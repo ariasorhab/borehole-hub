@@ -1,0 +1,104 @@
+/* Aufschluss page: borehole log, ramming chart, layer table. Theme tokens only (var(--...)); the fixed soil fills and
+   hatch colours are written inline by Drawing/BohrprofilSvg.cs, so there is no colour literal in this file. */
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* ---------- Drawings side by side: columns in the ratio of the two viewBox widths (760 : 500) so that
+   both SVGs are shown at the same scale and the depth axes line up. ---------- */
+.profil-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 760fr) minmax(0, 500fr);
+    gap: var(--s5);
+    align-items: start;
+    margin-bottom: var(--s6);
+}
+
+.drawing {
+    margin: 0;
+    padding: var(--s4);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+.drawing figcaption { margin-top: var(--s3); font-size: var(--fs-1); color: var(--muted); }
+.drawing figcaption strong { color: var(--ink); }
+.drawing-scroll { overflow-x: auto; }
+
+.bohrprofil,
+.rammdiagramm {
+    display: block;
+    width: 100%;
+    height: auto;
+    color: var(--ink);
+    font-family: var(--font-text);
+}
+
+/* ---------- SVG parts ---------- */
+.dr-head { fill: var(--sand); stroke: var(--line); stroke-width: 1; }
+.dr-title { font-family: var(--font-head); font-size: 17px; font-weight: 600; fill: currentColor; }
+.dr-sub { font-size: 12.5px; fill: var(--muted); }
+.dr-colhead { font-size: 11px; fill: var(--muted); letter-spacing: 0.04em; }
+.dr-tick,
+.dr-nhn { font-size: 11px; fill: var(--muted); font-variant-numeric: tabular-nums; }
+.dr-axis { stroke: var(--muted); stroke-width: 1; }
+.dr-grid { stroke: var(--line); stroke-width: 1; }
+.dr-line { stroke: currentColor; stroke-width: 1; opacity: 0.75; }
+.dr-frame { fill: none; stroke: currentColor; stroke-width: 1.6; }
+.dr-end { stroke: currentColor; stroke-width: 2.4; }
+.dr-et { font-size: 12px; font-weight: 600; fill: currentColor; font-variant-numeric: tabular-nums; paint-order: stroke; stroke: var(--surface); stroke-width: 4px; stroke-linejoin: round; }
+.dr-axislabel { font-size: 12px; fill: var(--muted); }
+
+.dr-block { font-size: 12.5px; fill: currentColor; }
+.dr-bold { font-weight: 600; }
+.dr-muted { fill: var(--muted); }
+.dr-leader { fill: none; stroke: var(--muted); stroke-width: 1; opacity: 0.85; }
+.dr-leader-gw { stroke: var(--water); opacity: 1; }
+.dr-gw-line { stroke: var(--water); stroke-width: 2; stroke-dasharray: 6 3; }
+.dr-gw-sym { fill: var(--water); stroke: var(--paper); stroke-width: 1.5; }
+.dr-gw-sym-line { stroke: var(--water); stroke-width: 2; }
+.dr-gw-text { fill: var(--water); font-weight: 600; }
+
+.rd-bar { fill: var(--rust); }
+
+/* ---------- Tables and lists ---------- */
+.profil-section { margin-bottom: var(--s6); }
+.data-table th.wrap,
+.data-table td.wrap { white-space: normal; min-width: 260px; }
+.data-table td.wrap-s { white-space: normal; min-width: 150px; }
+.note { margin-top: var(--s3); font-size: var(--fs-1); color: var(--muted); }
+
+.badge-ok { border-color: var(--ok); color: var(--ok); background: var(--tint-ok); }
+.badge-warn { border-color: var(--warn); color: var(--warn); background: var(--tint-warn); }
+.badge-muted { border-color: var(--line-strong); color: var(--muted); background: transparent; }
+
+.proben-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s2); }
+.proben-list li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--s4);
+    padding: var(--s3) var(--s4);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+}
+.proben-name { font-weight: 600; min-width: 6rem; }
+
+/* ---------- Narrow screens: drawings stack, each scrolls sideways if needed ---------- */
+@media (max-width: 900px) {
+    .profil-grid { grid-template-columns: minmax(0, 1fr); }
+    .drawing { min-width: 0; }
+    .bohrprofil { min-width: 620px; }
+    .rammdiagramm { min-width: 340px; }
+}

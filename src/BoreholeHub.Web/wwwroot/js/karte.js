@@ -9,10 +9,11 @@
     var nf1 = new Intl.NumberFormat('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
     var nf0 = new Intl.NumberFormat('de-DE', { maximumFractionDigits: 0, useGrouping: false });
 
-    var map = L.map('karte-map', { zoomControl: true }).setView([50.9, 9.183], 16);
+    var map = L.map('karte-map', { zoomControl: true }).setView([50.917, 9.2317], 16);
 
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
+        className: 'karte-basemap', // lets the dark theme darken the base map only (see site.css)
         attribution: '&copy; OpenStreetMap-Mitwirkende'
     }).addTo(map);
 
@@ -81,10 +82,26 @@
         });
         box.appendChild(dl);
         box.appendChild(el('p', 'karte-popup-note', 'EPSG:25832'));
+        var actions = el('div', 'karte-popup-actions');
+        actions.style.marginTop = 'var(--s3)';
+        var link = el('a', 'btn btn-primary btn-sm', 'Profil öffnen');
+        link.href = '/Aufschluesse/' + p.id;
+        actions.appendChild(link);
+        box.appendChild(actions);
         return box;
     }
 
     var markers = {};
+
+    // Permanent labels only when zoomed in (zoom >= 17); popups work at every zoom level.
+    var LABEL_MIN_ZOOM = 17;
+    function updateLabels() {
+        var show = map.getZoom() >= LABEL_MIN_ZOOM;
+        Object.keys(markers).forEach(function (id) {
+            if (show) { markers[id].openTooltip(); } else { markers[id].closeTooltip(); }
+        });
+    }
+    map.on('zoomend', updateLabels);
 
     fetch(root.getAttribute('data-punkte-url'), { headers: { 'Accept': 'application/json' } })
         .then(function (response) {
@@ -107,6 +124,7 @@
             if (bounds.length > 0) {
                 map.fitBounds(bounds, { padding: [64, 64], maxZoom: 19 });
             }
+            updateLabels();
         })
         .catch(function () {
             var notice = el('div', 'notice karte-error', 'Die Punkte konnten nicht geladen werden.');

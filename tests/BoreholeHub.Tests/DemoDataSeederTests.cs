@@ -162,6 +162,25 @@ public class DemoDataSeederTests : IDisposable
     }
 
     [Fact]
+    public async Task Seed_UsesEbvParameterNames_AndNewProjectName()
+    {
+        int id = await SeedAsync();
+
+        using var db = Open();
+        var projekt = await db.Projects.SingleAsync(p => p.Id == id);
+        Assert.Equal("Neubau Einfamilienhaus mit Garage, Schwalmstadt-Ziegenhain (Demo)", DemoDataSeeder.DemoProjectName);
+        Assert.Equal(DemoDataSeeder.DemoProjectName, projekt.Name);
+        Assert.Equal("Schwalmstadt-Ziegenhain", projekt.Ort);
+
+        string[] expected = ["Arsen", "Blei", "Cadmium", "Chrom, gesamt", "Kupfer", "Nickel", "Quecksilber", "Zink", "PAK16", "Kohlenwasserstoffe"];
+        var limits = await db.Grenzwerte.Select(g => g.Parameter).Distinct().ToListAsync();
+        var measured = await db.Laborwerte.Select(l => l.Parameter).Distinct().ToListAsync();
+        Assert.Equal(expected.OrderBy(x => x), limits.OrderBy(x => x));
+        Assert.Equal(expected.OrderBy(x => x), measured.OrderBy(x => x));
+        Assert.DoesNotContain("Chrom (gesamt)", measured);
+    }
+
+    [Fact]
     public async Task Seed_Coordinates_ConvertToSchwalmstadtRange()
     {
         await SeedAsync();
@@ -173,9 +192,9 @@ public class DemoDataSeederTests : IDisposable
         foreach (var a in all)
         {
             var (lat, lon) = CoordinateService.ToWgs84(a.Rechtswert, a.Hochwert);
-            Assert.InRange(lat, 50.89, 50.91);
-            Assert.InRange(lon, 9.17, 9.20);
-            Assert.InRange(a.AnsatzhoeheMNhn, 214.0, 216.0);
+            Assert.InRange(lat, 50.917012 - 0.002, 50.917012 + 0.002);
+            Assert.InRange(lon, 9.231739 - 0.002, 9.231739 + 0.002);
+            Assert.InRange(a.AnsatzhoeheMNhn, 212.7 - 0.8, 212.7 + 0.8);
         }
     }
 

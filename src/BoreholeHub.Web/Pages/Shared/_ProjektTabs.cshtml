@@ -1,0 +1,23 @@
+@model BoreholeHub.Web.Pages.Shared.ProjektTabsModel
+@{
+    var tabs = new (string Key, string Text, string Url)[]
+    {
+        ("uebersicht", "Übersicht", $"/Projekte/{Model.ProjektId}"),
+        ("karte", "Karte", $"/Projekte/{Model.ProjektId}/Karte"),
+        ("labor", "Labor & Versickerung", $"/Projekte/{Model.ProjektId}/Labor"),
+        ("daten", "Daten", $"/Projekte/{Model.ProjektId}/Daten"),
+    };
+}
+<nav class="tabs" aria-label="Projektbereiche">
+    @foreach (var t in tabs)
+    {
+        if (t.Key == Model.Aktiv)
+        {
+            <a class="tab" href="@t.Url" aria-current="page">@t.Text</a>
+        }
+        else
+        {
+            <a class="tab" href="@t.Url">@t.Text</a>
+        }
+    }
+</nav>

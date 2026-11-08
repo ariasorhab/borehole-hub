@@ -11,9 +11,18 @@
     --rust-dark: #94461f;
     --water: #2d6a86;
     --ok: #3d7a4f;
-    --warn: #a8740f;
+    --warn: #946509;
     --bad: #b23a2e;
-    --white: #ffffff;
+    --surface: #ffffff;       /* cards, tables, inputs */
+    --line-strong: var(--line-strong);   /* hover / dashed borders */
+    --on-rust: #ffffff;       /* text on a rust background */
+    --notice-bg: #eef4f7;
+    --notice-line: #c9dce5;
+    --tint-warn: #fbf3e0;     /* subtle row / badge tints */
+    --tint-bad: #fbe9e6;
+    --tint-ok: #e9f3ec;
+    --overlay: rgba(255, 255, 255, 0.94);
+    --ring: var(--ring);
 
     /* Spacing scale: 4 / 8 / 12 / 16 / 24 / 32 / 48 / 64 px */
     --s1: 4px;
@@ -35,12 +44,41 @@
     --radius: 10px;
     --radius-sm: 8px;
     --radius-lg: 12px;
-    --shadow: 0 1px 2px rgba(34, 32, 28, 0.05);
-    --shadow-hover: 0 4px 14px rgba(34, 32, 28, 0.08);
+    --shadow: 0 1px 2px rgb(34 32 28 / 0.05);
+    --shadow-hover: 0 4px 14px rgb(34 32 28 / 0.08);
 
     --font-text: "Inter", system-ui, "Segoe UI", Arial, sans-serif;
     --font-head: "Space Grotesk", system-ui, "Segoe UI", Arial, sans-serif;
 }
+
+/* Night mode: the same tokens, redefined. Switched by data-theme on <html> (see _Layout.cshtml). */
+[data-theme="dark"] {
+    --ink: #ece6da;
+    --paper: #171512;
+    --sand: #211e1a;
+    --line: #38332b;
+    --muted: #aaa190;
+    --rust: #e08a5b;
+    --rust-dark: #eea67c;
+    --water: #78b9d6;
+    --ok: #74c68f;
+    --warn: #e3b552;
+    --bad: #f28f82;
+    --surface: #1f1c18;
+    --line-strong: #4d463b;
+    --on-rust: #1a130e;
+    --notice-bg: #1a272e;
+    --notice-line: #2e4755;
+    --tint-warn: #2c2514;
+    --tint-bad: #321d1a;
+    --tint-ok: #1b2a20;
+    --overlay: rgba(31, 28, 24, 0.94);
+    --ring: rgba(236, 230, 218, 0.45);
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.4);
+    --shadow-hover: 0 4px 14px rgb(0 0 0 / 0.5);
+    color-scheme: dark;
+}
+[data-theme="light"] { color-scheme: light; }
 
 /* ---------- Base ---------- */
 *, *::before, *::after { box-sizing: border-box; }
@@ -96,13 +134,9 @@ a:hover { color: var(--ink); }
 /* ---------- Layout ---------- */
 .container {
     width: 100%;
-    max-width: 1200px;
+    max-width: 1760px;
     margin: 0 auto;
-    padding: 0 var(--s6);
-}
-
-@media (max-width: 720px) {
-    .container { padding: 0 var(--s4); }
+    padding-inline: clamp(16px, 3vw, 48px);
 }
 
 /* ---------- Header / footer ---------- */
@@ -123,6 +157,7 @@ a:hover { color: var(--ink); }
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: var(--s4);
     min-height: 64px;
 }
 
@@ -133,10 +168,11 @@ a:hover { color: var(--ink); }
     letter-spacing: -0.01em;
     color: var(--ink);
     text-decoration: none;
+    white-space: nowrap;
 }
 .wordmark:hover { color: var(--rust-dark); }
 
-.site-nav { display: flex; gap: var(--s5); }
+.site-nav { display: flex; align-items: center; gap: var(--s4); }
 .site-nav a {
     color: var(--ink);
     text-decoration: none;
@@ -145,6 +181,27 @@ a:hover { color: var(--ink); }
     border-bottom: 2px solid transparent;
 }
 .site-nav a:hover { border-bottom-color: var(--rust); color: var(--ink); }
+
+/* Night-mode toggle: shows the moon in light mode (click = switch to dark) and the sun in dark mode. */
+.theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    color: var(--ink);
+    background: transparent;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+.theme-toggle:hover { background: var(--sand); border-color: var(--muted); }
+.theme-toggle svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.theme-toggle .icon-sun { display: none; }
+[data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
 
 .site-footer {
     flex-shrink: 0;
@@ -184,6 +241,28 @@ a:hover { color: var(--ink); }
 
 .muted { color: var(--muted); }
 
+/* ---------- Project tabs (Pages/Shared/_ProjektTabs.cshtml) ---------- */
+.tabs {
+    display: flex;
+    gap: var(--s1);
+    margin: 0 0 var(--s5);
+    border-bottom: 1px solid var(--line);
+    overflow-x: auto;
+    scrollbar-width: thin;
+}
+.tab {
+    flex: 0 0 auto;
+    padding: 12px var(--s4);
+    margin-bottom: -1px;
+    color: var(--muted);
+    font-weight: 500;
+    text-decoration: none;
+    white-space: nowrap;
+    border-bottom: 3px solid transparent;
+}
+.tab:hover { color: var(--ink); border-bottom-color: var(--line-strong); }
+.tab[aria-current="page"] { color: var(--ink); font-weight: 600; border-bottom-color: var(--rust); }
+
 /* ---------- Buttons ---------- */
 .btn {
     display: inline-flex;
@@ -201,17 +280,18 @@ a:hover { color: var(--ink); }
     text-decoration: none;
     transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
-.btn-primary { background: var(--rust); color: var(--white); }
-.btn-primary:hover { background: var(--rust-dark); color: var(--white); }
-.btn-secondary { background: var(--white); color: var(--ink); border-color: #cfc7b6; }
+.btn-primary { background: var(--rust); color: var(--on-rust); }
+.btn-primary:hover { background: var(--rust-dark); color: var(--on-rust); }
+.btn-secondary { background: var(--surface); color: var(--ink); border-color: var(--line-strong); }
 .btn-secondary:hover { background: var(--sand); border-color: var(--muted); color: var(--ink); }
+.btn-sm { font-size: var(--fs-1); padding: 6px var(--s3); }
 .btn-ghost { background: transparent; color: var(--water); padding-left: var(--s3); padding-right: var(--s3); }
 .btn-ghost:hover { background: var(--sand); color: var(--ink); }
 .inline-form { display: inline; margin: 0; }
 
 /* ---------- Cards ---------- */
 .card {
-    background: var(--white);
+    background: var(--surface);
     border: 1px solid var(--line);
     border-radius: var(--radius);
     box-shadow: var(--shadow);
@@ -223,7 +303,7 @@ a.card {
     text-decoration: none;
     transition: box-shadow 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
 }
-a.card:hover { border-color: #cfc7b6; box-shadow: var(--shadow-hover); transform: translateY(-1px); color: inherit; }
+a.card:hover { border-color: var(--line-strong); box-shadow: var(--shadow-hover); transform: translateY(-1px); color: inherit; }
 .card h2, .card h3 { font-size: var(--fs-3); }
 .card .muted { margin-top: var(--s1); }
 .card-meta { margin-top: var(--s4); display: flex; flex-wrap: wrap; gap: var(--s2); }
@@ -231,7 +311,7 @@ a.card:hover { border-color: #cfc7b6; box-shadow: var(--shadow-hover); transform
 
 .card-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr));
     gap: var(--s5);
 }
 .card-grid.cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -239,19 +319,16 @@ a.card:hover { border-color: #cfc7b6; box-shadow: var(--shadow-hover); transform
 @media (max-width: 900px) {
     .card-grid.cols-3 { grid-template-columns: 1fr; }
 }
-@media (max-width: 480px) {
-    .card-grid { grid-template-columns: 1fr; }
-}
 
 /* ---------- KPI ---------- */
 .kpi-row {
     display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr));
     gap: var(--s4);
     margin-bottom: var(--s6);
 }
 .kpi {
-    background: var(--white);
+    background: var(--surface);
     border: 1px solid var(--line);
     border-top: 3px solid var(--sand);
     border-radius: var(--radius);
@@ -268,14 +345,11 @@ a.card:hover { border-color: #cfc7b6; box-shadow: var(--shadow-hover); transform
 .kpi.kpi-water { border-top-color: var(--water); }
 .kpi.kpi-rust { border-top-color: var(--rust); }
 
-@media (max-width: 1100px) {
-    .kpi-row { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-}
 
 /* ---------- Table ---------- */
 .table-wrap {
     overflow-x: auto;
-    background: var(--white);
+    background: var(--surface);
     border: 1px solid var(--line);
     border-radius: var(--radius);
     box-shadow: var(--shadow);
@@ -312,7 +386,7 @@ a.card:hover { border-color: #cfc7b6; box-shadow: var(--shadow-hover); transform
     padding: 4px 10px;
     border-radius: 999px;
     border: 1px solid var(--line);
-    background: var(--white);
+    background: var(--surface);
     color: var(--ink);
     white-space: nowrap;
 }
@@ -321,8 +395,8 @@ a.card:hover { border-color: #cfc7b6; box-shadow: var(--shadow-hover); transform
 
 /* ---------- Notice, empty state ---------- */
 .notice {
-    background: #eef4f7;
-    border: 1px solid #c9dce5;
+    background: var(--notice-bg);
+    border: 1px solid var(--notice-line);
     border-left: 4px solid var(--water);
     border-radius: var(--radius-sm);
     padding: var(--s3) var(--s4);
@@ -331,8 +405,8 @@ a.card:hover { border-color: #cfc7b6; box-shadow: var(--shadow-hover); transform
 
 .empty-state {
     text-align: center;
-    background: var(--white);
-    border: 1px dashed #cfc7b6;
+    background: var(--surface);
+    border: 1px dashed var(--line-strong);
     border-radius: var(--radius);
     padding: var(--s8) var(--s5);
 }
@@ -342,17 +416,17 @@ a.card:hover { border-color: #cfc7b6; box-shadow: var(--shadow-hover); transform
 .hero {
     display: grid;
     grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
-    gap: var(--s8);
+    gap: clamp(32px, 5vw, 96px);
     align-items: center;
     padding: var(--s8) 0 var(--s7);
 }
-.hero h1 { font-size: var(--fs-5); letter-spacing: -0.02em; }
-.hero .lead { margin-top: var(--s4); font-size: var(--fs-3); max-width: 34ch; color: var(--ink); }
+.hero h1 { font-size: clamp(2.5rem, 1.2rem + 2.4vw, 4.25rem); letter-spacing: -0.02em; }
+.hero .lead { margin-top: var(--s4); font-size: clamp(1.125rem, 0.9rem + 0.5vw, 1.5rem); max-width: 34ch; color: var(--ink); }
 .hero-actions { margin-top: var(--s6); display: flex; gap: var(--s3); flex-wrap: wrap; align-items: center; }
 .hero-stats { margin-top: var(--s5); font-size: var(--fs-1); color: var(--muted); font-variant-numeric: tabular-nums; }
 
 .profile-figure { margin: 0; }
-.profile-figure svg { display: block; width: 100%; height: auto; border-radius: var(--radius); border: 1px solid var(--line); background: var(--white); }
+.profile-figure svg { display: block; width: 100%; height: auto; border-radius: var(--radius); border: 1px solid var(--line); background: var(--surface); }
 .profile-figure figcaption { margin-top: var(--s2); font-size: var(--fs-1); color: var(--muted); }
 
 .steps { padding-bottom: var(--s5); }
@@ -361,8 +435,16 @@ a.card:hover { border-color: #cfc7b6; box-shadow: var(--shadow-hover); transform
 
 @media (max-width: 960px) {
     .hero { grid-template-columns: 1fr; gap: var(--s6); padding-top: var(--s7); }
-    .hero h1 { font-size: 2.5rem; }
 }
+
+/* Landing figure: theme-aware text and lines; soil fills stay fixed (see inline SVG). */
+.profile-figure .pf-bg { fill: var(--surface); }
+.profile-figure .pf-ink { fill: var(--ink); }
+.profile-figure .pf-muted { fill: var(--muted); }
+.profile-figure .pf-water { fill: var(--water); }
+.profile-figure .pf-frame { fill: none; stroke: var(--ink); stroke-width: 1.5; }
+.profile-figure .pf-lead { stroke: var(--line-strong); stroke-width: 1; }
+.profile-figure .pf-gw { stroke: var(--water); stroke-width: 2; stroke-dasharray: 6 4; }
 
 /* ---------- Error / not found ---------- */
 .message-page { padding: var(--s8) 0; max-width: 640px; }
@@ -380,15 +462,24 @@ a.card:hover { border-color: #cfc7b6; box-shadow: var(--shadow-hover); transform
 
 
 /* Karte */
-.container-wide { max-width: 1560px; }
 .karte-head { padding: var(--s2) 0 var(--s4); }
 
+/* The map page fills the viewport below the header: the container is a column, the map row takes the rest. */
+main:has(.karte-layout) { padding-bottom: 0; }
+main:has(.karte-layout) > .container {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 69px);
+    min-height: calc(100dvh - 69px);
+    padding-bottom: var(--s5);
+}
+
 .karte-layout {
+    flex: 1 0 480px;
     display: grid;
-    grid-template-columns: 320px minmax(0, 1fr);
+    grid-template-columns: clamp(300px, 22vw, 400px) minmax(0, 1fr);
     gap: var(--s4);
-    height: calc(100vh - 250px);
-    min-height: 520px;
+    min-height: 480px;
 }
 
 .karte-map-wrap {
@@ -399,13 +490,14 @@ a.card:hover { border-color: #cfc7b6; box-shadow: var(--shadow-hover); transform
     overflow: hidden;
     background: var(--sand);
 }
-.karte-map { height: 100%; font-family: var(--font-text); }
+.karte-map { height: 100%; font-family: var(--font-text); background: var(--sand); }
 .karte-map-wrap .karte-legend {
     position: absolute;
     left: var(--s3);
     bottom: var(--s3);
     z-index: 800;
-    background: rgba(255, 255, 255, 0.94);
+    color: var(--ink);
+    background: var(--overlay);
     border: 1px solid var(--line);
     border-radius: var(--radius-sm);
     padding: var(--s2) var(--s3);
@@ -415,12 +507,11 @@ a.card:hover { border-color: #cfc7b6; box-shadow: var(--shadow-hover); transform
 .karte-panel {
     min-height: 0;
     overflow-y: auto;
-    background: var(--white);
+    background: var(--surface);
     border: 1px solid var(--line);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow);
 }
-
 .karte-section { padding: var(--s4) var(--s5); border-bottom: 1px solid var(--line); }
 .karte-section:last-child { border-bottom: 0; }
 .karte-title { font-size: var(--fs-1); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: var(--s3); }
@@ -451,41 +542,82 @@ a.card:hover { border-color: #cfc7b6; box-shadow: var(--shadow-hover); transform
     cursor: pointer;
 }
 .karte-item:hover { background: var(--sand); }
+.karte-item:focus-visible { outline-offset: -2px; }
 .karte-item.is-active { background: var(--sand); border-color: var(--line); }
 .karte-item-text { display: flex; flex-direction: column; line-height: 1.35; }
 .karte-item-text .muted { font-size: var(--fs-1); }
 
 /* Marker symbols (map, legend and list share the same classes). */
 .mk { display: inline-block; flex-shrink: 0; width: 16px; height: 16px; box-sizing: border-box; }
-.mk-krb { border-radius: 50%; background: var(--rust); border: 2px solid var(--white); box-shadow: 0 0 0 1px rgba(34, 32, 28, 0.35); }
-.mk-dph { width: 14px; height: 14px; margin: 1px; transform: rotate(45deg); background: var(--water); border: 2px solid var(--white); box-shadow: 0 0 0 1px rgba(34, 32, 28, 0.35); }
-.mk-krb.has-gw { box-shadow: 0 0 0 2px var(--white), 0 0 0 4px var(--water); margin: 2px; }
+.mk-krb { border-radius: 50%; background: var(--rust); border: 2px solid var(--surface); box-shadow: 0 0 0 1px var(--ring); }
+.mk-dph { width: 14px; height: 14px; margin: 1px; transform: rotate(45deg); background: var(--water); border: 2px solid var(--surface); box-shadow: 0 0 0 1px var(--ring); }
+.mk-krb.has-gw { box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--water); margin: 2px; }
 .karte-icon { background: transparent; border: 0; display: flex; align-items: center; justify-content: center; }
 
-/* Leaflet adjustments */
+/* Leaflet adjustments (theme tokens only; vendor CSS is not edited) */
 .karte-map .leaflet-container { font-family: var(--font-text); font-size: var(--fs-2); }
+.karte-map.leaflet-container { font-family: var(--font-text); font-size: var(--fs-2); color: var(--ink); }
+.karte-map.leaflet-container a { color: var(--water); }
+.karte-map.leaflet-container a.btn-primary { color: var(--on-rust); }
+.karte-map.leaflet-container a.btn-secondary { color: var(--ink); }
+.karte-map.leaflet-container .leaflet-control-attribution { background: var(--overlay); color: var(--muted); }
+.karte-map.leaflet-container .leaflet-control-attribution a { color: var(--muted); text-decoration: underline; }
+.karte-map .leaflet-bar { border: 1px solid var(--line-strong); box-shadow: var(--shadow-hover); }
+.karte-map .leaflet-bar a { background-color: var(--surface); color: var(--ink); border-bottom-color: var(--line); }
+.karte-map .leaflet-bar a:hover,
+.karte-map .leaflet-bar a:focus { background-color: var(--sand); color: var(--ink); }
+.karte-map .leaflet-bar a.leaflet-disabled { background-color: var(--sand); color: var(--muted); }
 .karte-label.leaflet-tooltip {
-    background: var(--white);
+    background: var(--surface);
     color: var(--ink);
-    border: 1px solid var(--line);
+    border: 1px solid var(--line-strong);
     border-radius: 6px;
     box-shadow: none;
     padding: 1px 6px;
     font-size: var(--fs-1);
     font-weight: 600;
 }
-.karte-label.leaflet-tooltip-right::before { border-right-color: var(--line); }
-.leaflet-popup-content-wrapper { border-radius: var(--radius); box-shadow: var(--shadow-hover); }
+.karte-label.leaflet-tooltip-right::before { border-right-color: var(--line-strong); }
+.karte-label.leaflet-tooltip-left::before { border-left-color: var(--line-strong); }
+.karte-label.leaflet-tooltip-top::before { border-top-color: var(--line-strong); }
+.karte-label.leaflet-tooltip-bottom::before { border-bottom-color: var(--line-strong); }
+.karte-map .leaflet-popup-content-wrapper { background: var(--surface); color: var(--ink); border-radius: var(--radius); box-shadow: var(--shadow-hover); }
+.karte-map .leaflet-popup-tip { background: var(--surface); box-shadow: var(--shadow); }
 .leaflet-popup-content { margin: var(--s4) var(--s5); }
 .karte-popup-title { display: block; font-family: var(--font-head); font-size: var(--fs-3); margin-bottom: var(--s2); }
 .karte-popup-list { display: grid; grid-template-columns: auto 1fr; gap: 2px var(--s4); margin: 0; font-size: var(--fs-1); }
 .karte-popup-list dt { color: var(--muted); }
 .karte-popup-list dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; }
 .karte-popup-note { margin: var(--s2) 0 0; font-size: var(--fs-1); color: var(--muted); }
-.leaflet-container a.leaflet-popup-close-button { color: var(--muted); }
+.karte-map.leaflet-container a.leaflet-popup-close-button { color: var(--muted); }
+.karte-map.leaflet-container a.leaflet-popup-close-button:hover { color: var(--ink); }
+
+/* Dark mode: darken the OpenStreetMap base layer only (class set in karte.js); HLNUG overlays stay untouched. */
+[data-theme="dark"] .karte-basemap { filter: brightness(0.68) contrast(1.1) saturate(0.75); }
 
 @media (max-width: 900px) {
-    .karte-layout { grid-template-columns: 1fr; height: auto; }
-    .karte-map-wrap { height: 60vh; min-height: 420px; order: -1; }
-    .karte-panel { max-height: 360px; }
+    main:has(.karte-layout) > .container { min-height: 0; }
+    .karte-layout { flex: 0 0 auto; grid-template-columns: 1fr; min-height: 0; }
+    .karte-panel { max-height: 220px; }
+    .karte-map-wrap { height: calc(100dvh - 200px); min-height: 480px; }
+}
+
+/* ---------- Wide and small screens ---------- */
+@media (min-width: 1800px) {
+    html { font-size: 106.25%; }
+}
+@media (min-width: 2300px) {
+    html { font-size: 118.75%; }
+    .container { max-width: 2240px; }
+}
+@media (max-width: 560px) {
+    .page-header { padding-top: var(--s5); }
+    .site-header-inner { min-height: 56px; }
+    .site-nav { gap: var(--s3); }
+    .hero { padding: var(--s6) 0 var(--s5); }
+    .data-table th, .data-table td { padding: 10px var(--s3); }
+    .data-table th:first-child, .data-table td:first-child { padding-left: var(--s4); }
+    .data-table th:last-child, .data-table td:last-child { padding-right: var(--s4); }
+    .card { padding: var(--s4); }
+    .footer-text, .site-footer p { overflow-wrap: anywhere; }
 }

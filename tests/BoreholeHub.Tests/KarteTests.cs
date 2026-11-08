@@ -49,6 +49,17 @@ public class KarteTests : IClassFixture<WebAppFactory>
     }
 
     [Fact]
+    public async Task KarteScript_ShowsLabelsOnlyWhenZoomedIn_AndLinksToProfile()
+    {
+        var js = await _factory.CreateClient().GetStringAsync("/js/karte.js");
+
+        Assert.Contains("LABEL_MIN_ZOOM = 17", js);
+        Assert.Contains("closeTooltip", js);
+        Assert.Contains("Profil öffnen", js);
+        Assert.Contains("'/Aufschluesse/' + p.id", js);
+    }
+
+    [Fact]
     public async Task Karte_UnknownId_Returns404()
     {
         var client = _factory.CreateClient();
@@ -85,8 +96,8 @@ public class KarteTests : IClassFixture<WebAppFactory>
             var coordinates = geometry.GetProperty("coordinates");
             Assert.Equal(2, coordinates.GetArrayLength());
             double lon = coordinates[0].GetDouble(), lat = coordinates[1].GetDouble();
-            Assert.InRange(lon, 9.17, 9.20);
-            Assert.InRange(lat, 50.89, 50.91);
+            Assert.InRange(lon, 9.231739 - 0.002, 9.231739 + 0.002);
+            Assert.InRange(lat, 50.917012 - 0.002, 50.917012 + 0.002);
 
             var props = f.GetProperty("properties");
             Assert.Equal(expected.OrderBy(x => x), props.EnumerateObject().Select(p => p.Name).OrderBy(x => x));

@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="~/lib/leaflet/leaflet.css" />
 }
 
-<div class="container container-wide">
+<div class="container">
     <nav class="breadcrumb" aria-label="Brotkrumen">
         <ol>
             <li><a href="/Projekte">Projekte</a></li>
@@ -21,6 +21,8 @@
         <h1>@Model.Projekt.Name</h1>
         <p class="muted">Koordinaten: ETRS89 / UTM 32N (EPSG:25832)</p>
     </header>
+
+    @await Html.PartialAsync("_ProjektTabs", new BoreholeHub.Web.Pages.Shared.ProjektTabsModel(Model.Projekt.Id, "karte"))
 
     <div class="karte-layout" id="karte" data-punkte-url="/Projekte/@Model.Projekt.Id/Karte?handler=Punkte">
         <aside class="karte-panel" aria-label="Kartenleiste">

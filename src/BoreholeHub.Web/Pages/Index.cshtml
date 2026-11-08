@@ -24,34 +24,34 @@
 
         <figure class="profile-figure">
             <svg viewBox="0 0 440 340" role="img" aria-label="Schematisches Schichtenprofil mit Grundwasserstand">
-                <rect x="0" y="0" width="440" height="340" fill="#ffffff" />
+                <rect class="pf-bg" x="0" y="0" width="440" height="340" />
                 <!-- ground line -->
-                <text x="24" y="34" font-size="12" fill="#6b645a" font-family="Inter, system-ui, sans-serif">0,0 m</text>
+                <text class="pf-muted" x="24" y="34" font-size="12" font-family="Inter, system-ui, sans-serif">0,0 m</text>
                 <!-- column -->
                 <rect x="80" y="44" width="96" height="30" fill="#6f6a5e" />
                 <rect x="80" y="74" width="96" height="96" fill="#c9a26b" />
                 <rect x="80" y="170" width="96" height="104" fill="#8a5a3b" />
                 <rect x="80" y="274" width="96" height="30" fill="#b85a2e" />
-                <rect x="80" y="44" width="96" height="260" fill="none" stroke="#22201c" stroke-width="1.5" />
+                <rect class="pf-frame" x="80" y="44" width="96" height="260" />
                 <!-- ground water -->
-                <line x1="60" y1="214" x2="196" y2="214" stroke="#2d6a86" stroke-width="2" stroke-dasharray="6 4" />
-                <path d="M44 208 l8 12 h-16 z" fill="#2d6a86" transform="translate(0 -4)" />
+                <line class="pf-gw" x1="60" y1="214" x2="196" y2="214" />
+                <path class="pf-water" d="M44 208 l8 12 h-16 z" transform="translate(0 -4)" />
                 <!-- labels -->
-                <g font-family="Inter, system-ui, sans-serif" font-size="13" fill="#22201c">
+                <g class="pf-ink" font-family="Inter, system-ui, sans-serif" font-size="13">
                     <text x="212" y="63">Oberboden</text>
                     <text x="212" y="127">Auenlehm</text>
                     <text x="212" y="250">Flusskies</text>
                     <text x="212" y="293">Verwitterungszone</text>
                 </g>
-                <g stroke="#e3ddd0" stroke-width="1">
-                    <line x1="176" y1="59" x2="204" y2="59" />
-                    <line x1="176" y1="122" x2="204" y2="122" />
-                    <line x1="176" y1="246" x2="204" y2="246" />
-                    <line x1="176" y1="289" x2="204" y2="289" />
+                <g class="pf-lead-lines">
+                    <line class="pf-lead" x1="176" y1="59" x2="204" y2="59" />
+                    <line class="pf-lead" x1="176" y1="122" x2="204" y2="122" />
+                    <line class="pf-lead" x1="176" y1="246" x2="204" y2="246" />
+                    <line class="pf-lead" x1="176" y1="289" x2="204" y2="289" />
                 </g>
-                <text x="212" y="208" font-family="Inter, system-ui, sans-serif" font-size="12" fill="#2d6a86">Grundwasser</text>
+                <text class="pf-water" x="212" y="208" font-family="Inter, system-ui, sans-serif" font-size="12">Grundwasser</text>
                 <!-- depth scale -->
-                <g font-family="Inter, system-ui, sans-serif" font-size="12" fill="#6b645a">
+                <g class="pf-muted" font-family="Inter, system-ui, sans-serif" font-size="12">
                     <text x="24" y="135">1</text>
                     <text x="24" y="222">2</text>
                     <text x="24" y="308">3 m</text>

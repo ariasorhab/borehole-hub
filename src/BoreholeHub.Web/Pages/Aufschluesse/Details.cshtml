@@ -1,0 +1,144 @@
+@page "/Aufschluesse/{id:int}"
+@model BoreholeHub.Web.Pages.Aufschluesse.DetailsModel
+@using System.Globalization
+@using BoreholeHub.Web.Pages.Aufschluesse
+@{
+    var a = Model.Aufschluss;
+    ViewData["Title"] = a.Bezeichnung + " · " + Model.Projekt.Name;
+    var de = CultureInfo.GetCultureInfo("de-DE");
+}
+
+@section Head {
+    <link rel="stylesheet" href="~/css/aufschluss.css" asp-append-version="true" />
+}
+
+<div class="container">
+    <nav class="breadcrumb" aria-label="Brotkrumen">
+        <ol>
+            <li><a href="/Projekte">Projekte</a></li>
+            <li><a href="/Projekte/@Model.Projekt.Id">@Model.Projekt.Name</a></li>
+            <li aria-current="page">@a.Bezeichnung</li>
+        </ol>
+    </nav>
+
+    <header class="page-header">
+        <h1>@a.Bezeichnung</h1>
+        <p class="muted">
+            @(Model.IstKleinrammbohrung ? "Kleinrammbohrung" : "Rammsondierung") · Endteufe @DetailsModel.Meter(a.EndteufeM) m ·
+            Ansatzhöhe @DetailsModel.Meter(a.AnsatzhoeheMNhn) m NHN ·
+            @(a.GrundwasserM is double gw ? "Grundwasser " + DetailsModel.Meter(gw) + " m u. GOK" : "Grundwasser nicht angetroffen")
+        </p>
+        <div class="page-actions">
+            <a class="btn btn-secondary" href="/Projekte/@Model.Projekt.Id/Karte">Zurück zur Karte</a>
+        </div>
+    </header>
+
+    @await Html.PartialAsync("_ProjektTabs", new BoreholeHub.Web.Pages.Shared.ProjektTabsModel(Model.Projekt.Id, "uebersicht"))
+
+    <section class="profil-grid" aria-label="Bohrprofil und Rammdiagramm">
+        <figure class="drawing drawing-log">
+            @if (Model.BohrprofilSvgHtml is not null)
+            {
+                <div class="drawing-scroll">@Html.Raw(Model.BohrprofilSvgHtml)</div>
+                <figcaption>
+                    @if (!Model.IstKleinrammbohrung && Model.Bohrung is not null && Model.AbstandM is double d1)
+                    {
+                        <strong>@Model.Bohrung.Bezeichnung · @DetailsModel.AbstandText(d1)</strong> <span>(nächstgelegene Kleinrammbohrung)</span><br />
+                    }
+                    Darstellung in Anlehnung an DIN 4023 (vereinfacht) · Bezug: DIN 4023:2023-02
+                </figcaption>
+            }
+            else
+            {
+                <div class="empty-state"><p>In diesem Projekt gibt es keine Kleinrammbohrung für ein Bohrprofil.</p></div>
+            }
+        </figure>
+
+        <figure class="drawing drawing-ram">
+            @if (Model.RammdiagrammSvgHtml is not null)
+            {
+                <div class="drawing-scroll">@Html.Raw(Model.RammdiagrammSvgHtml)</div>
+                <figcaption>
+                    @if (Model.IstKleinrammbohrung && Model.Sonde is not null && Model.AbstandM is double d2)
+                    {
+                        <strong>@Model.Sonde.Bezeichnung · @DetailsModel.AbstandText(d2)</strong> <span>(nächstgelegene Rammsondierung)</span><br />
+                    }
+                    N10 = Schläge je 10 cm Eindringung
+                </figcaption>
+            }
+            else
+            {
+                <div class="empty-state"><p>In diesem Projekt gibt es keine Rammsondierung.</p></div>
+            }
+        </figure>
+    </section>
+
+    @if (Model.Bohrung is not null)
+    {
+        <section class="profil-section" aria-labelledby="schichten-titel">
+            <h2 class="section-title" id="schichten-titel">Schichtenverzeichnis @Model.Bohrung.Bezeichnung</h2>
+            <div class="table-wrap">
+                <table class="data-table">
+                    <caption class="sr-only">Schichten von @Model.Bohrung.Bezeichnung</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col" class="num">Von–Bis [m]</th>
+                            <th scope="col">Kurzzeichen</th>
+                            <th scope="col" class="wrap">Beschreibung</th>
+                            <th scope="col">Bodengruppe</th>
+                            <th scope="col">Farbe</th>
+                            <th scope="col">Zustand</th>
+                            <th scope="col">Homogenbereich</th>
+                            <th scope="col">Frostklasse</th>
+                            <th scope="col" class="num">kf [m/s]</th>
+                            <th scope="col">Versickerung</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var s in Model.Schichten)
+                        {
+                            var v = DetailsModel.Versickerung(s.KfWertMs);
+                            <tr>
+                                <td class="num">@DetailsModel.Meter(s.VonM)–@DetailsModel.Meter(s.BisM)</td>
+                                <td>@s.Kurzzeichen</td>
+                                <td class="wrap">@s.Beschreibung</td>
+                                <td>@(s.Bodengruppe ?? "–")</td>
+                                <td>@(s.Farbe ?? "–")</td>
+                                <td>@(s.Zustand ?? "–")</td>
+                                <td>@(s.Homogenbereich ?? "–")</td>
+                                <td class="wrap-s">@DetailsModel.FrostText(s.Frostklasse)</td>
+                                <td class="num">@DetailsModel.KfText(s.KfWertMs)</td>
+                                <td><span class="badge @v.Css">@v.Text</span></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            @if (Model.HatKf)
+            {
+                <p class="note">Vereinfachte Vorprüfung: Der kf-Wert ersetzt keine Bemessung nach DWA-A 138-1.</p>
+            }
+        </section>
+
+        <section class="profil-section" aria-labelledby="proben-titel">
+            <h2 class="section-title" id="proben-titel">Proben</h2>
+            @if (Model.Proben.Count == 0)
+            {
+                <p class="muted">Aus @Model.Bohrung.Bezeichnung wurden keine Proben entnommen.</p>
+            }
+            else
+            {
+                <ul class="proben-list">
+                    @foreach (var p in Model.Proben)
+                    {
+                        <li>
+                            <span class="proben-name">@p.Bezeichnung</span>
+                            <span class="muted">@DetailsModel.Meter(p.VonM)–@DetailsModel.Meter(p.BisM) m</span>
+                            <a href="/Projekte/@Model.Projekt.Id/Labor#probe-@p.Id">Laborwerte</a>
+                        </li>
+                    }
+                </ul>
+            }
+        </section>
+    }
+</div>

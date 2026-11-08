@@ -22,6 +22,8 @@
         </div>
     </header>
 
+    @await Html.PartialAsync("_ProjektTabs", new BoreholeHub.Web.Pages.Shared.ProjektTabsModel(Model.Projekt.Id, "uebersicht"))
+
     @if (!string.IsNullOrWhiteSpace(Model.Projekt.Beschreibung))
     {
         <p class="lead-text">@Model.Projekt.Beschreibung</p>
@@ -77,7 +79,7 @@
                     @foreach (var a in Model.Aufschluesse)
                     {
                         <tr>
-                            <th scope="row">@a.Bezeichnung</th>
+                            <th scope="row"><a href="/Aufschluesse/@a.Id">@a.Bezeichnung</a></th>
                             <td>
                                 @if (a.Art == AufschlussArt.Kleinrammbohrung)
                                 {

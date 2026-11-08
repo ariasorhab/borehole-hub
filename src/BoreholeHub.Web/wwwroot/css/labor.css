@@ -1,0 +1,106 @@
+/* Labor & Versickerung page. Theme tokens only (var(--...)), no colour literals. */
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.notice { margin-bottom: var(--s5); }
+
+.labor-kpis { grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); }
+.kpi.kpi-ok { border-top-color: var(--ok); }
+.kpi.kpi-warn { border-top-color: var(--warn); }
+.kpi.kpi-bad { border-top-color: var(--bad); }
+
+.badge-ok { border-color: var(--ok); color: var(--ok); background: var(--tint-ok); }
+.badge-warn { border-color: var(--warn); color: var(--warn); background: var(--tint-warn); }
+.badge-bad { border-color: var(--bad); color: var(--bad); background: var(--tint-bad); }
+.badge-muted { border-color: var(--line-strong); color: var(--muted); background: transparent; }
+
+/* ---------- Legend and filter ---------- */
+.legend {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s2);
+    margin-bottom: var(--s4);
+    font-size: var(--fs-1);
+    color: var(--muted);
+}
+.legend-title { margin-right: var(--s2); }
+
+.filter-box { position: absolute; opacity: 0; pointer-events: none; }
+.filter-label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s2);
+    margin-bottom: var(--s4);
+    padding: var(--s2) var(--s4);
+    font-weight: 600;
+    color: var(--ink);
+    background: var(--surface);
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    cursor: pointer;
+    user-select: none;
+}
+.filter-label::before {
+    content: "";
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--muted);
+    border-radius: 4px;
+    background: transparent;
+}
+.filter-box:checked + .filter-label { border-color: var(--rust); background: var(--sand); }
+.filter-box:checked + .filter-label::before { background: var(--rust); border-color: var(--rust); box-shadow: inset 0 0 0 2px var(--surface); }
+.filter-box:focus-visible + .filter-label { outline: 3px solid var(--water); outline-offset: 2px; }
+.filter-box:checked ~ .sample-list .sample-card[data-auffaellig="false"] { display: none; }
+
+/* ---------- Sample cards ---------- */
+.sample-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 460px), 1fr));
+    gap: var(--s5);
+    align-items: start;
+    margin-bottom: var(--s5);
+}
+.sample-card { padding: 0; overflow: hidden; scroll-margin-top: var(--s5); }
+.sample-card:target { border-color: var(--rust); box-shadow: var(--shadow-hover); }
+.sample-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s3);
+    padding: var(--s4) var(--s5);
+    border-bottom: 1px solid var(--line);
+}
+.sample-head h3 { font-size: var(--fs-2); line-height: 1.35; }
+.table-flat { border: 0; border-radius: 0; box-shadow: none; background: transparent; }
+.table-flat .data-table td,
+.table-flat .data-table th { padding-top: 9px; padding-bottom: 9px; }
+
+.data-table tr.row-warn th,
+.data-table tr.row-warn td { background: var(--tint-warn); }
+.data-table tr.row-bad th,
+.data-table tr.row-bad td { background: var(--tint-bad); }
+.data-table tr.row-warn:hover th,
+.data-table tr.row-warn:hover td { background: var(--tint-warn); }
+.data-table tr.row-bad:hover th,
+.data-table tr.row-bad:hover td { background: var(--tint-bad); }
+
+/* ---------- Limits, infiltration ---------- */
+.limits { margin-bottom: var(--s6); }
+.limits summary { cursor: pointer; font-weight: 600; padding: var(--s2) 0; color: var(--water); }
+.limits p { margin: var(--s2) 0 var(--s3); font-size: var(--fs-1); }
+
+.versickerung { margin-top: var(--s6); }
+.versickerung .data-table td:last-child { white-space: normal; }
+.note { margin-top: var(--s3); font-size: var(--fs-1); color: var(--muted); }

@@ -1,0 +1,59 @@
+/* Daten page (export / import). Theme tokens only (var(--...)), no colour literals. */
+
+.daten-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    gap: var(--s5);
+    align-items: start;
+}
+@media (max-width: 900px) {
+    .daten-grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+.card-action { margin-top: var(--s5); }
+.hint { margin-top: var(--s3); font-size: var(--fs-1); color: var(--muted); }
+.card h3 { margin: var(--s6) 0 var(--s3); font-size: var(--fs-2); font-family: var(--font-head); }
+
+.import-form { margin-top: var(--s5); display: grid; gap: var(--s4); }
+.field { display: grid; gap: var(--s2); }
+.field label { font-weight: 600; }
+.field input[type="file"] {
+    width: 100%;
+    padding: var(--s3);
+    color: var(--ink);
+    font: inherit;
+    background: var(--paper);
+    border: 1px dashed var(--line-strong);
+    border-radius: var(--radius-sm);
+}
+.field input[type="file"]::file-selector-button {
+    margin-right: var(--s3);
+    padding: var(--s2) var(--s4);
+    font: inherit;
+    font-weight: 600;
+    color: var(--ink);
+    background: var(--sand);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+}
+.form-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s4); }
+.form-actions .hint { margin: 0; }
+
+.rules { margin: 0; padding-left: var(--s5); color: var(--muted); font-size: var(--fs-1); display: grid; gap: var(--s1); }
+
+/* ---------- Result box ---------- */
+.result {
+    margin-bottom: var(--s5);
+    padding: var(--s4) var(--s5);
+    border: 1px solid var(--line);
+    border-left-width: 4px;
+    border-radius: var(--radius);
+    background: var(--surface);
+}
+.result h2 { font-size: var(--fs-3); margin-bottom: var(--s2); }
+.result p + p { margin-top: var(--s3); }
+.result-ok { border-left-color: var(--ok); background: var(--tint-ok); }
+.result-bad { border-left-color: var(--bad); background: var(--tint-bad); }
+.error-list { margin: var(--s3) 0 0; padding-left: var(--s5); display: grid; gap: var(--s1); }
+.error-list li { overflow-wrap: anywhere; }
