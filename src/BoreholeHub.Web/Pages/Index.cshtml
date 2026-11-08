@@ -1,13 +1,83 @@
-@page
+@page "/"
 @model BoreholeHub.Web.Pages.IndexModel
-<!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="utf-8" />
-    <title>BoreholeHub</title>
-</head>
-<body>
-    <h1>BoreholeHub</h1>
-    <p>Projekte: @Model.ProjektAnzahl</p>
-</body>
-</html>
+@{
+    ViewData["Title"] = null;
+}
+
+<div class="container">
+    <section class="hero">
+        <div>
+            <p class="eyebrow">Bohrdaten · Karte · Prüfung</p>
+            <h1>BoreholeHub</h1>
+            <p class="lead">Aufschlüsse erfassen, auf der Karte sehen, Schichten und Laborwerte prüfen.</p>
+            <div class="hero-actions">
+                <form method="post" action="/Demo" class="inline-form">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-primary">Demo-Projekt laden</button>
+                </form>
+                <a class="btn btn-secondary" href="/Projekte">Projekte ansehen</a>
+            </div>
+            <p class="hero-stats">
+                @Model.ProjektAnzahl @(Model.ProjektAnzahl == 1 ? "Projekt" : "Projekte") · @Model.AufschlussAnzahl @(Model.AufschlussAnzahl == 1 ? "Aufschluss" : "Aufschlüsse") in der Datenbank
+            </p>
+        </div>
+
+        <figure class="profile-figure">
+            <svg viewBox="0 0 440 340" role="img" aria-label="Schematisches Schichtenprofil mit Grundwasserstand">
+                <rect x="0" y="0" width="440" height="340" fill="#ffffff" />
+                <!-- ground line -->
+                <text x="24" y="34" font-size="12" fill="#6b645a" font-family="Inter, system-ui, sans-serif">0,0 m</text>
+                <!-- column -->
+                <rect x="80" y="44" width="96" height="30" fill="#6f6a5e" />
+                <rect x="80" y="74" width="96" height="96" fill="#c9a26b" />
+                <rect x="80" y="170" width="96" height="104" fill="#8a5a3b" />
+                <rect x="80" y="274" width="96" height="30" fill="#b85a2e" />
+                <rect x="80" y="44" width="96" height="260" fill="none" stroke="#22201c" stroke-width="1.5" />
+                <!-- ground water -->
+                <line x1="60" y1="214" x2="196" y2="214" stroke="#2d6a86" stroke-width="2" stroke-dasharray="6 4" />
+                <path d="M44 208 l8 12 h-16 z" fill="#2d6a86" transform="translate(0 -4)" />
+                <!-- labels -->
+                <g font-family="Inter, system-ui, sans-serif" font-size="13" fill="#22201c">
+                    <text x="212" y="63">Oberboden</text>
+                    <text x="212" y="127">Auenlehm</text>
+                    <text x="212" y="250">Flusskies</text>
+                    <text x="212" y="293">Verwitterungszone</text>
+                </g>
+                <g stroke="#e3ddd0" stroke-width="1">
+                    <line x1="176" y1="59" x2="204" y2="59" />
+                    <line x1="176" y1="122" x2="204" y2="122" />
+                    <line x1="176" y1="246" x2="204" y2="246" />
+                    <line x1="176" y1="289" x2="204" y2="289" />
+                </g>
+                <text x="212" y="208" font-family="Inter, system-ui, sans-serif" font-size="12" fill="#2d6a86">Grundwasser</text>
+                <!-- depth scale -->
+                <g font-family="Inter, system-ui, sans-serif" font-size="12" fill="#6b645a">
+                    <text x="24" y="135">1</text>
+                    <text x="24" y="222">2</text>
+                    <text x="24" y="308">3 m</text>
+                </g>
+            </svg>
+            <figcaption>Schematische Darstellung, keine Messdaten.</figcaption>
+        </figure>
+    </section>
+
+    <section class="steps" aria-label="Ablauf">
+        <div class="card-grid cols-3">
+            <div class="card">
+                <p class="step-no">01</p>
+                <h2>Erfassen</h2>
+                <p>Kleinrammbohrungen und Rammsondierungen mit Koordinaten, Endteufe und Grundwasser.</p>
+            </div>
+            <div class="card">
+                <p class="step-no">02</p>
+                <h2>Sehen</h2>
+                <p>Alle Aufschlüsse auf der Karte, optional mit Geologie und Boden als Überlagerung.</p>
+            </div>
+            <div class="card">
+                <p class="step-no">03</p>
+                <h2>Prüfen</h2>
+                <p>Schichten, Rammsondierung und Laborwerte im Überblick, mit Beispielgrenzwerten.</p>
+            </div>
+        </div>
+    </section>
+</div>

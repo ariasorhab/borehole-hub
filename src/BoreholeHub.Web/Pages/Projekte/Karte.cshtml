@@ -1,0 +1,91 @@
+@page "/Projekte/{id:int}/Karte"
+@model BoreholeHub.Web.Pages.Projekte.KarteModel
+@{
+    ViewData["Title"] = Model.Projekt.Name + " · Karte";
+}
+
+@section Head {
+    <link rel="stylesheet" href="~/lib/leaflet/leaflet.css" />
+}
+
+<div class="container container-wide">
+    <nav class="breadcrumb" aria-label="Brotkrumen">
+        <ol>
+            <li><a href="/Projekte">Projekte</a></li>
+            <li><a href="/Projekte/@Model.Projekt.Id">@Model.Projekt.Name</a></li>
+            <li aria-current="page">Karte</li>
+        </ol>
+    </nav>
+
+    <header class="page-header karte-head">
+        <h1>@Model.Projekt.Name</h1>
+        <p class="muted">Koordinaten: ETRS89 / UTM 32N (EPSG:25832)</p>
+    </header>
+
+    <div class="karte-layout" id="karte" data-punkte-url="/Projekte/@Model.Projekt.Id/Karte?handler=Punkte">
+        <aside class="karte-panel" aria-label="Kartenleiste">
+            <section class="karte-section">
+                <h2 class="karte-title">Ebenen</h2>
+                <label class="karte-check">
+                    <input type="checkbox" id="layer-geologie" />
+                    <span>Geologie (GÜK 300, HLNUG)</span>
+                </label>
+                <label class="karte-check">
+                    <input type="checkbox" id="layer-boden" />
+                    <span>Boden (BFD 50, HLNUG)</span>
+                </label>
+                <p class="karte-hint">Geologie ist nur bei Maßstäben kleiner als etwa 1:22.000 sichtbar. Bodenkarte: nur private Nutzung erlaubt.</p>
+            </section>
+
+            <section class="karte-section">
+                <h2 class="karte-title">Kleinrammbohrungen <span class="muted">(@Model.Kleinrammbohrungen.Count)</span></h2>
+                <ul class="karte-list">
+                    @foreach (var z in Model.Kleinrammbohrungen)
+                    {
+                        <li>
+                            <button type="button" class="karte-item" data-id="@z.Id">
+                                <span class="mk mk-krb @(z.GrundwasserM is not null ? "has-gw" : "")" aria-hidden="true"></span>
+                                <span class="karte-item-text">
+                                    <strong>@z.Bezeichnung</strong>
+                                    <span class="muted">@KarteModel.Kurzinfo(z)</span>
+                                </span>
+                            </button>
+                        </li>
+                    }
+                </ul>
+            </section>
+
+            <section class="karte-section">
+                <h2 class="karte-title">Rammsondierungen <span class="muted">(@Model.Rammsondierungen.Count)</span></h2>
+                <ul class="karte-list">
+                    @foreach (var z in Model.Rammsondierungen)
+                    {
+                        <li>
+                            <button type="button" class="karte-item" data-id="@z.Id">
+                                <span class="mk mk-dph" aria-hidden="true"></span>
+                                <span class="karte-item-text">
+                                    <strong>@z.Bezeichnung</strong>
+                                    <span class="muted">@KarteModel.Kurzinfo(z)</span>
+                                </span>
+                            </button>
+                        </li>
+                    }
+                </ul>
+            </section>
+        </aside>
+
+        <div class="karte-map-wrap">
+            <div class="karte-map" id="karte-map" role="application" aria-label="Karte der Aufschlüsse"></div>
+            <ul class="karte-legend" aria-label="Legende">
+                <li><span class="mk mk-krb" aria-hidden="true"></span> Kleinrammbohrung (KRB)</li>
+                <li><span class="mk mk-dph" aria-hidden="true"></span> Rammsondierung (DPH)</li>
+                <li><span class="mk mk-krb has-gw" aria-hidden="true"></span> Grundwasser angetroffen</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/leaflet/leaflet.js"></script>
+    <script src="~/js/karte.js" asp-append-version="true"></script>
+}

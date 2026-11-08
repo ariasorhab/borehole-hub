@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <title>@(string.IsNullOrEmpty(ViewData["Title"] as string) ? "BoreholeHub" : ViewData["Title"] + " · BoreholeHub")</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    @await RenderSectionAsync("Head", required: false)
+</head>
+<body>
+    <a class="skip-link" href="#main">Zum Inhalt springen</a>
+    <header class="site-header">
+        <div class="strata" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+        <div class="container site-header-inner">
+            <a class="wordmark" href="/">BoreholeHub</a>
+            <nav class="site-nav" aria-label="Hauptnavigation">
+                <a href="/Projekte">Projekte</a>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main">
+        @RenderBody()
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>Demo mit synthetischen Daten · Mit KI-Unterstützung erstellt, entworfen und geprüft von Sohrab Talebian Far · Version 1.0.0</p>
+        </div>
+    </footer>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,104 @@
+@page "/Projekte/{id:int}"
+@model BoreholeHub.Web.Pages.Projekte.DetailsModel
+@using System.Globalization
+@{
+    ViewData["Title"] = Model.Projekt.Name;
+    var de = CultureInfo.GetCultureInfo("de-DE");
+}
+
+<div class="container">
+    <nav class="breadcrumb" aria-label="Brotkrumen">
+        <ol>
+            <li><a href="/Projekte">Projekte</a></li>
+            <li aria-current="page">@Model.Projekt.Name</li>
+        </ol>
+    </nav>
+
+    <header class="page-header">
+        <h1>@Model.Projekt.Name</h1>
+        <p class="muted">@Model.Projekt.Ort · @Model.Projekt.Auftraggeber</p>
+        <div class="page-actions">
+            <a class="btn btn-primary" href="/Projekte/@Model.Projekt.Id/Karte">Karte öffnen</a>
+        </div>
+    </header>
+
+    @if (!string.IsNullOrWhiteSpace(Model.Projekt.Beschreibung))
+    {
+        <p class="lead-text">@Model.Projekt.Beschreibung</p>
+    }
+
+    <section class="kpi-row" aria-label="Kennzahlen">
+        <div class="kpi">
+            <div class="kpi-value">@Model.Gesamt.ToString(de)</div>
+            <div class="kpi-label">Aufschlüsse</div>
+        </div>
+        <div class="kpi kpi-rust">
+            <div class="kpi-value">@Model.Kleinrammbohrungen.ToString(de)</div>
+            <div class="kpi-label">Kleinrammbohrungen</div>
+        </div>
+        <div class="kpi kpi-water">
+            <div class="kpi-value">@Model.Rammsondierungen.ToString(de)</div>
+            <div class="kpi-label">Rammsondierungen</div>
+        </div>
+        <div class="kpi">
+            <div class="kpi-value">@(Model.MaxEndteufeM is double max ? DetailsModel.Meter(max) : "–")</div>
+            <div class="kpi-label">Max. Endteufe</div>
+        </div>
+        <div class="kpi kpi-water">
+            <div class="kpi-value">@Model.MitGrundwasser.ToString(de)</div>
+            <div class="kpi-label">Grundwasser angetroffen</div>
+        </div>
+    </section>
+
+    @if (Model.Aufschluesse.Count == 0)
+    {
+        <div class="empty-state">
+            <p>Für dieses Projekt sind noch keine Aufschlüsse erfasst.</p>
+        </div>
+    }
+    else
+    {
+        <h2 class="section-title">Aufschlüsse</h2>
+        <div class="table-wrap">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th scope="col">Bezeichnung</th>
+                        <th scope="col">Art</th>
+                        <th scope="col">Datum</th>
+                        <th scope="col" class="num">Ansatzhöhe [m NHN]</th>
+                        <th scope="col" class="num">Endteufe [m]</th>
+                        <th scope="col" class="num">Grundwasser [m u. GOK]</th>
+                        <th scope="col" class="num">Rechtswert</th>
+                        <th scope="col" class="num">Hochwert</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var a in Model.Aufschluesse)
+                    {
+                        <tr>
+                            <th scope="row">@a.Bezeichnung</th>
+                            <td>
+                                @if (a.Art == AufschlussArt.Kleinrammbohrung)
+                                {
+                                    <span class="badge badge-krb">Kleinrammbohrung</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-dph">Rammsondierung</span>
+                                }
+                            </td>
+                            <td>@a.Datum.ToString("dd.MM.yyyy", de)</td>
+                            <td class="num">@a.AnsatzhoeheMNhn.ToString("0.0", de)</td>
+                            <td class="num">@a.EndteufeM.ToString("0.0", de)</td>
+                            <td class="num">@(a.GrundwasserM is double gw ? gw.ToString("0.0", de) : "–")</td>
+                            <td class="num">@DetailsModel.Koordinate(a.Rechtswert)</td>
+                            <td class="num">@DetailsModel.Koordinate(a.Hochwert)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <p class="muted" style="margin-top: var(--s3); font-size: var(--fs-1);">Koordinaten: ETRS89 / UTM 32N (EPSG:25832)</p>
+    }
+</div>

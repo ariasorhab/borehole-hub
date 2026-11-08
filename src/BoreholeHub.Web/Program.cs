@@ -1,4 +1,6 @@
 using BoreholeHub.Web.Data;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,6 +33,20 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Error");
 }
 
+// German number and date formats (decimal comma, dd.MM.yyyy) for the whole app.
+var deDe = new CultureInfo("de-DE");
+app.UseRequestLocalization(new RequestLocalizationOptions
+{
+    DefaultRequestCulture = new RequestCulture(deDe),
+    SupportedCultures = [deDe],
+    SupportedUICultures = [deDe],
+    // Ignore the browser's Accept-Language so every viewer sees the same formats.
+    RequestCultureProviders = [],
+});
+
+// Unknown URLs (and NotFound() results) render Pages/NotFound.cshtml with status 404.
+app.UseStatusCodePagesWithReExecute("/NotFound");
+
 app.UseStaticFiles();
 app.UseRouting();
 app.MapRazorPages();
@@ -42,3 +58,6 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.Run();
+
+// Makes the entry point visible to WebApplicationFactory in the tests.
+public partial class Program;

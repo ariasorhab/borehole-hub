@@ -1,0 +1,46 @@
+@page "/Projekte"
+@model BoreholeHub.Web.Pages.Projekte.IndexModel
+@{
+    ViewData["Title"] = "Projekte";
+}
+
+<div class="container">
+    <nav class="breadcrumb" aria-label="Brotkrumen">
+        <ol>
+            <li><a href="/">Start</a></li>
+            <li aria-current="page">Projekte</li>
+        </ol>
+    </nav>
+
+    <header class="page-header">
+        <h1>Projekte</h1>
+    </header>
+
+    @if (Model.Projekte.Count == 0)
+    {
+        <div class="empty-state">
+            <p>Noch keine Projekte vorhanden.</p>
+            <form method="post" action="/Demo" class="inline-form">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-primary">Demo-Projekt laden</button>
+            </form>
+        </div>
+    }
+    else
+    {
+        <div class="card-grid">
+            @foreach (var p in Model.Projekte)
+            {
+                <a class="card" href="/Projekte/@p.Id">
+                    <h2>@p.Name</h2>
+                    <p class="muted">@p.Ort · @p.Auftraggeber</p>
+                    <div class="card-meta">
+                        <span class="badge badge-krb">@p.Kleinrammbohrungen @(p.Kleinrammbohrungen == 1 ? "Kleinrammbohrung" : "Kleinrammbohrungen")</span>
+                        <span class="badge badge-dph">@p.Rammsondierungen @(p.Rammsondierungen == 1 ? "Rammsondierung" : "Rammsondierungen")</span>
+                    </div>
+                    <p class="card-foot">Erstellt am @p.ErstelltAm.ToString("dd.MM.yyyy")</p>
+                </a>
+            }
+        </div>
+    }
+</div>
