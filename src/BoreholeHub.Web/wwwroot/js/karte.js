@@ -1,4 +1,4 @@
-// Project map: OpenStreetMap base layer, optional HLNUG WMS overlays, markers for all Aufschlüsse.
+// Project map: OpenStreetMap base layer, optional HLNUG overlays (GK 25 via ArcGIS export, GÜK 300 and BFD 50 via WMS), markers for all Aufschlüsse.
 (function () {
     'use strict';
 
@@ -31,12 +31,98 @@
             'https://geodienste-umwelt.hessen.de/arcgis/services/boden/bfd50/MapServer/WMSServer',
             Object.assign({ layers: 'BFD50_Bodenhauptgruppen' }, wmsOptions))
     };
+    // ---- GK 25 (HLNUG, 1:25 000): ArcGIS REST MapServer, one image per map view, refreshed after moveend ----
+    // Layers 21 (boundaries) and 22 (Kartiereinheiten); the WMS of this service does not answer, the REST "export" does.
+    var GK25_URL = 'https://geodienste-umwelt.hessen.de/arcgis/rest/services/geologie/gk25/MapServer';
+    var GK25_OPACITY = 0.6;
+    var gk25 = L.imageOverlay('data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==',
+        [[0, 0], [0, 0]], { opacity: GK25_OPACITY, attribution: '&copy; HLNUG', interactive: false });
+    var gk25Timer = null;
+    var gk25Request = 0;
+    var gk25Popup = null;
+
+    function gk25Refresh() {
+        if (!map.hasLayer(gk25)) { return; }
+        var size = map.getSize();
+        var b = map.getBounds();
+        var sw = L.CRS.EPSG3857.project(b.getSouthWest());
+        var ne = L.CRS.EPSG3857.project(b.getNorthEast());
+        var url = GK25_URL + '/export?f=image&format=png32&transparent=true&layers=show:21,22'
+            + '&bbox=' + [sw.x, sw.y, ne.x, ne.y].join(',') + '&bboxSR=3857&imageSR=3857'
+            + '&size=' + size.x + ',' + size.y;
+        var ticket = ++gk25Request;
+        var img = new Image();
+        img.onload = function () {
+            // ignore answers for an older map view
+            if (ticket !== gk25Request || !map.hasLayer(gk25)) { return; }
+            gk25.setUrl(url);
+            gk25.setBounds(b);
+        };
+        img.src = url;
+    }
+
+    function gk25Schedule() {
+        window.clearTimeout(gk25Timer);
+        gk25Timer = window.setTimeout(gk25Refresh, 250);
+    }
+    map.on('moveend', gk25Schedule);
+
+    // Click identify: unit name of the GK 25 map unit at the clicked point (only while the layer is on).
+    map.on('click', function (e) {
+        if (!map.hasLayer(gk25)) { return; }
+        var size = map.getSize();
+        var b = map.getBounds();
+        var sw = L.CRS.EPSG3857.project(b.getSouthWest());
+        var ne = L.CRS.EPSG3857.project(b.getNorthEast());
+        var pt = L.CRS.EPSG3857.project(e.latlng);
+        var url = GK25_URL + '/identify?f=json&layers=all:22&tolerance=2&returnGeometry=false&sr=3857'
+            + '&geometryType=esriGeometryPoint&geometry=' + pt.x + ',' + pt.y
+            + '&mapExtent=' + [sw.x, sw.y, ne.x, ne.y].join(',') + '&imageDisplay=' + size.x + ',' + size.y + ',96';
+        fetch(url)
+            .then(function (r) { if (!r.ok) { throw new Error('HTTP ' + r.status); } return r.json(); })
+            .then(function (data) {
+                var hit = data.results && data.results[0];
+                var box = el('div', 'karte-popup');
+                if (!hit) {
+                    box.appendChild(el('strong', 'karte-popup-title', 'Geologie (GK 25)'));
+                    box.appendChild(el('p', 'karte-popup-note', 'Hier ist keine Kartiereinheit verzeichnet.'));
+                } else {
+                    var a = hit.attributes;
+                    box.appendChild(el('strong', 'karte-popup-title', a['Kartiereinheit'] || 'Kartiereinheit'));
+                    var lines = [a['Kürzel'] ? 'Kürzel: ' + a['Kürzel'] : null, a['Stratigraphische Zuordnung'], a['Hauptgesteinseinheit']];
+                    lines.forEach(function (t) { if (t && t !== 'Null') { box.appendChild(el('p', 'karte-popup-note', t)); } });
+                    box.appendChild(el('p', 'karte-popup-note', 'GK 25, \u00a9 HLNUG'));
+                }
+                gk25Popup = L.popup({ maxWidth: 260 }).setLatLng(e.latlng).setContent(box).openOn(map);
+            })
+            .catch(function () { /* identify is optional: no popup if the service does not answer */ });
+    });
+
+    var overlays = {
+        'layer-gk25': gk25,
+        'layer-geologie': overlays['layer-geologie'],
+        'layer-boden': overlays['layer-boden']
+    };
+    var defaultOpacity = { 'layer-gk25': GK25_OPACITY, 'layer-geologie': 0.6, 'layer-boden': 0.6 };
+
     Object.keys(overlays).forEach(function (id) {
         var box = document.getElementById(id);
         if (!box) { return; }
+        var slider = document.getElementById('opacity-' + id);
+        var sliderRow = slider ? slider.closest('.karte-opacity') : null;
+        var output = sliderRow ? sliderRow.querySelector('output') : null;
         box.checked = false;
+        if (slider) {
+            slider.value = String(Math.round(defaultOpacity[id] * 100));
+            slider.addEventListener('input', function () {
+                overlays[id].setOpacity(slider.value / 100);
+                if (output) { output.textContent = slider.value + ' %'; }
+            });
+        }
         box.addEventListener('change', function () {
+            if (sliderRow) { sliderRow.hidden = !box.checked; }
             if (!box.checked) {
+                if (id === 'layer-gk25' && gk25Popup) { map.closePopup(gk25Popup); gk25Popup = null; }
                 map.removeLayer(overlays[id]);
                 return;
             }
@@ -47,6 +133,7 @@
                 map.flyTo(map.getCenter(), GEOLOGY_MAX_ZOOM, { duration: 0.6 });
             } else {
                 overlays[id].addTo(map);
+                if (id === 'layer-gk25') { gk25Refresh(); }
             }
         });
     });

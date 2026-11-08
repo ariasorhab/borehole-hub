@@ -29,14 +29,34 @@
             <section class="karte-section">
                 <h2 class="karte-title">Ebenen</h2>
                 <label class="karte-check">
+                    <input type="checkbox" id="layer-gk25" />
+                    <span>Geologie (GK 25, HLNUG)</span>
+                </label>
+                <div class="karte-opacity" hidden>
+                    <input type="range" min="0" max="100" step="5" value="60" id="opacity-layer-gk25" aria-label="Deckkraft Geologie (GK 25)" />
+                    <output for="opacity-layer-gk25">60 %</output>
+                </div>
+                <label class="karte-check">
                     <input type="checkbox" id="layer-geologie" />
                     <span>Geologie (GÜK 300, HLNUG)</span>
                 </label>
+                <div class="karte-opacity" hidden>
+                    <input type="range" min="0" max="100" step="5" value="60" id="opacity-layer-geologie" aria-label="Deckkraft Geologie (GÜK 300)" />
+                    <output for="opacity-layer-geologie">60 %</output>
+                </div>
                 <label class="karte-check">
                     <input type="checkbox" id="layer-boden" />
                     <span>Boden (BFD 50, HLNUG)</span>
                 </label>
-                <p class="karte-hint">Geologie ist nur bei Maßstäben kleiner als etwa 1:22.000 sichtbar. Bodenkarte: nur private Nutzung erlaubt.</p>
+                <div class="karte-opacity" hidden>
+                    <input type="range" min="0" max="100" step="5" value="60" id="opacity-layer-boden" aria-label="Deckkraft Boden (BFD 50)" />
+                    <output for="opacity-layer-boden">60 %</output>
+                </div>
+                <p class="karte-hint">GK 25: Klick in die Karte zeigt die Kartiereinheit. GÜK 300 ist nur bei Maßstäben kleiner als etwa 1:22.000 sichtbar. Bodenkarte: nur private Nutzung erlaubt. Quelle: © HLNUG.</p>
+            </section>
+
+            <section class="karte-section">
+                <a class="btn btn-secondary btn-sm" href="/Projekte/@Model.Projekt.Id/Profilschnitt">Profilschnitt</a>
             </section>
 
             <section class="karte-section">

@@ -621,3 +621,10 @@ main:has(.karte-layout) > .container {
     .card { padding: var(--s4); }
     .footer-text, .site-footer p { overflow-wrap: anywhere; }
 }
+
+/* Karte overlays */
+.karte-opacity { display: flex; align-items: center; gap: var(--s3); padding: 0 0 var(--s2) calc(18px + var(--s3)); }
+.karte-opacity[hidden] { display: none; }
+.karte-opacity input[type="range"] { flex: 1; min-width: 0; accent-color: var(--rust); }
+.karte-opacity output { min-width: 3.2em; text-align: right; font-size: var(--fs-1); color: var(--muted); font-variant-numeric: tabular-nums; }
+.karte-popup .karte-popup-note { margin: 2px 0 0; }

@@ -9,5 +9,11 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.33" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.33" />
+    <PackageReference Include="QuestPDF" Version="2026.9.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Fonts\*.ttf" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="Fonts\LICENSE-Inter.txt" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

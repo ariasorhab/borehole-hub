@@ -1,0 +1,116 @@
+@page "/Projekte/{id:int}/Profilschnitt"
+@model BoreholeHub.Web.Pages.Projekte.ProfilschnittModel
+@{
+    ViewData["Title"] = Model.Projekt.Name + " · Profilschnitt";
+}
+
+@section Head {
+    <link rel="stylesheet" href="~/css/profilschnitt.css" asp-append-version="true" />
+}
+
+<div class="container">
+    <nav class="breadcrumb" aria-label="Brotkrumen">
+        <ol>
+            <li><a href="/Projekte">Projekte</a></li>
+            <li><a href="/Projekte/@Model.Projekt.Id">@Model.Projekt.Name</a></li>
+            <li aria-current="page">Profilschnitt</li>
+        </ol>
+    </nav>
+
+    <header class="page-header">
+        <h1>Profilschnitt</h1>
+        <p class="muted">@Model.Projekt.Name · geologischer Schnitt durch 2 bis 4 Kleinrammbohrungen</p>
+    </header>
+
+    @await Html.PartialAsync("_ProjektTabs", new BoreholeHub.Web.Pages.Shared.ProjektTabsModel(Model.Projekt.Id, "profilschnitt"))
+
+    @if (Model.KeinSchnittText is not null)
+    {
+        <div class="empty-state"><p>@Model.KeinSchnittText</p></div>
+    }
+    else
+    {
+        <section class="ps-select" aria-labelledby="ps-select-title">
+            <form method="get" action="/Projekte/@Model.Projekt.Id/Profilschnitt" class="ps-form" id="ps-form">
+                <h2 class="ps-select-title" id="ps-select-title">Bohrungen wählen</h2>
+                <p class="ps-select-hint">2 bis 4 Kleinrammbohrungen; die Reihenfolge der Liste ist die Zeichenreihenfolge.</p>
+                @if (Model.Hinweis is not null)
+                {
+                    <p class="ps-alert" role="alert">@Model.Hinweis</p>
+                }
+                <ul class="ps-chips">
+                    @foreach (var k in Model.Kleinrammbohrungen)
+                    {
+                        <li>
+                            <label class="ps-chip">
+                                <input type="checkbox" name="punkte" value="@k.Id" @(Model.Auswahl.Contains(k.Id) ? "checked" : null) />
+                                <span class="ps-chip-text"><strong>@k.Bezeichnung</strong> <span class="muted">@k.AnsatzhoeheMNhn.ToString("0.0", System.Globalization.CultureInfo.GetCultureInfo("de-DE")) m NHN</span></span>
+                            </label>
+                        </li>
+                    }
+                </ul>
+                <button type="submit" class="btn btn-primary" id="ps-submit">Schnitt zeichnen</button>
+            </form>
+            <div class="ps-inset">
+                @Html.Raw(Model.LageplanSvgHtml)
+            </div>
+        </section>
+
+        <figure class="ps-figure">
+            <div class="ps-scroll">@Html.Raw(Model.SchnittSvgHtml)</div>
+        </figure>
+
+        <section aria-labelledby="ps-table-title" class="ps-tablebox">
+            <h2 class="section-title" id="ps-table-title">Daten zum Schnitt</h2>
+            <div class="table-wrap">
+                <table class="data-table">
+                    <caption class="sr-only">Aufschlüsse des Profilschnitts mit Abstand, Höhen, Endteufe, Grundwasser und Homogenbereichen</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Aufschluss</th>
+                            <th scope="col" class="num">Abstand [m]</th>
+                            <th scope="col" class="num">Ansatzhöhe [m NHN]</th>
+                            <th scope="col" class="num">Endteufe [m]</th>
+                            <th scope="col" class="num">Grundwasser [m u. GOK]</th>
+                            <th scope="col" class="num">Grundwasser [m NHN]</th>
+                            <th scope="col">Homogenbereiche [m u. GOK]</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var r in Model.Tabelle)
+                        {
+                            <tr>
+                                <th scope="row">@r.Bezeichnung</th>
+                                <td class="num">@r.Abstand</td>
+                                <td class="num">@r.Ansatz</td>
+                                <td class="num">@r.Endteufe</td>
+                                <td class="num">@r.Grundwasser</td>
+                                <td class="num">@r.GrundwasserNhn</td>
+                                <td>@r.Homogenbereiche</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <p class="ps-note">Abstände entlang des Linienzugs durch die gewählten Punkte (EPSG:25832).</p>
+        </section>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        (function () {
+            var form = document.getElementById("ps-form");
+            if (!form) { return; }
+            var boxes = Array.prototype.slice.call(form.querySelectorAll("input[type=checkbox]"));
+            var submit = document.getElementById("ps-submit");
+            function update() {
+                var n = boxes.filter(function (b) { return b.checked; }).length;
+                boxes.forEach(function (b) { b.disabled = n >= 4 && !b.checked; });
+                submit.disabled = n < 2;
+            }
+            boxes.forEach(function (b) { b.addEventListener("change", update); });
+            update();
+        }());
+    </script>
+}

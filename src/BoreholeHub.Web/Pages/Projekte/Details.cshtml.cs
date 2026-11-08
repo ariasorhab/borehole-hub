@@ -1,6 +1,7 @@
 using System.Globalization;
 using BoreholeHub.Core.Entities;
 using BoreholeHub.Web.Data;
+using BoreholeHub.Web.Reports;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -53,6 +54,25 @@ public class DetailsModel(BoreholeDbContext db) : PageModel
                 a.Id, a.Bezeichnung, a.Art, a.Datum, a.AnsatzhoeheMNhn, a.EndteufeM, a.GrundwasserM, a.Rechtswert, a.Hochwert))
             .ToListAsync();
         return Page();
+    }
+
+    /// <summary>PDF appendix of the project ("?handler=Pdf"); 404 for an unknown id.</summary>
+    public async Task<IActionResult> OnGetPdfAsync(int id)
+    {
+        var projekt = await db.Projects.AsNoTracking()
+            .Include(p => p.Aufschluesse).ThenInclude(a => a.Schichten)
+            .Include(p => p.Aufschluesse).ThenInclude(a => a.Proben).ThenInclude(pr => pr.Laborwerte)
+            .Include(p => p.Aufschluesse).ThenInclude(a => a.Messwerte)
+            .AsSplitQuery()
+            .FirstOrDefaultAsync(p => p.Id == id);
+        if (projekt is null)
+        {
+            return NotFound();
+        }
+
+        var grenzwerte = await db.Grenzwerte.AsNoTracking().OrderBy(g => g.Reihenfolge).ToListAsync();
+        byte[] bytes = ProjektBerichtPdf.Erzeugen(projekt, grenzwerte.Count == 0 ? null : grenzwerte);
+        return File(bytes, "application/pdf", ProjektBerichtPdf.Dateiname(projekt.Name));
     }
 
     /// <summary>Formats a depth or height with one decimal and the German decimal comma, e.g. "4,0 m".</summary>
