@@ -1,0 +1,10 @@
+## Build output
+bin/
+obj/
+
+## Visual Studio user files
+*.user
+.vs/
+
+## Local databases
+*.db
