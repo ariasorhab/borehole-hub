@@ -58,7 +58,7 @@ public static class DemoDataSeeder
         // Plot of 24 m x 20 m centred on R 516290 / H 5640622 (EPSG:25832) = 50.91701 N, 9.23174 E, ground about 212.7 m NHN
         // (EU-DEM 25 m via opentopodata): open meadow on the Schwalm valley floor south of the street "Am Bunten Bock".
         // The ground falls gently (0.6 m across the plot) towards the south-west, i.e. towards the Schwalm.
-        // KRB 1 = NW corner, KRB 2 = NE, KRB 3 = centre, KRB 4 = SW, KRB 5 = SE.
+        // KRB 1 = NW corner, KRB 2 = NE, KRB 3 = centre, KRB 4 = SW, KRB 5 = SE, KRB 6 = north edge.
         var krb1 = Krb("KRB 1", 516278, 5640632, 212.9, 3.5, null, new DateOnly(2026, 10, 27),
             L(0.00, 1.00, "A, U, s, g'", "Auffüllung: Schluff, sandig, schwach kiesig, vereinzelt Ziegelreste", "UL", "braun, dunkelgrau", "steif", "B1", "F3", 2e-7),
             L(1.00, 1.60, "U, t, s'", "Auenlehm: Schluff, tonig, schwach sandig", "TL", "braun", "steif", "B2", "F3", 5e-8),
@@ -88,6 +88,13 @@ public static class DemoDataSeeder
             L(1.90, 2.80, "G, s, u'", "Flusskies: Kies, sandig, schwach schluffig", "GU", "graubraun", "mitteldicht", "B3", "F2", 5e-5),
             L(2.80, 4.00, "G, s", "Flusskies: Kies, sandig, sauber", "GW", "grau", "mitteldicht bis dicht", "B3", "F1", 1e-3));
 
+        // KRB 6 is the deliberately incomplete example for the Prüfung tab: no kf value for the gravel layer (one Hinweis "Versickerung").
+        var krb6 = Krb("KRB 6", 516290, 5640632, 212.95, 3.0, null, new DateOnly(2026, 10, 28),
+            L(0.00, 0.30, "U, h, s'", "Mutterboden: Schluff, humos, schwach sandig", "OH", "dunkelbraun", "weich", "B1", "F2", 1e-6),
+            L(0.30, 1.50, "U, t, s'", "Auenlehm: Schluff, tonig, schwach sandig", "TL", "braun", "steif", "B2", "F3", 5e-8),
+            L(1.50, 3.00, "G, s, u'", "Flusskies: Kies, sandig, schwach schluffig", "GU", "graubraun", "mitteldicht", "B3", "F2", null));
+        krb6.Bemerkung = "kf-Wert für den Flusskies noch nicht bestimmt (Siebanalyse ausstehend).";
+
         // Samples with lab values (mg/kg). Only KRB 1/1 (fill) clearly exceeds BM-0 for Blei and PAK16.
         krb1.Proben.Add(Probe("KRB 1/1", 0.30, 0.90, 9, 185, 0.7, 35, 62, 21, 0.30, 210, 14.2, 320));
         krb2.Proben.Add(Probe("KRB 2/1", 0.30, 1.20, 5.2, 18, 0.15, 24, 12, 13, 0.05, 48, 0.4, 30));
@@ -101,7 +108,7 @@ public static class DemoDataSeeder
         var dph2 = Dph("DPH 2", 516292, 5640623, 212.7, new DateOnly(2026, 10, 28), krb3, seed: 2);
         var dph3 = Dph("DPH 3", 516304, 5640613, 212.6, new DateOnly(2026, 10, 28), krb5, seed: 3);
 
-        project.Aufschluesse.AddRange([krb1, krb2, krb3, krb4, krb5, dph1, dph2, dph3]);
+        project.Aufschluesse.AddRange([krb1, krb2, krb3, krb4, krb5, krb6, dph1, dph2, dph3]);
         return project;
     }
 
@@ -124,7 +131,7 @@ public static class DemoDataSeeder
     }
 
     private static Schicht L(double von, double bis, string kurz, string beschreibung, string gruppe, string farbe,
-        string zustand, string homogenbereich, string frost, double kf) => new()
+        string zustand, string homogenbereich, string frost, double? kf) => new()
     {
         VonM = von,
         BisM = bis,

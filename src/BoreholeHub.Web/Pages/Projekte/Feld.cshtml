@@ -1,0 +1,310 @@
+@page "/Projekte/{id:int}/Feld"
+@model BoreholeHub.Web.Pages.Projekte.FeldModel
+@using BoreholeHub.Core.Services
+@{
+    ViewData["Title"] = "Feldaufnahme";
+    var id = Model.Projekt.Id;
+    var zeilen = Model.AnzuzeigendeZeilen();
+    int schritte = Model.AnzahlSchritte();
+    bool dph = Model.IstDph;
+
+    void Fehlerliste(string key)
+    {
+        foreach (var f in Model.FehlerFuer(key))
+        {
+            <p class="field-error" role="alert">@f.Text</p>
+        }
+    }
+
+    string Anker(string key) => key == "n10" ? "section-dph" : key == "schichten" ? "section-krb" : key;
+
+    string Invalid(string key) => Model.HatFehler(key) ? "true" : "false";
+
+    async Task Zeile(string idx, BoreholeHub.Web.Pages.Projekte.FeldModel.SchichtZeile z, int nr)
+    {
+        string rowKey = "schicht-" + idx;
+        <div class="schicht-row@(Model.HatFehler(rowKey) ? " is-invalid" : "")" data-row id="@rowKey">
+            <div class="row-nr">Schicht <span data-nr>@nr</span></div>
+            <div class="f f-von">
+                <label for="@rowKey-von">Von [m]</label>
+                <input type="text" inputmode="decimal" autocomplete="off" id="@rowKey-von" name="Schichten[@idx].Von" value="@z.Von" />
+            </div>
+            <div class="f f-bis">
+                <label for="@rowKey-bis">Bis [m]</label>
+                <input type="text" inputmode="decimal" autocomplete="off" id="@rowKey-bis" name="Schichten[@idx].Bis" value="@z.Bis" />
+            </div>
+            <div class="f f-kurz">
+                <label for="@rowKey-kurzzeichen">Kurzzeichen</label>
+                <input type="text" autocomplete="off" maxlength="40" id="@rowKey-kurzzeichen" name="Schichten[@idx].Kurzzeichen" value="@z.Kurzzeichen" />
+            </div>
+            <div class="f f-beschr">
+                <label for="@rowKey-beschreibung">Beschreibung</label>
+                <input type="text" autocomplete="off" maxlength="400" id="@rowKey-beschreibung" name="Schichten[@idx].Beschreibung" value="@z.Beschreibung" />
+            </div>
+            <div class="f f-gruppe">
+                <label for="@rowKey-bodengruppe">Bodengruppe</label>
+                <select id="@rowKey-bodengruppe" name="Schichten[@idx].Bodengruppe">
+                    <option value="" selected="@(z.Bodengruppe.Length == 0)"></option>
+                    @foreach (var g in BoreholeHub.Web.Pages.Projekte.FeldModel.Bodengruppen)
+                    {
+                        <option value="@g" selected="@(z.Bodengruppe == g)">@g</option>
+                    }
+                    @if (z.Bodengruppe.Length > 0 && !BoreholeHub.Web.Pages.Projekte.FeldModel.Bodengruppen.Contains(z.Bodengruppe))
+                    {
+                        <option value="@z.Bodengruppe" selected>@z.Bodengruppe</option>
+                    }
+                </select>
+            </div>
+            <div class="f f-farbe">
+                <label for="@rowKey-farbe">Farbe</label>
+                <input type="text" autocomplete="off" maxlength="60" id="@rowKey-farbe" name="Schichten[@idx].Farbe" value="@z.Farbe" />
+            </div>
+            <div class="f f-zustand">
+                <label for="@rowKey-zustand">Zustand</label>
+                <input type="text" autocomplete="off" maxlength="60" id="@rowKey-zustand" name="Schichten[@idx].Zustand" value="@z.Zustand" />
+            </div>
+            <div class="f f-homogen">
+                <label for="@rowKey-homogenbereich">Homogenbereich</label>
+                <input type="text" autocomplete="off" maxlength="10" list="homogenbereiche" id="@rowKey-homogenbereich" name="Schichten[@idx].Homogenbereich" value="@z.Homogenbereich" />
+            </div>
+            <div class="f f-frost">
+                <label for="@rowKey-frostklasse">Frostklasse</label>
+                <select id="@rowKey-frostklasse" name="Schichten[@idx].Frostklasse">
+                    <option value="" selected="@(z.Frostklasse.Length == 0)"></option>
+                    @foreach (var fk in BoreholeHub.Web.Pages.Projekte.FeldModel.Frostklassen)
+                    {
+                        <option value="@fk" selected="@(string.Equals(z.Frostklasse, fk, StringComparison.OrdinalIgnoreCase))">@fk</option>
+                    }
+                </select>
+            </div>
+            <div class="f f-kf">
+                <label for="@rowKey-kf">kf [m/s]</label>
+                <input type="text" inputmode="decimal" autocomplete="off" id="@rowKey-kf" name="Schichten[@idx].Kf" value="@z.Kf" placeholder="z. B. 2e-5" />
+            </div>
+            <div class="row-remove">
+                <button type="button" class="btn btn-secondary" data-action="remove">Entfernen</button>
+            </div>
+            @foreach (var f in Model.FehlerFuer(rowKey))
+            {
+                <p class="field-error row-error" role="alert">@f.Text</p>
+            }
+        </div>
+    }
+}
+
+@section Head {
+    <link rel="stylesheet" href="~/css/feld.css" asp-append-version="true" />
+}
+
+<div class="container feld-page">
+    <nav class="breadcrumb" aria-label="Brotkrumen">
+        <ol>
+            <li><a href="/Projekte">Projekte</a></li>
+            <li><a href="/Projekte/@id">@Model.Projekt.Name</a></li>
+            <li aria-current="page">Feldaufnahme</li>
+        </ol>
+    </nav>
+
+    <header class="page-header">
+        <h1>Feldaufnahme</h1>
+        <p class="muted">@Model.Projekt.Name</p>
+    </header>
+
+    @await Html.PartialAsync("_ProjektTabs", new BoreholeHub.Web.Pages.Shared.ProjektTabsModel(id, "feld"))
+
+    @if (Model.Gespeichert)
+    {
+        <section class="result result-ok" role="status" aria-labelledby="ergebnis-titel">
+            <h2 id="ergebnis-titel">@Model.GespeichertName gespeichert.</h2>
+            <p>@Model.PruefungText</p>
+            @if (Model.GespeichertHinweise.Count > 0)
+            {
+                <ul class="befund-list">
+                    @foreach (var h in Model.GespeichertHinweise)
+                    {
+                        <li><span class="badge badge-warn">Hinweis</span> <span>@h</span></li>
+                    }
+                </ul>
+            }
+            <p class="result-links">
+                <a class="btn btn-primary" href="/Aufschluesse/@Model.GespeichertId">Profil öffnen</a>
+                <a class="btn btn-secondary" href="/Projekte/@id/Pruefung">Zur Prüfung</a>
+            </p>
+        </section>
+    }
+
+    @if (Model.NichtGespeichert)
+    {
+        <section class="result result-bad" role="alert" aria-labelledby="fehler-titel" id="fehlerbox" tabindex="-1">
+            <h2 id="fehler-titel">Nichts gespeichert (@Model.Fehler.Count @(Model.Fehler.Count == 1 ? "Fehler" : "Fehler"))</h2>
+            <p>Bitte die Angaben korrigieren. Alle eingegebenen Werte sind erhalten geblieben.</p>
+            <ol class="error-list">
+                @foreach (var f in Model.Fehler)
+                {
+                    <li><a href="#@Anker(f.Key)">@f.Text</a></li>
+                }
+            </ol>
+        </section>
+
+        var hinweise = Model.Befunde.Where(b => b.Stufe == PruefStufe.Hinweis).ToList();
+        if (hinweise.Count > 0)
+        {
+            <section class="result result-warn" role="status" aria-labelledby="hinweis-titel">
+                <h2 id="hinweis-titel">Hinweise der Prüfung (@hinweise.Count)</h2>
+                <ul class="befund-list">
+                    @foreach (var h in hinweise)
+                    {
+                        <li><span class="badge badge-warn">Hinweis</span> <span>@h.Regel: @h.Meldung</span></li>
+                    }
+                </ul>
+            </section>
+        }
+    }
+
+    <form method="post" action="/Projekte/@id/Feld" id="feld-form" class="feld-form" novalidate
+          data-utm-url="/Projekte/@id/Feld?handler=Utm">
+        @Html.AntiForgeryToken()
+
+        <section class="card feld-card" aria-labelledby="allgemein-titel">
+            <h2 id="allgemein-titel">Aufschluss</h2>
+
+            <fieldset class="art-field">
+                <legend>Art</legend>
+                <div class="art-toggle" id="art">
+                    <label class="art-option">
+                        <input type="radio" name="Art" value="KRB" checked="@(!dph)" />
+                        <span class="art-text">Kleinrammbohrung (KRB)</span>
+                    </label>
+                    <label class="art-option">
+                        <input type="radio" name="Art" value="DPH" checked="@dph" />
+                        <span class="art-text">Rammsondierung (DPH)</span>
+                    </label>
+                </div>
+                @{ Fehlerliste("art"); }
+            </fieldset>
+
+            <div class="feld-grid">
+                <div class="f">
+                    <label for="bezeichnung">Bezeichnung</label>
+                    <input type="text" id="bezeichnung" name="Bezeichnung" maxlength="@BoreholeHub.Web.Pages.Projekte.FeldModel.MaxBezeichnung" autocomplete="off"
+                           value="@Model.Bezeichnung" data-prefill-krb="@Model.PrefillKrb" data-prefill-dph="@Model.PrefillDph"
+                           aria-invalid="@Invalid("bezeichnung")" />
+                    @{ Fehlerliste("bezeichnung"); }
+                </div>
+                <div class="f">
+                    <label for="datum">Datum</label>
+                    <input type="date" id="datum" name="Datum" value="@Model.Datum" aria-invalid="@Invalid("datum")" />
+                    @{ Fehlerliste("datum"); }
+                </div>
+
+                <div class="f">
+                    <label for="rechtswert">Rechtswert [m, EPSG:25832]</label>
+                    <input type="text" inputmode="decimal" autocomplete="off" id="rechtswert" name="Rechtswert" value="@Model.Rechtswert" aria-invalid="@Invalid("rechtswert")" />
+                    @{ Fehlerliste("rechtswert"); }
+                </div>
+                <div class="f">
+                    <label for="hochwert">Hochwert [m, EPSG:25832]</label>
+                    <input type="text" inputmode="decimal" autocomplete="off" id="hochwert" name="Hochwert" value="@Model.Hochwert" aria-invalid="@Invalid("hochwert")" />
+                    @{ Fehlerliste("hochwert"); }
+                </div>
+
+                <div class="f f-wide standort">
+                    <button type="button" class="btn btn-secondary" id="standort-btn">Standort übernehmen</button>
+                    <p class="standort-status" id="standort-status" role="status" aria-live="polite"></p>
+                </div>
+
+                <div class="f">
+                    <label for="ansatzhoehe">Ansatzhöhe [m NHN]</label>
+                    <input type="text" inputmode="decimal" autocomplete="off" id="ansatzhoehe" name="Ansatzhoehe" value="@Model.Ansatzhoehe" aria-invalid="@Invalid("ansatzhoehe")" />
+                    @{ Fehlerliste("ansatzhoehe"); }
+                </div>
+                <div class="f">
+                    <label for="endteufe">Endteufe [m]</label>
+                    <input type="text" inputmode="decimal" autocomplete="off" id="endteufe" name="Endteufe" value="@Model.Endteufe" aria-invalid="@Invalid("endteufe")" />
+                    @{ Fehlerliste("endteufe"); }
+                </div>
+
+                <div class="f">
+                    <label for="grundwasser">Grundwasser [m u. GOK] <span class="opt">(optional)</span></label>
+                    <input type="text" inputmode="decimal" autocomplete="off" id="grundwasser" name="Grundwasser" value="@Model.Grundwasser" aria-invalid="@Invalid("grundwasser")" />
+                    @{ Fehlerliste("grundwasser"); }
+                </div>
+                <div class="f f-wide">
+                    <label for="bemerkung">Bemerkung <span class="opt">(optional)</span></label>
+                    <textarea id="bemerkung" name="Bemerkung" rows="3">@Model.Bemerkung</textarea>
+                </div>
+            </div>
+        </section>
+
+        <section class="card feld-card art-section" id="section-krb" data-art="KRB" aria-labelledby="schichten-titel">
+            <div class="section-head">
+                <h2 id="schichten-titel">Schichten</h2>
+                <p class="muted">Von oben nach unten, lückenlos von 0 bis zur Endteufe. Leere Zeilen werden ignoriert.</p>
+            </div>
+            @{ Fehlerliste("schichten"); }
+            <div class="schichten" id="schichten">
+                @for (int i = 0; i < zeilen.Count; i++)
+                {
+                    await Zeile(i.ToString(), zeilen[i], i + 1);
+                }
+            </div>
+            <p class="section-actions">
+                <button type="button" class="btn btn-secondary" id="schicht-add">Schicht hinzufügen</button>
+            </p>
+            <datalist id="homogenbereiche">
+                @foreach (var h in Model.Homogenbereiche)
+                {
+                    <option value="@h"></option>
+                }
+            </datalist>
+            <template id="schicht-template">
+                @{ await Zeile("__i__", new BoreholeHub.Web.Pages.Projekte.FeldModel.SchichtZeile(), 0); }
+            </template>
+        </section>
+
+        <section class="card feld-card art-section" id="section-dph" data-art="DPH" aria-labelledby="n10-titel">
+            <div class="section-head">
+                <h2 id="n10-titel">Schlagzahlen N10</h2>
+                <p class="muted">Schläge je 0,10 m, von 0,10 m bis zur Endteufe. Leere Felder werden nicht gespeichert.</p>
+            </div>
+            @{ Fehlerliste("n10"); }
+            <div class="n10" id="n10" data-max="@BoreholeHub.Web.Pages.Projekte.FeldModel.MaxSchritte" data-standard="@BoreholeHub.Web.Pages.Projekte.FeldModel.StandardSchritte">
+                <div class="n10-head" aria-hidden="true">
+                    <span class="n10-label"></span>
+                    <span class="n10-cells">
+                        @for (int c = 1; c <= 10; c++)
+                        {
+                            <span>@(c == 10 ? "1,0" : "0," + c)</span>
+                        }
+                    </span>
+                </div>
+                @for (int r = 0; r * 10 < schritte; r++)
+                {
+                    <div class="n10-row" data-n10-row>
+                        <span class="n10-label">@(r)–@(r + 1) m</span>
+                        <span class="n10-cells">
+                            @for (int c = 1; c <= 10 && r * 10 + c <= schritte; c++)
+                            {
+                                int s = r * 10 + c;
+                                Model.N10.TryGetValue(s, out var wert);
+                                <input type="text" inputmode="numeric" autocomplete="off" maxlength="3"
+                                       id="n10-@s" name="N10[@s]" value="@wert"
+                                       aria-label="N10 bis @((s / 10.0).ToString("0.00", System.Globalization.CultureInfo.GetCultureInfo("de-DE"))) m"
+                                       aria-invalid="@(Model.N10Ungueltig.Contains(s) ? "true" : "false")" />
+                            }
+                        </span>
+                    </div>
+                }
+            </div>
+        </section>
+
+        <div class="action-bar">
+            <button type="submit" class="btn btn-primary">Speichern</button>
+            <button type="reset" class="btn btn-secondary">Zurücksetzen</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script src="~/js/feld.js" asp-append-version="true"></script>
+}

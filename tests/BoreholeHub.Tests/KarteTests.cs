@@ -72,7 +72,7 @@ public class KarteTests : IClassFixture<WebAppFactory>
     }
 
     [Fact]
-    public async Task Punkte_ReturnsEightFeatures_WithExpectedProperties()
+    public async Task Punkte_ReturnsNineFeatures_WithExpectedProperties()
     {
         int id = await SeedAsync();
         var client = _factory.CreateClient();
@@ -84,7 +84,7 @@ public class KarteTests : IClassFixture<WebAppFactory>
 
         Assert.Equal("FeatureCollection", root.GetProperty("type").GetString());
         var features = root.GetProperty("features");
-        Assert.Equal(8, features.GetArrayLength());
+        Assert.Equal(9, features.GetArrayLength());
 
         string[] expected = ["id", "bezeichnung", "art", "endteufeM", "grundwasserM", "ansatzhoeheMNhn", "rechtswert", "hochwert"];
         int krb = 0, dph = 0, withWater = 0;
@@ -116,7 +116,7 @@ public class KarteTests : IClassFixture<WebAppFactory>
             else { Assert.Equal(JsonValueKind.Null, gw.ValueKind); }
         }
 
-        Assert.Equal(5, krb);
+        Assert.Equal(6, krb);
         Assert.Equal(3, dph);
         Assert.Equal(2, withWater);
     }

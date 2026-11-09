@@ -39,8 +39,8 @@ public class DemoDataSeederTests : IDisposable
         var project = await db.Projects.Include(p => p.Aufschluesse).SingleAsync();
         Assert.Equal(id, project.Id);
         Assert.Equal(DemoDataSeeder.DemoProjectName, project.Name);
-        Assert.Equal(8, project.Aufschluesse.Count);
-        Assert.Equal(5, project.Aufschluesse.Count(a => a.Art == AufschlussArt.Kleinrammbohrung));
+        Assert.Equal(9, project.Aufschluesse.Count);
+        Assert.Equal(6, project.Aufschluesse.Count(a => a.Art == AufschlussArt.Kleinrammbohrung));
         Assert.Equal(3, project.Aufschluesse.Count(a => a.Art == AufschlussArt.Rammsondierung));
         Assert.Equal(2, project.Aufschluesse.Count(a => a.GrundwasserM is not null));
         Assert.All(project.Aufschluesse.Where(a => a.GrundwasserM is not null), a => Assert.InRange(a.GrundwasserM!.Value, 2.6, 3.2));
@@ -55,7 +55,7 @@ public class DemoDataSeederTests : IDisposable
         Assert.Equal(first, second);
         using var db = Open();
         Assert.Equal(1, await db.Projects.CountAsync());
-        Assert.Equal(8, await db.Aufschluesse.CountAsync());
+        Assert.Equal(9, await db.Aufschluesse.CountAsync());
         Assert.Equal(60, await db.Grenzwerte.CountAsync());
     }
 
@@ -68,7 +68,7 @@ public class DemoDataSeederTests : IDisposable
         var krbs = await db.Aufschluesse.Include(a => a.Schichten)
             .Where(a => a.Art == AufschlussArt.Kleinrammbohrung).ToListAsync();
 
-        Assert.Equal(5, krbs.Count);
+        Assert.Equal(6, krbs.Count);
         foreach (var krb in krbs)
         {
             var layers = krb.Schichten.OrderBy(s => s.VonM).ToList();
@@ -188,7 +188,7 @@ public class DemoDataSeederTests : IDisposable
         using var db = Open();
         var all = await db.Aufschluesse.ToListAsync();
 
-        Assert.Equal(8, all.Count);
+        Assert.Equal(9, all.Count);
         foreach (var a in all)
         {
             var (lat, lon) = CoordinateService.ToWgs84(a.Rechtswert, a.Hochwert);
@@ -213,5 +213,24 @@ public class DemoDataSeederTests : IDisposable
             Assert.True(probe.BisM <= probe.Aufschluss.EndteufeM);
             Assert.StartsWith(probe.Aufschluss.Bezeichnung, probe.Bezeichnung);
         }
+    }
+
+    [Fact]
+    public async Task Seed_Pruefen_ReturnsExactlyOneVersickerungHinweis_ForKrb6()
+    {
+        await SeedAsync();
+
+        using var db = Open();
+        var aufschluesse = await db.Aufschluesse
+            .Include(a => a.Schichten).Include(a => a.Proben).Include(a => a.Messwerte)
+            .ToListAsync();
+
+        var befunde = DataQualityService.Pruefen(aufschluesse);
+
+        var befund = Assert.Single(befunde);
+        Assert.Equal("Versickerung", befund.Regel);
+        Assert.Equal(PruefStufe.Hinweis, befund.Stufe);
+        Assert.Equal("KRB 6", befund.Aufschluss);
+        Assert.Equal("kf-Wert fehlt für Schicht 1,50–3,00 m (GU) – Versickerung nicht prüfbar.", befund.Meldung);
     }
 }

@@ -260,6 +260,8 @@ a:hover { color: var(--ink); }
     white-space: nowrap;
     border-bottom: 3px solid transparent;
 }
+/* Seven tabs: slightly tighter padding on tablets so the last tab stays visible (portrait 800 px). */
+@media (max-width: 960px) { .tab { padding: 12px var(--s3); } }
 .tab:hover { color: var(--ink); border-bottom-color: var(--line-strong); }
 .tab[aria-current="page"] { color: var(--ink); font-weight: 600; border-bottom-color: var(--rust); }
 

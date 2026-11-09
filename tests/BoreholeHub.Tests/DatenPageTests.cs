@@ -99,7 +99,7 @@ public class DatenPageTests : IClassFixture<WebAppFactory>
     }
 
     [Fact]
-    public async Task GeoJson_HasEightFeatures_WithExtraProperties_AndSchwalmstadtCoordinates()
+    public async Task GeoJson_HasNineFeatures_WithExtraProperties_AndSchwalmstadtCoordinates()
     {
         int id = await SeedAsync();
         var response = await _factory.CreateClient().GetAsync($"/Projekte/{id}/Daten?handler=GeoJson");
@@ -111,7 +111,7 @@ public class DatenPageTests : IClassFixture<WebAppFactory>
         var root = doc.RootElement;
         Assert.Equal("FeatureCollection", root.GetProperty("type").GetString());
         var features = root.GetProperty("features");
-        Assert.Equal(8, features.GetArrayLength());
+        Assert.Equal(9, features.GetArrayLength());
         foreach (var f in features.EnumerateArray())
         {
             var c = f.GetProperty("geometry").GetProperty("coordinates");

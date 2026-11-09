@@ -1,0 +1,220 @@
+/* Feldaufnahme (tablet field form). Theme tokens only (var(--...)), no colour literals. */
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* ---------- Result boxes (success, errors, findings) ---------- */
+.result {
+    margin-bottom: var(--s5);
+    padding: var(--s4) var(--s5);
+    border: 1px solid var(--line);
+    border-left-width: 4px;
+    border-radius: var(--radius);
+    background: var(--surface);
+}
+.result h2 { font-size: var(--fs-3); margin-bottom: var(--s2); }
+.result p + p { margin-top: var(--s3); }
+.result-ok { border-left-color: var(--ok); background: var(--tint-ok); }
+.result-bad { border-left-color: var(--bad); background: var(--tint-bad); }
+.result-warn { border-left-color: var(--warn); background: var(--tint-warn); }
+.error-list { margin: var(--s3) 0 0; padding-left: var(--s5); display: grid; gap: var(--s2); }
+.error-list li { overflow-wrap: anywhere; }
+.error-list a { color: var(--ink); }
+.befund-list { list-style: none; margin: var(--s3) 0 0; padding: 0; display: grid; gap: var(--s2); }
+.befund-list li { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--s2); }
+.result-links { margin-top: var(--s4); display: flex; flex-wrap: wrap; gap: var(--s3); }
+
+.badge-warn { border-color: var(--warn); color: var(--warn); background: var(--tint-warn); }
+
+/* ---------- Buttons: at least 48 px high ---------- */
+.feld-page .btn {
+    min-height: 48px;
+    padding: 12px var(--s5);
+    font-size: 1rem;
+}
+.feld-page .btn:focus-visible,
+.feld-form input:focus-visible,
+.feld-form select:focus-visible,
+.feld-form textarea:focus-visible {
+    outline: 3px solid var(--water);
+    outline-offset: 0;
+    box-shadow: 0 0 0 6px var(--ring);
+}
+
+/* ---------- Form layout ---------- */
+.feld-form { display: grid; gap: var(--s5); }
+.feld-card { display: grid; gap: var(--s4); align-content: start; }
+.feld-card h2 { font-size: var(--fs-3); }
+.art-section[hidden] { display: none; }
+.section-head .muted { margin-top: var(--s1); }
+.section-actions { margin: 0; }
+
+.f { display: grid; gap: var(--s2); align-content: start; min-width: 0; }
+.f label, .art-field legend { font-weight: 600; }
+.f .opt { font-weight: 400; color: var(--muted); }
+
+.feld-form input[type="text"],
+.feld-form input[type="date"],
+.feld-form select,
+.feld-form textarea {
+    width: 100%;
+    min-width: 0;
+    min-height: 48px;
+    padding: 10px var(--s3);
+    font-family: inherit;
+    font-size: 1rem;            /* 16 px: no zoom on iOS */
+    line-height: 1.3;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-sm);
+}
+.feld-form textarea { resize: vertical; min-height: 96px; }
+.feld-form input[aria-invalid="true"],
+.schicht-row.is-invalid input { border-color: var(--bad); }
+.field-error { margin: 0; color: var(--bad); font-weight: 600; font-size: var(--fs-2); }
+
+.art-field { margin: 0; padding: 0; border: 0; min-width: 0; display: grid; gap: var(--s2); }
+.art-field legend { padding: 0; margin-bottom: var(--s2); }
+
+.feld-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s4); }
+@media (min-width: 900px) {
+    .feld-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--s5); }
+    .feld-grid .f-wide { grid-column: 1 / -1; }
+}
+
+/* ---------- Art toggle (two big buttons, radios underneath) ---------- */
+.art-toggle { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s3); }
+.art-option { position: relative; display: block; cursor: pointer; }
+.art-option input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+.art-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 64px;
+    padding: var(--s3) var(--s4);
+    text-align: center;
+    font-weight: 600;
+    font-size: 1.0625rem;
+    color: var(--ink);
+    background: var(--paper);
+    border: 2px solid var(--line-strong);
+    border-radius: var(--radius);
+}
+.art-option:hover .art-text { border-color: var(--muted); }
+.art-option input:checked + .art-text { background: var(--rust); border-color: var(--rust); color: var(--on-rust); }
+.art-option input:focus-visible + .art-text { outline: 3px solid var(--water); outline-offset: 2px; box-shadow: 0 0 0 6px var(--ring); }
+
+/* ---------- Standort ---------- */
+.standort { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s3) var(--s4); }
+.standort-status { margin: 0; color: var(--muted); }
+.standort-status.is-error { color: var(--bad); font-weight: 600; }
+
+/* ---------- Layers: one card per row (2 columns), more columns on wider screens ---------- */
+.schichten { display: grid; gap: var(--s3); }
+.schicht-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--s3);
+    padding: var(--s4);
+    background: var(--sand);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+}
+.schicht-row.is-invalid { border-color: var(--bad); }
+.row-nr { grid-column: 1 / -1; font-family: var(--font-head); font-weight: 600; }
+.schicht-row .row-error { grid-column: 1 / -1; }
+@media (max-width: 599px) {
+    .schicht-row .f-kurz,
+    .schicht-row .f-beschr,
+    .schicht-row .row-remove { grid-column: 1 / -1; }
+}
+.row-remove .btn { width: 100%; }
+
+@media (min-width: 600px) {
+    .schicht-row {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        grid-template-areas:
+            "nr nr nr nr nr nr"
+            "von bis kurz kurz gruppe gruppe"
+            "beschr beschr beschr beschr beschr beschr"
+            "farbe farbe zustand zustand homogen frost"
+            "kf kf . . rm rm";
+    }
+    .row-nr { grid-area: nr; }
+    .f-von { grid-area: von; }
+    .f-bis { grid-area: bis; }
+    .f-kurz { grid-area: kurz; }
+    .f-gruppe { grid-area: gruppe; }
+    .f-beschr { grid-area: beschr; }
+    .f-farbe { grid-area: farbe; }
+    .f-zustand { grid-area: zustand; }
+    .f-homogen { grid-area: homogen; }
+    .f-frost { grid-area: frost; }
+    .f-kf { grid-area: kf; }
+    .row-remove { grid-area: rm; align-self: end; }
+    .row-remove .btn { width: 100%; }
+}
+
+@media (min-width: 1700px) {
+    .schicht-row {
+        grid-template-columns: 4.5rem 5rem 5rem 7rem minmax(12rem, 3fr) 7rem minmax(7rem, 1.5fr) minmax(7rem, 1.5fr) 8.5rem 6rem 7rem 7rem;
+        grid-template-areas: "nr von bis kurz beschr gruppe farbe zustand homogen frost kf rm";
+        align-items: end;
+    }
+    .row-nr { align-self: center; }
+    .row-remove .btn { padding-inline: var(--s3); }
+}
+
+/* ---------- N10 grid: 10 inputs per row (one row per metre) ---------- */
+.n10 { display: grid; gap: var(--s2); }
+.n10-row, .n10-head { display: grid; grid-template-columns: 4.5rem minmax(0, 1fr); gap: var(--s3); align-items: center; }
+.n10-label { font-weight: 600; color: var(--muted); font-variant-numeric: tabular-nums; }
+.n10-cells { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: var(--s2); }
+.n10-head .n10-cells span { text-align: center; font-size: var(--fs-1); color: var(--muted); font-variant-numeric: tabular-nums; }
+.feld-form .n10-cells input[type="text"] { padding: 8px 2px; text-align: center; font-variant-numeric: tabular-nums; }
+
+@media (max-width: 599px) {
+    .n10-row, .n10-head { grid-template-columns: minmax(0, 1fr); gap: var(--s1); }
+    .n10-head .n10-label { display: none; }
+    .n10-cells { gap: 4px; }
+    .n10-row { padding-bottom: var(--s2); }
+}
+
+/* ---------- Bottom action bar (stays visible) ---------- */
+.action-bar {
+    position: sticky;
+    bottom: var(--s3);
+    z-index: 20;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s3);
+    padding: var(--s3) var(--s4);
+    background: var(--surface);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-hover);
+}
+.action-bar .btn { flex: 0 1 14rem; }
+@media (max-width: 599px) {
+    .action-bar { flex-wrap: nowrap; padding: var(--s2) var(--s3); }
+    .action-bar .btn { flex: 1 1 0; padding-inline: var(--s3); }
+    .action-bar .btn-primary { flex: 2 1 0; }
+}
