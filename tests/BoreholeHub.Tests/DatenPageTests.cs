@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using BoreholeHub.Web.Data;
+using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 
 namespace BoreholeHub.Tests;
@@ -185,6 +186,27 @@ public class DatenPageTests : IClassFixture<WebAppFactory>
 
         Assert.Contains("größer als 1 MB", html);
         await _factory.WithDbAsync(async db => Assert.Equal(0, await db.Aufschluesse.CountAsync(a => a.ProjectId == id)));
+    }
+
+    [Fact]
+    public async Task Import_Valid_RedirectsToDaten_AndFollowUpShowsResultAndPruefungLine()
+    {
+        int id = await NewProjectAsync("Import-Test Redirect");
+        var client = _factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
+        var response = await PostImportAsync(client, id, A2,
+            "Bezeichnung;Von_m;Bis_m;Kurzzeichen;Beschreibung;Bodengruppe;Farbe;Zustand;Homogenbereich;Frostklasse;kf_m_s\r\n" +
+            "KRB 6;0,00;1,20;U, t;Auenlehm;TL;braun;steif;B2;F3;5E-08\r\nKRB 6;1,20;3,00;G, s;Flusskies;GW;grau;mitteldicht;B3;F1;2,0E-03\r\n");
+
+        Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
+        Assert.EndsWith($"/Projekte/{id}/Daten", response.Headers.Location!.ToString());
+
+        var follow = await client.GetAsync($"/Projekte/{id}/Daten");
+        var html = WebWebUtility(await follow.Content.ReadAsStringAsync());
+
+        Assert.Equal(HttpStatusCode.OK, follow.StatusCode);
+        Assert.Contains("2 Aufschlüsse und 2 Schichten importiert.", html);
+        Assert.Matches(@"Prüfung: \d+ Fehler, \d+ Hinweise\.", html);
+        Assert.Contains($"href=\"/Projekte/{id}/Pruefung\"", html);
     }
 
     private static string WebWebUtility(string html) => WebUtility.HtmlDecode(html);

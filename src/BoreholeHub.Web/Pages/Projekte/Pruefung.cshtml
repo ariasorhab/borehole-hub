@@ -1,0 +1,78 @@
+@page "/Projekte/{id:int}/Pruefung"
+@model BoreholeHub.Web.Pages.Projekte.PruefungModel
+@{
+    ViewData["Title"] = Model.Projekt.Name + " · Prüfung";
+}
+
+@section Head {
+    <link rel="stylesheet" href="~/css/pruefung.css" asp-append-version="true" />
+}
+
+<div class="container">
+    <nav class="breadcrumb" aria-label="Brotkrumen">
+        <ol>
+            <li><a href="/Projekte">Projekte</a></li>
+            <li><a href="/Projekte/@Model.Projekt.Id">@Model.Projekt.Name</a></li>
+            <li aria-current="page">Prüfung</li>
+        </ol>
+    </nav>
+
+    <header class="page-header">
+        <h1>Prüfung</h1>
+        <p class="muted">@Model.Projekt.Name</p>
+    </header>
+
+    @await Html.PartialAsync("_ProjektTabs", new BoreholeHub.Web.Pages.Shared.ProjektTabsModel(Model.Projekt.Id, "pruefung"))
+
+    @if (Model.AnzahlAufschluesse == 0)
+    {
+        <div class="empty-state"><p>Noch keine Aufschlüsse erfasst.</p></div>
+    }
+    else
+    {
+        <section class="kpi-row pruefung-kpis" aria-label="Kennzahlen Prüfung">
+            <div class="kpi kpi-bad">
+                <div class="kpi-value">@Model.AnzahlFehler</div>
+                <div class="kpi-label">Fehler</div>
+            </div>
+            <div class="kpi kpi-warn">
+                <div class="kpi-value">@Model.AnzahlHinweise</div>
+                <div class="kpi-label">Hinweise</div>
+            </div>
+            <div class="kpi kpi-ok">
+                <div class="kpi-value">@Model.OhneBefund / @Model.AnzahlAufschluesse</div>
+                <div class="kpi-label">Ohne Befund</div>
+            </div>
+        </section>
+
+        <section aria-labelledby="pruefung-titel">
+            <h2 class="section-title" id="pruefung-titel">Befunde</h2>
+            <div class="table-wrap">
+                <table class="data-table pruefung-table">
+                    <caption class="sr-only">Befunde der Datenprüfung je Aufschluss</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Stufe</th>
+                            <th scope="col">Aufschluss</th>
+                            <th scope="col">Regel</th>
+                            <th scope="col">Meldung</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var z in Model.Zeilen)
+                        {
+                            <tr class="@z.RowCss">
+                                <td><span class="badge @z.StufeCss">@z.Stufe</span></td>
+                                <td><a href="/Aufschluesse/@z.AufschlussId">@z.Aufschluss</a></td>
+                                <td>@z.Regel</td>
+                                <td class="meldung">@z.Meldung</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    }
+
+    <p class="note">Automatische Plausibilitätsprüfung der erfassten Daten. Sie ersetzt keine fachliche Prüfung.</p>
+</div>

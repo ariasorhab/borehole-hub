@@ -27,11 +27,48 @@ public class DatenModel(BoreholeDbContext db) : PageModel
 
     public int ImportierteSchichten { get; private set; }
 
+    /// <summary>Findings of the data quality check after the last import.</summary>
+    public int PruefungFehler { get; private set; }
+
+    public int PruefungHinweise { get; private set; }
+
     public bool Erfolg => ImportVersucht && Fehler.Count == 0;
+
+    // TempData keys: a successful import redirects to the GET, which shows its result once.
+    private const string TempProjekt = "DatenImportProjekt";
+    private const string TempAufschluesse = "DatenImportAufschluesse";
+    private const string TempSchichten = "DatenImportSchichten";
+    private const string TempPruefungFehler = "DatenPruefungFehler";
+    private const string TempPruefungHinweise = "DatenPruefungHinweise";
 
     public async Task<IActionResult> OnGetAsync(int id)
     {
-        return await LoadProjektAsync(id) ? Page() : NotFound();
+        if (!await LoadProjektAsync(id))
+        {
+            return NotFound();
+        }
+
+        LeseImportErgebnis(id);
+        return Page();
+    }
+
+    /// <summary>Reads the result of the import that redirected here. Only results for this project are shown.</summary>
+    private void LeseImportErgebnis(int id)
+    {
+        object? projekt = TempData[TempProjekt];
+        object? aufschluesse = TempData[TempAufschluesse];
+        object? schichten = TempData[TempSchichten];
+        object? fehler = TempData[TempPruefungFehler];
+        object? hinweise = TempData[TempPruefungHinweise];
+        if (projekt is int pid && pid == id
+            && aufschluesse is int a && schichten is int s && fehler is int f && hinweise is int h)
+        {
+            ImportVersucht = true;
+            ImportierteAufschluesse = a;
+            ImportierteSchichten = s;
+            PruefungFehler = f;
+            PruefungHinweise = h;
+        }
     }
 
     // ---------- templates ----------
@@ -153,10 +190,15 @@ public class DatenModel(BoreholeDbContext db) : PageModel
 
         db.Schichten.AddRange(result.NeueSchichten);
         await db.SaveChangesAsync();
-        ImportierteAufschluesse = result.NeueAufschluesse.Count;
-        ImportierteSchichten = result.NeueSchichten.Count;
-        Fehler = [];
-        return Page();
+
+        // Check all Aufschlüsse of the project after the import, then redirect (Post-Redirect-Get).
+        var befunde = DataQualityService.Pruefen(await PruefungModel.LadeAufschluesseAsync(db, id));
+        TempData[TempProjekt] = id;
+        TempData[TempAufschluesse] = result.NeueAufschluesse.Count;
+        TempData[TempSchichten] = result.NeueSchichten.Count;
+        TempData[TempPruefungFehler] = befunde.Count(b => b.Stufe == PruefStufe.Fehler);
+        TempData[TempPruefungHinweise] = befunde.Count(b => b.Stufe == PruefStufe.Hinweis);
+        return RedirectToPage(new { id });
     }
 
     private static async Task<string?> ReadAsync(IFormFile? file, string label, List<string> fehler)

@@ -14,7 +14,7 @@
     --warn: #946509;
     --bad: #b23a2e;
     --surface: #ffffff;       /* cards, tables, inputs */
-    --line-strong: var(--line-strong);   /* hover / dashed borders */
+    --line-strong: #c9c0ae;   /* hover / dashed borders */
     --on-rust: #ffffff;       /* text on a rust background */
     --notice-bg: #eef4f7;
     --notice-line: #c9dce5;
@@ -22,7 +22,7 @@
     --tint-bad: #fbe9e6;
     --tint-ok: #e9f3ec;
     --overlay: rgba(255, 255, 255, 0.94);
-    --ring: var(--ring);
+    --ring: rgba(34, 32, 28, 0.35);
 
     /* Spacing scale: 4 / 8 / 12 / 16 / 24 / 32 / 48 / 64 px */
     --s1: 4px;

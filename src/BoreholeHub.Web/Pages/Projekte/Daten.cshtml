@@ -31,6 +31,7 @@
             <section class="result result-ok" role="status" aria-labelledby="ergebnis-titel">
                 <h2 id="ergebnis-titel">Import abgeschlossen</h2>
                 <p>@DatenModel.Plural(Model.ImportierteAufschluesse, "Aufschluss", "Aufschlüsse") und @DatenModel.Plural(Model.ImportierteSchichten, "Schicht", "Schichten") importiert.</p>
+                <p>Prüfung: @Model.PruefungFehler Fehler, @Model.PruefungHinweise Hinweise. <a href="/Projekte/@Model.Projekt.Id/Pruefung">Zur Prüfung</a></p>
                 <p><a class="btn btn-primary" href="/Projekte/@Model.Projekt.Id/Karte">Auf der Karte ansehen</a></p>
             </section>
         }

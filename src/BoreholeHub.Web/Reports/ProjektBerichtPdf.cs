@@ -339,7 +339,7 @@ public static class ProjektBerichtPdf
                     t.ColumnsDefinition(cd =>
                     {
                         cd.ConstantColumn(50); cd.ConstantColumn(46); cd.RelativeColumn(3); cd.RelativeColumn(2); cd.ConstantColumn(40);
-                        cd.ConstantColumn(50); cd.ConstantColumn(38); cd.ConstantColumn(50);
+                        cd.ConstantColumn(60); cd.ConstantColumn(38); cd.ConstantColumn(50);
                     });
                     t.Header(h =>
                     {

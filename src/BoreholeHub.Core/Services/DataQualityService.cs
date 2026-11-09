@@ -1,0 +1,301 @@
+using System.Globalization;
+using BoreholeHub.Core.Entities;
+
+namespace BoreholeHub.Core.Services;
+
+/// <summary>Severity of a finding. <c>Fehler</c> sorts before <c>Hinweis</c>.</summary>
+public enum PruefStufe { Fehler, Hinweis }
+
+/// <summary>One finding of the data quality check (Prüfung).</summary>
+/// <param name="Regel">Name of the rule, e.g. "Schichtfolge".</param>
+/// <param name="Stufe">Severity of the finding.</param>
+/// <param name="AufschlussId">Id of the checked Aufschluss.</param>
+/// <param name="Aufschluss">Designation of the checked Aufschluss.</param>
+/// <param name="Meldung">Message in German.</param>
+public record PruefBefund(string Regel, PruefStufe Stufe, int AufschlussId, string Aufschluss, string Meldung);
+
+/// <summary>
+/// Automatic plausibility check of investigation points with fixed rules (no configuration).
+/// Expects the layers, samples and blow counts of every Aufschluss to be loaded.
+/// </summary>
+public static class DataQualityService
+{
+    public const double Toleranz = 0.005;            // m
+    public const double MaxEndteufeM = 4.0;
+    public const double MaxAbstandM = 500.0;
+    public const double MaxHoehenabweichungM = 10.0;
+    public const int MaxN10 = 50;
+
+    // Plausibility ranges: ETRS89 / UTM 32N for Hessen, heights in m NHN.
+    private const double RechtswertMin = 400000, RechtswertMax = 600000;
+    private const double HochwertMin = 5450000, HochwertMax = 5750000;
+    private const double HoeheMin = 50, HoeheMax = 1000;
+
+    private const double RammSchritt = 0.10;         // m, step between two blow counts
+    private const int MinKoordinaten = 2;            // points needed for the distance check
+    private const int MinHoehen = 3;                 // heights needed for the median check
+
+    private static readonly CultureInfo De = CultureInfo.GetCultureInfo("de-DE");
+
+    private static readonly HashSet<string> VersickerungsBodengruppen = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "SE", "SW", "SI", "SU", "ST", "GE", "GW", "GI", "GU", "GT",
+    };
+
+    /// <summary>Rule names; index 0 is R1.</summary>
+    private static readonly string[] Regeln = ["Schichtfolge", "Endteufe", "Proben", "Koordinaten", "Ansatzhöhe", "Rammsondierung", "Versickerung"];
+
+    /// <summary>Project-wide values that some rules compare against.</summary>
+    private sealed record Kontext(double? MittelRechtswert, double? MittelHochwert, double? MedianHoehe);
+
+    private delegate void Melder(int regel, PruefStufe stufe, string meldung);
+
+    /// <summary>
+    /// Runs all rules over the given Aufschlüsse. Order: Stufe (Fehler first), then Aufschluss.Bezeichnung (ordinal),
+    /// then rule R1 to R7, then the order in which the findings were found.
+    /// </summary>
+    public static IReadOnlyList<PruefBefund> Pruefen(IReadOnlyList<Aufschluss> aufschluesse)
+    {
+        ArgumentNullException.ThrowIfNull(aufschluesse);
+
+        var kontext = BuildKontext(aufschluesse);
+        var treffer = new List<(int Regel, PruefBefund Befund)>();
+
+        foreach (var a in aufschluesse)
+        {
+            string name = a.Bezeichnung ?? string.Empty;
+            void Add(int regel, PruefStufe stufe, string meldung) =>
+                treffer.Add((regel, new PruefBefund(Regeln[regel - 1], stufe, a.Id, name, meldung)));
+
+            Schichtfolge(a, Add);
+            Endteufe(a, Add);
+            Proben(a, Add);
+            Koordinaten(a, kontext, Add);
+            Ansatzhoehe(a, kontext, Add);
+            Rammsondierung(a, Add);
+            Versickerung(a, Add);
+        }
+
+        return treffer
+            .OrderBy(t => t.Befund.Stufe)
+            .ThenBy(t => t.Befund.Aufschluss, StringComparer.Ordinal)
+            .ThenBy(t => t.Regel)
+            .Select(t => t.Befund)
+            .ToList();
+    }
+
+    // ---------- project-wide context ----------
+
+    private static Kontext BuildKontext(IReadOnlyList<Aufschluss> aufschluesse)
+    {
+        var koordinaten = aufschluesse.Where(KoordinatenPlausibel).ToList();
+        double? mittelRw = null, mittelHw = null;
+        if (koordinaten.Count >= MinKoordinaten)
+        {
+            mittelRw = koordinaten.Average(a => a.Rechtswert);
+            mittelHw = koordinaten.Average(a => a.Hochwert);
+        }
+
+        var hoehen = aufschluesse.Where(HoehePlausibel).Select(a => a.AnsatzhoeheMNhn).OrderBy(h => h).ToList();
+        double? median = hoehen.Count >= MinHoehen ? Median(hoehen) : null;
+        return new Kontext(mittelRw, mittelHw, median);
+    }
+
+    private static bool KoordinatenPlausibel(Aufschluss a) =>
+        a.Rechtswert >= RechtswertMin && a.Rechtswert <= RechtswertMax
+        && a.Hochwert >= HochwertMin && a.Hochwert <= HochwertMax;
+
+    private static bool HoehePlausibel(Aufschluss a) => a.AnsatzhoeheMNhn >= HoeheMin && a.AnsatzhoeheMNhn <= HoeheMax;
+
+    /// <summary>Median of an already sorted, non-empty list.</summary>
+    private static double Median(IReadOnlyList<double> sortiert)
+    {
+        int n = sortiert.Count;
+        return n % 2 == 1 ? sortiert[n / 2] : (sortiert[n / 2 - 1] + sortiert[n / 2]) / 2;
+    }
+
+    private static string M(double wert) => wert.ToString("0.00", De);
+
+    // ---------- R1 Schichtfolge (Kleinrammbohrung) ----------
+
+    private static void Schichtfolge(Aufschluss a, Melder melde)
+    {
+        if (a.Art != AufschlussArt.Kleinrammbohrung) { return; }
+        if (a.Schichten.Count == 0)
+        {
+            melde(1, PruefStufe.Fehler, "Keine Schichten erfasst.");
+            return;
+        }
+
+        var s = a.Schichten.OrderBy(x => x.VonM).ToList();
+        for (int i = 0; i < s.Count; i++)
+        {
+            if (s[i].VonM >= s[i].BisM)
+            {
+                melde(1, PruefStufe.Fehler, $"Schicht {M(s[i].VonM)}–{M(s[i].BisM)}: Oberkante liegt nicht über Unterkante.");
+            }
+
+            if (i == 0)
+            {
+                if (s[0].VonM > Toleranz)
+                {
+                    melde(1, PruefStufe.Fehler, $"Lücke 0,00–{M(s[0].VonM)} m.");
+                }
+            }
+            else
+            {
+                var prev = s[i - 1];
+                var next = s[i];
+                if (next.VonM > prev.BisM + Toleranz)
+                {
+                    melde(1, PruefStufe.Fehler, $"Lücke {M(prev.BisM)}–{M(next.VonM)} m.");
+                }
+                else if (next.VonM < prev.BisM - Toleranz)
+                {
+                    melde(1, PruefStufe.Fehler, $"Überlappung {M(next.VonM)}–{M(prev.BisM)} m.");
+                }
+            }
+        }
+
+        var last = s[^1];
+        if (Math.Abs(last.BisM - a.EndteufeM) > Toleranz)
+        {
+            melde(1, PruefStufe.Hinweis, $"Letzte Schicht endet bei {M(last.BisM)} m, Endteufe {M(a.EndteufeM)} m.");
+        }
+    }
+
+    // ---------- R2 Endteufe ----------
+
+    private static void Endteufe(Aufschluss a, Melder melde)
+    {
+        if (a.EndteufeM <= 0)
+        {
+            melde(2, PruefStufe.Fehler, "Endteufe fehlt oder ist 0.");
+        }
+        else if (a.EndteufeM > MaxEndteufeM)
+        {
+            melde(2, PruefStufe.Hinweis, $"Endteufe {M(a.EndteufeM)} m liegt über {M(MaxEndteufeM)} m (Rahmen GK1).");
+        }
+    }
+
+    // ---------- R3 Proben ----------
+
+    private static void Proben(Aufschluss a, Melder melde)
+    {
+        foreach (var p in a.Proben)
+        {
+            bool fehler = false;
+            if (p.VonM >= p.BisM)
+            {
+                melde(3, PruefStufe.Fehler, $"Probe {p.Bezeichnung}: Oberkante liegt nicht über Unterkante.");
+                fehler = true;
+            }
+
+            if (p.VonM < -Toleranz || p.BisM > a.EndteufeM + Toleranz)
+            {
+                melde(3, PruefStufe.Fehler, $"Probe {p.Bezeichnung} ({M(p.VonM)}–{M(p.BisM)} m) liegt außerhalb der Bohrung.");
+                fehler = true;
+            }
+
+            if (!fehler && a.Art == AufschlussArt.Kleinrammbohrung && a.Schichten.Count > 0
+                && !a.Schichten.Any(s => s.VonM - Toleranz <= p.VonM && p.BisM <= s.BisM + Toleranz))
+            {
+                melde(3, PruefStufe.Hinweis, $"Probe {p.Bezeichnung} ({M(p.VonM)}–{M(p.BisM)} m) reicht über eine Schichtgrenze.");
+            }
+        }
+    }
+
+    // ---------- R4 Koordinaten ----------
+
+    private static void Koordinaten(Aufschluss a, Kontext k, Melder melde)
+    {
+        if (!KoordinatenPlausibel(a))
+        {
+            melde(4, PruefStufe.Fehler, "Koordinaten liegen außerhalb Hessens (ETRS89 / UTM 32N).");
+            return;
+        }
+
+        if (k.MittelRechtswert is double mr && k.MittelHochwert is double mh)
+        {
+            double d = Math.Sqrt(Math.Pow(a.Rechtswert - mr, 2) + Math.Pow(a.Hochwert - mh, 2));
+            if (d > MaxAbstandM)
+            {
+                string meter = Math.Round(d, MidpointRounding.AwayFromZero).ToString("0", De);
+                melde(4, PruefStufe.Hinweis, $"Liegt {meter} m vom Projektmittelpunkt entfernt.");
+            }
+        }
+    }
+
+    // ---------- R5 Ansatzhöhe ----------
+
+    private static void Ansatzhoehe(Aufschluss a, Kontext k, Melder melde)
+    {
+        if (!HoehePlausibel(a))
+        {
+            melde(5, PruefStufe.Fehler, $"Ansatzhöhe {M(a.AnsatzhoeheMNhn)} m NHN ist für Hessen nicht plausibel.");
+            return;
+        }
+
+        if (k.MedianHoehe is double median)
+        {
+            double diff = Math.Abs(a.AnsatzhoeheMNhn - median);
+            if (diff > MaxHoehenabweichungM)
+            {
+                melde(5, PruefStufe.Hinweis, $"Ansatzhöhe weicht {M(diff)} m vom Median des Projekts ab.");
+            }
+        }
+    }
+
+    // ---------- R6 Rammsondierung ----------
+
+    private static void Rammsondierung(Aufschluss a, Melder melde)
+    {
+        if (a.Art != AufschlussArt.Rammsondierung) { return; }
+        if (a.Messwerte.Count == 0)
+        {
+            melde(6, PruefStufe.Fehler, "Keine Messwerte erfasst.");
+            return;
+        }
+
+        var werte = a.Messwerte.OrderBy(w => w.TiefeBisM).ToList();
+        foreach (var w in werte)
+        {
+            if (w.N10 < 0)
+            {
+                melde(6, PruefStufe.Fehler, $"Negative Schlagzahl bei {M(w.TiefeBisM)} m.");
+            }
+
+            if (w.N10 > MaxN10)
+            {
+                melde(6, PruefStufe.Hinweis, $"Sehr hohe Schlagzahl N10 = {w.N10} bei {M(w.TiefeBisM)} m – Abbruchkriterium prüfen.");
+            }
+        }
+
+        // The series starts at 0,10 m and goes on in 0,10 m steps. Each place is reported once.
+        var gemeldet = new HashSet<double>();
+        for (int i = 0; i < werte.Count; i++)
+        {
+            double schritt = i == 0 ? werte[0].TiefeBisM : werte[i].TiefeBisM - werte[i - 1].TiefeBisM;
+            if (Math.Abs(schritt - RammSchritt) > Toleranz && gemeldet.Add(werte[i].TiefeBisM))
+            {
+                melde(6, PruefStufe.Hinweis, $"Messwertreihe lückenhaft bei {M(werte[i].TiefeBisM)} m.");
+            }
+        }
+    }
+
+    // ---------- R7 Versickerung ----------
+
+    private static void Versickerung(Aufschluss a, Melder melde)
+    {
+        if (a.Art != AufschlussArt.Kleinrammbohrung) { return; }
+
+        foreach (var s in a.Schichten.OrderBy(x => x.VonM))
+        {
+            string? bodengruppe = s.Bodengruppe?.Trim();
+            if (!string.IsNullOrEmpty(bodengruppe) && VersickerungsBodengruppen.Contains(bodengruppe) && s.KfWertMs is null)
+            {
+                melde(7, PruefStufe.Hinweis, $"kf-Wert fehlt für Schicht {M(s.VonM)}–{M(s.BisM)} m ({bodengruppe}) – Versickerung nicht prüfbar.");
+            }
+        }
+    }
+}
