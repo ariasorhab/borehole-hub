@@ -1,13 +1,15 @@
 using BoreholeHub.Core.Entities;
 using BoreholeHub.Core.Services;
 using BoreholeHub.Web.Data;
+using BoreholeHub.Web.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 
 namespace BoreholeHub.Web.Pages.Projekte;
 
-public class PruefungModel(BoreholeDbContext db) : PageModel
+public class PruefungModel(BoreholeDbContext db, IStringLocalizer<PruefungModel> loc, IStringLocalizer<PruefTexte> pruefTexte) : PageModel
 {
     /// <summary>One table row: a finding, or the green row of an Aufschluss without findings.</summary>
     public record Zeile(string Stufe, string StufeCss, string RowCss, string Aufschluss, int AufschlussId, string Regel, string Meldung);
@@ -50,18 +52,18 @@ public class PruefungModel(BoreholeDbContext db) : PageModel
         {
             bool fehler = b.Stufe == PruefStufe.Fehler;
             zeilen.Add(new Zeile(
-                fehler ? "Fehler" : "Hinweis",
+                PruefTexte.Stufe(pruefTexte, b.Stufe),
                 fehler ? "badge-bad" : "badge-warn",
                 fehler ? "row-bad" : "row-warn",
                 b.Aufschluss,
                 b.AufschlussId,
-                b.Regel,
-                b.Meldung));
+                PruefTexte.Regel(pruefTexte, b.Regel),
+                PruefTexte.Meldung(pruefTexte, b)));
         }
 
         foreach (var a in ohne.OrderBy(a => a.Bezeichnung, StringComparer.Ordinal).ThenBy(a => a.Id))
         {
-            zeilen.Add(new Zeile("OK", "badge-ok", "row-ok", a.Bezeichnung, a.Id, "–", "Alle Prüfungen bestanden."));
+            zeilen.Add(new Zeile("OK", "badge-ok", "row-ok", a.Bezeichnung, a.Id, "–", loc["Alle Prüfungen bestanden."].Value));
         }
 
         Zeilen = zeilen;

@@ -7,12 +7,13 @@ using BoreholeHub.Web.Import;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 
 namespace BoreholeHub.Web.Pages.Projekte;
 
 // Hard cap for the whole request; each file is limited to 1 MB in the handler with a friendly message.
 [RequestSizeLimit(3 * 1024 * 1024)]
-public class DatenModel(BoreholeDbContext db) : PageModel
+public class DatenModel(BoreholeDbContext db, IStringLocalizer<CsvImportService> loc) : PageModel
 {
     public const long MaxDateiBytes = 1024 * 1024;
 
@@ -21,7 +22,14 @@ public class DatenModel(BoreholeDbContext db) : PageModel
     /// <summary>Set after an import attempt.</summary>
     public bool ImportVersucht { get; private set; }
 
+    /// <summary>German error messages of the last failed import (kept for the German text and the error count).</summary>
     public IReadOnlyList<string> Fehler { get; private set; } = [];
+
+    /// <summary>The same errors as templates and arguments, shown in the UI language through <see cref="Fehlertext"/>.</summary>
+    public IReadOnlyList<ImportFehler> FehlerTexte { get; private set; } = [];
+
+    /// <summary>One error in the UI language.</summary>
+    public string Fehlertext(ImportFehler fehler) => loc[fehler.Vorlage, fehler.Argumente.ToArray<object>()].Value;
 
     public int ImportierteAufschluesse { get; private set; }
 
@@ -164,12 +172,13 @@ public class DatenModel(BoreholeDbContext db) : PageModel
         }
 
         ImportVersucht = true;
-        var fehler = new List<string>();
-        string? a = await ReadAsync(aufschluesseCsv, "Aufschlüsse-Datei", fehler);
-        string? s = await ReadAsync(schichtenCsv, "Schichten-Datei", fehler);
+        var fehler = new List<ImportFehler>();
+        string? a = await ReadAsync(aufschluesseCsv, "Aufschlüsse-Datei: Die Datei ist größer als 1 MB.", fehler);
+        string? s = await ReadAsync(schichtenCsv, "Schichten-Datei: Die Datei ist größer als 1 MB.", fehler);
         if (fehler.Count > 0)
         {
-            Fehler = fehler;
+            FehlerTexte = fehler;
+            Fehler = fehler.Select(CsvImportService.Deutsch).ToList();
             return Page();
         }
 
@@ -177,6 +186,7 @@ public class DatenModel(BoreholeDbContext db) : PageModel
         var result = new CsvImportService().Parse(a, s, existing);
         if (result.Fehler.Count > 0)
         {
+            FehlerTexte = result.FehlerTexte;
             Fehler = result.Fehler;
             return Page();
         }
@@ -201,12 +211,12 @@ public class DatenModel(BoreholeDbContext db) : PageModel
         return RedirectToPage(new { id });
     }
 
-    private static async Task<string?> ReadAsync(IFormFile? file, string label, List<string> fehler)
+    private static async Task<string?> ReadAsync(IFormFile? file, string vorlage, List<ImportFehler> fehler)
     {
         if (file is null || file.Length == 0) { return null; }
         if (file.Length > MaxDateiBytes)
         {
-            fehler.Add($"{label}: Die Datei ist größer als 1 MB.");
+            fehler.Add(new ImportFehler(vorlage, []));
             return null;
         }
 

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Schichtfolge" xml:space="preserve">
+    <value>Layer sequence</value>
+  </data>
+  <data name="Endteufe" xml:space="preserve">
+    <value>Final depth</value>
+  </data>
+  <data name="Proben" xml:space="preserve">
+    <value>Samples</value>
+  </data>
+  <data name="Koordinaten" xml:space="preserve">
+    <value>Coordinates</value>
+  </data>
+  <data name="Ansatzhöhe" xml:space="preserve">
+    <value>Start height</value>
+  </data>
+  <data name="Rammsondierung" xml:space="preserve">
+    <value>Dynamic probing</value>
+  </data>
+  <data name="Versickerung" xml:space="preserve">
+    <value>Infiltration</value>
+  </data>
+  <data name="Fehler" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="Hinweis" xml:space="preserve">
+    <value>Notice</value>
+  </data>
+  <data name="Keine Schichten erfasst." xml:space="preserve">
+    <value>No layers recorded.</value>
+  </data>
+  <data name="Schicht {0}–{1}: Oberkante liegt nicht über Unterkante." xml:space="preserve">
+    <value>Layer {0}–{1}: top is not above bottom.</value>
+  </data>
+  <data name="Lücke {0}–{1} m." xml:space="preserve">
+    <value>Gap {0}–{1} m.</value>
+  </data>
+  <data name="Überlappung {0}–{1} m." xml:space="preserve">
+    <value>Overlap {0}–{1} m.</value>
+  </data>
+  <data name="Letzte Schicht endet bei {0} m, Endteufe {1} m." xml:space="preserve">
+    <value>Last layer ends at {0} m, final depth {1} m.</value>
+  </data>
+  <data name="Endteufe fehlt oder ist 0." xml:space="preserve">
+    <value>Final depth missing or 0.</value>
+  </data>
+  <data name="Endteufe {0} m liegt über {1} m (Rahmen GK1)." xml:space="preserve">
+    <value>Final depth {0} m is above {1} m (GK1 range).</value>
+  </data>
+  <data name="Probe {0}: Oberkante liegt nicht über Unterkante." xml:space="preserve">
+    <value>Sample {0}: top is not above bottom.</value>
+  </data>
+  <data name="Probe {0} ({1}–{2} m) liegt außerhalb der Bohrung." xml:space="preserve">
+    <value>Sample {0} ({1}–{2} m) lies outside the borehole.</value>
+  </data>
+  <data name="Probe {0} ({1}–{2} m) reicht über eine Schichtgrenze." xml:space="preserve">
+    <value>Sample {0} ({1}–{2} m) extends across a layer boundary.</value>
+  </data>
+  <data name="Koordinaten liegen außerhalb Hessens (ETRS89 / UTM 32N)." xml:space="preserve">
+    <value>Coordinates lie outside Hesse (ETRS89 / UTM 32N).</value>
+  </data>
+  <data name="Liegt {0} m vom Projektmittelpunkt entfernt." xml:space="preserve">
+    <value>Lies {0} m from the project centre.</value>
+  </data>
+  <data name="Ansatzhöhe {0} m NHN ist für Hessen nicht plausibel." xml:space="preserve">
+    <value>Start height {0} m NHN is not plausible for Hesse.</value>
+  </data>
+  <data name="Ansatzhöhe weicht {0} m vom Median des Projekts ab." xml:space="preserve">
+    <value>Start height deviates {0} m from the project median.</value>
+  </data>
+  <data name="Keine Messwerte erfasst." xml:space="preserve">
+    <value>No readings recorded.</value>
+  </data>
+  <data name="Negative Schlagzahl bei {0} m." xml:space="preserve">
+    <value>Negative blow count at {0} m.</value>
+  </data>
+  <data name="Sehr hohe Schlagzahl N10 = {0} bei {1} m – Abbruchkriterium prüfen." xml:space="preserve">
+    <value>Very high blow count N10 = {0} at {1} m – check the termination criterion.</value>
+  </data>
+  <data name="Messwertreihe lückenhaft bei {0} m." xml:space="preserve">
+    <value>Gap in the reading series at {0} m.</value>
+  </data>
+  <data name="kf-Wert fehlt für Schicht {0}–{1} m ({2}) – Versickerung nicht prüfbar." xml:space="preserve">
+    <value>kf value missing for layer {0}–{1} m ({2}) – infiltration cannot be checked.</value>
+  </data>
+</root>

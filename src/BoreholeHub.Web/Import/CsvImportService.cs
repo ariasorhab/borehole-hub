@@ -12,7 +12,14 @@ namespace BoreholeHub.Web.Import;
 /// <param name="NeueSchichten">All new layers. Layers of a new Aufschluss point to it via <see cref="Schicht.Aufschluss"/>;
 /// layers of an Aufschluss that already exists in the project carry its AufschlussId.</param>
 /// <param name="Fehler">German error messages with file name and line number.</param>
-public record ImportResult(IReadOnlyList<Aufschluss> NeueAufschluesse, IReadOnlyList<Schicht> NeueSchichten, IReadOnlyList<string> Fehler);
+public record ImportResult(IReadOnlyList<Aufschluss> NeueAufschluesse, IReadOnlyList<Schicht> NeueSchichten, IReadOnlyList<string> Fehler)
+{
+    /// <summary>The same errors as <see cref="Fehler"/>, in the same order, as German template and arguments (for the UI language).</summary>
+    public IReadOnlyList<ImportFehler> FehlerTexte { get; init; } = Array.Empty<ImportFehler>();
+}
+
+/// <summary>One import error: German composite-format template and its arguments, already formatted in de-DE.</summary>
+public record ImportFehler(string Vorlage, IReadOnlyList<string> Argumente);
 
 /// <summary>
 /// Reads the two CSV formats of the data page (semicolon separated, decimal comma, dd.MM.yyyy) and validates them completely
@@ -27,8 +34,8 @@ public class CsvImportService
     private const double Tol = 0.0005;
     private static readonly CultureInfo De = CultureInfo.GetCultureInfo("de-DE");
 
-    private const string FileA = "Aufschlüsse";
-    private const string FileS = "Schichten";
+    /// <summary>Reports an error of a CSV row. The template uses {0} for the row number and {1} onwards for the arguments.</summary>
+    private delegate void ZeilenFehler(string vorlage, int zeile, params string[] argumente);
 
     /// <summary>Decodes an uploaded file: UTF-8 (with or without BOM); if the bytes are not valid UTF-8, ISO-8859-1 (old Excel "CSV").</summary>
     public static string Decode(byte[] bytes)
@@ -47,20 +54,27 @@ public class CsvImportService
         return text.TrimStart('﻿');
     }
 
+    /// <summary>Wraps a value in plain double quotes (kept out of the templates so that every key is a literal).</summary>
+    private static string Q(string value) => "\"" + value + "\"";
+
+    /// <summary>German text of an error (the same as the entry of <see cref="ImportResult.Fehler"/>).</summary>
+    internal static string Deutsch(ImportFehler fehler) => string.Format(De, fehler.Vorlage, fehler.Argumente.ToArray<object>());
+
     public ImportResult Parse(string? aufschluesseCsv, string? schichtenCsv, IReadOnlyCollection<Aufschluss> existing)
     {
         ArgumentNullException.ThrowIfNull(existing);
-        var fehler = new List<string>();
-        void Err(string file, int line, string message)
+        var fehler = new List<ImportFehler>();
+        void Err(string vorlage, int zeile, params string[] argumente)
         {
-            if (fehler.Count < MaxFehler) { fehler.Add($"{file}, Zeile {line}: {message}"); }
+            if (fehler.Count < MaxFehler) { fehler.Add(new ImportFehler(vorlage, [zeile.ToString(De), .. argumente])); }
         }
 
         bool hasA = !string.IsNullOrWhiteSpace(aufschluesseCsv);
         bool hasS = !string.IsNullOrWhiteSpace(schichtenCsv);
         if (!hasA && !hasS)
         {
-            return new ImportResult([], [], ["Es wurde keine Datei ausgewählt oder die Datei ist leer."]);
+            const string keineDatei = "Es wurde keine Datei ausgewählt oder die Datei ist leer.";
+            return new ImportResult([], [], [keineDatei]) { FehlerTexte = [new ImportFehler(keineDatei, [])] };
         }
 
         // ---------- Aufschlüsse ----------
@@ -68,7 +82,7 @@ public class CsvImportService
         var lineOfNew = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
         if (hasA)
         {
-            var rows = ReadRows(aufschluesseCsv!, AufschluesseHeader, FileA, 8, Err);
+            var rows = ReadRows(aufschluesseCsv!, AufschluesseHeader, true, 8, Err);
             foreach (var (line, f) in rows)
             {
                 var a = ParseAufschluss(line, f, existing, lineOfNew, Err);
@@ -84,14 +98,14 @@ public class CsvImportService
         var schichten = new List<Schicht>();
         if (hasS)
         {
-            var rows = ReadRows(schichtenCsv!, SchichtenHeader, FileS, 11, Err);
+            var rows = ReadRows(schichtenCsv!, SchichtenHeader, false, 11, Err);
             var perAufschluss = new Dictionary<string, List<(int Line, Schicht S)>>(StringComparer.OrdinalIgnoreCase);
             foreach (var (line, f) in rows)
             {
                 string name = f[0].Trim();
                 if (name.Length == 0)
                 {
-                    Err(FileS, line, "Bezeichnung fehlt.");
+                    Err("Schichten, Zeile {0}: Bezeichnung fehlt.", line);
                     continue;
                 }
 
@@ -100,19 +114,19 @@ public class CsvImportService
                 var ziel = neu ?? vorhanden;
                 if (ziel is null)
                 {
-                    Err(FileS, line, $"Aufschluss \"{name}\" ist weder in der Aufschlüsse-Datei noch im Projekt vorhanden.");
+                    Err("Schichten, Zeile {0}: Aufschluss {1} ist weder in der Aufschlüsse-Datei noch im Projekt vorhanden.", line, Q(name));
                     continue;
                 }
 
                 if (neu is null && vorhanden!.Schichten.Count > 0)
                 {
-                    Err(FileS, line, $"Aufschluss \"{name}\" hat im Projekt bereits Schichten; sie können nicht nachträglich ergänzt werden.");
+                    Err("Schichten, Zeile {0}: Aufschluss {1} hat im Projekt bereits Schichten; sie können nicht nachträglich ergänzt werden.", line, Q(name));
                     continue;
                 }
 
                 if (ziel.Art == AufschlussArt.Rammsondierung)
                 {
-                    Err(FileS, line, $"Rammsondierung \"{ziel.Bezeichnung}\" kann keine Schichten haben.");
+                    Err("Schichten, Zeile {0}: Rammsondierung {1} kann keine Schichten haben.", line, Q(ziel.Bezeichnung));
                     continue;
                 }
 
@@ -140,15 +154,15 @@ public class CsvImportService
                 {
                     if (first && Math.Abs(s.VonM) > Tol)
                     {
-                        Err(FileS, line, $"Die erste Schicht von {name} beginnt bei {M(s.VonM)}, nicht bei 0,00 m.");
+                        Err("Schichten, Zeile {0}: Die erste Schicht von {1} beginnt bei {2}, nicht bei 0,00 m.", line, name, M(s.VonM));
                     }
                     else if (!first && s.VonM > cursor + Tol)
                     {
-                        Err(FileS, line, $"Lücke zwischen {M(cursor)} und {M(s.VonM)} bei {name}");
+                        Err("Schichten, Zeile {0}: Lücke zwischen {1} und {2} bei {3}", line, M(cursor), M(s.VonM), name);
                     }
                     else if (!first && s.VonM < cursor - Tol)
                     {
-                        Err(FileS, line, $"Überlappung zwischen {M(s.VonM)} und {M(cursor)} bei {name}");
+                        Err("Schichten, Zeile {0}: Überlappung zwischen {1} und {2} bei {3}", line, M(s.VonM), M(cursor), name);
                     }
 
                     first = false;
@@ -157,7 +171,7 @@ public class CsvImportService
 
                 if (Math.Abs(cursor - ziel.EndteufeM) > Tol)
                 {
-                    Err(FileS, sorted[^1].Line, $"Die letzte Schicht von {name} endet bei {M(cursor)}, die Endteufe ist {M(ziel.EndteufeM)}.");
+                    Err("Schichten, Zeile {0}: Die letzte Schicht von {1} endet bei {2}, die Endteufe ist {3}.", sorted[^1].Line, name, M(cursor), M(ziel.EndteufeM));
                 }
 
                 schichten.AddRange(sorted.Select(x => x.S));
@@ -166,8 +180,12 @@ public class CsvImportService
 
         if (fehler.Count > 0)
         {
-            if (fehler.Count >= MaxFehler) { fehler.Add($"Weitere Fehler werden nicht angezeigt (Anzeige begrenzt auf {MaxFehler})."); }
-            return new ImportResult([], [], fehler);
+            if (fehler.Count >= MaxFehler)
+            {
+                fehler.Add(new ImportFehler("Weitere Fehler werden nicht angezeigt (Anzeige begrenzt auf {0}).", [MaxFehler.ToString(De)]));
+            }
+
+            return new ImportResult([], [], fehler.Select(Deutsch).ToList()) { FehlerTexte = fehler };
         }
 
         return new ImportResult(neue, schichten, []);
@@ -177,7 +195,7 @@ public class CsvImportService
 
     private static string M(double v) => v.ToString("0.00", De) + " m";
 
-    private static List<(int Line, string[] Fields)> ReadRows(string csv, string header, string file, int columns, Action<string, int, string> err)
+    private static List<(int Line, string[] Fields)> ReadRows(string csv, string header, bool aufschluss, int columns, ZeilenFehler err)
     {
         var result = new List<(int, string[])>();
         var lines = SplitLines(csv.TrimStart('﻿'));
@@ -188,7 +206,10 @@ public class CsvImportService
         string normalised = string.Join(";", SplitFields(head.Text).Select(x => x.Trim()));
         if (!string.Equals(normalised, header, StringComparison.OrdinalIgnoreCase))
         {
-            err(file, head.Number, $"Kopfzeile stimmt nicht. Erwartet: {header}");
+            string kopf = aufschluss
+                ? "Aufschlüsse, Zeile {0}: Kopfzeile stimmt nicht. Erwartet: {1}"
+                : "Schichten, Zeile {0}: Kopfzeile stimmt nicht. Erwartet: {1}";
+            err(kopf, head.Number, header);
             return result;
         }
 
@@ -199,7 +220,10 @@ public class CsvImportService
             var fields = SplitFields(l.Text);
             if (fields.Length != columns)
             {
-                err(file, l.Number, $"{columns} Spalten erwartet, {fields.Length} gefunden (Trennzeichen ist das Semikolon).");
+                string spalten = aufschluss
+                    ? "Aufschlüsse, Zeile {0}: {1} Spalten erwartet, {2} gefunden (Trennzeichen ist das Semikolon)."
+                    : "Schichten, Zeile {0}: {1} Spalten erwartet, {2} gefunden (Trennzeichen ist das Semikolon).";
+                err(spalten, l.Number, columns.ToString(De), fields.Length.ToString(De));
                 continue;
             }
 
@@ -277,21 +301,28 @@ public class CsvImportService
     // ---------- Aufschluss row ----------
 
     private static Aufschluss? ParseAufschluss(int line, string[] f, IReadOnlyCollection<Aufschluss> existing,
-        Dictionary<string, int> seen, Action<string, int, string> err)
+        Dictionary<string, int> seen, ZeilenFehler err)
     {
         bool ok = true;
-        void E(string message) { ok = false; err(FileA, line, message); }
+        void E(string vorlage, params string[] argumente) { ok = false; err(vorlage, line, argumente); }
+
+        double Pflicht(string text, string spalte)
+        {
+            if (text.Trim().Length == 0) { E("Aufschlüsse, Zeile {0}: {1} fehlt.", spalte); return double.NaN; }
+            if (!TryNumber(text, out double v)) { E("Aufschlüsse, Zeile {0}: {1} {2} ist keine Zahl.", spalte, Q(text.Trim())); return double.NaN; }
+            return v;
+        }
 
         string name = f[0].Trim();
-        if (name.Length == 0) { E("Bezeichnung fehlt."); }
-        else if (name.Length > 20) { E($"Bezeichnung \"{name}\" ist länger als 20 Zeichen."); }
+        if (name.Length == 0) { E("Aufschlüsse, Zeile {0}: Bezeichnung fehlt."); }
+        else if (name.Length > 20) { E("Aufschlüsse, Zeile {0}: Bezeichnung {1} ist länger als 20 Zeichen.", Q(name)); }
         else if (existing.Any(a => string.Equals(a.Bezeichnung, name, StringComparison.OrdinalIgnoreCase)))
         {
-            E($"Bezeichnung \"{name}\" existiert bereits im Projekt.");
+            E("Aufschlüsse, Zeile {0}: Bezeichnung {1} existiert bereits im Projekt.", Q(name));
         }
         else if (seen.TryGetValue(name, out int firstLine))
         {
-            E($"Bezeichnung \"{name}\" kommt in dieser Datei mehrfach vor (zuerst in Zeile {firstLine}).");
+            E("Aufschlüsse, Zeile {0}: Bezeichnung {1} kommt in dieser Datei mehrfach vor (zuerst in Zeile {2}).", Q(name), firstLine.ToString(De));
         }
 
         AufschlussArt art = AufschlussArt.Kleinrammbohrung;
@@ -299,34 +330,37 @@ public class CsvImportService
         {
             case "krb": case "kleinrammbohrung": art = AufschlussArt.Kleinrammbohrung; break;
             case "dph": case "rammsondierung": art = AufschlussArt.Rammsondierung; break;
-            case "": E("Art fehlt (erlaubt: KRB, DPH, Kleinrammbohrung, Rammsondierung)."); break;
-            default: E($"Ungültige Art \"{f[1].Trim()}\" (erlaubt: KRB, DPH, Kleinrammbohrung, Rammsondierung)."); break;
+            case "": E("Aufschlüsse, Zeile {0}: Art fehlt (erlaubt: KRB, DPH, Kleinrammbohrung, Rammsondierung)."); break;
+            default: E("Aufschlüsse, Zeile {0}: Ungültige Art {1} (erlaubt: KRB, DPH, Kleinrammbohrung, Rammsondierung).", Q(f[1].Trim())); break;
         }
 
-        double rw = Required(f[2], "Rechtswert", E);
-        double hw = Required(f[3], "Hochwert", E);
-        double hoehe = Required(f[4], "Ansatzhoehe_mNHN", E);
-        double endteufe = Required(f[5], "Endteufe_m", E);
-        if (!double.IsNaN(rw) && (rw < 100000 || rw > 1000000)) { E($"Rechtswert {f[2].Trim()} liegt außerhalb des Bereichs für ETRS89 / UTM 32N (EPSG:25832)."); }
-        if (!double.IsNaN(hw) && (hw < 4000000 || hw > 6500000)) { E($"Hochwert {f[3].Trim()} liegt außerhalb des Bereichs für ETRS89 / UTM 32N (EPSG:25832)."); }
-        if (!double.IsNaN(hoehe) && (hoehe < -500 || hoehe > 5000)) { E($"Ansatzhoehe_mNHN {f[4].Trim()} ist nicht plausibel."); }
-        if (!double.IsNaN(endteufe) && endteufe <= 0) { E("Endteufe_m muss größer als 0 sein."); }
+        double rw = Pflicht(f[2], "Rechtswert");
+        double hw = Pflicht(f[3], "Hochwert");
+        double hoehe = Pflicht(f[4], "Ansatzhoehe_mNHN");
+        double endteufe = Pflicht(f[5], "Endteufe_m");
+        if (!double.IsNaN(rw) && (rw < 100000 || rw > 1000000)) { E("Aufschlüsse, Zeile {0}: Rechtswert {1} liegt außerhalb des Bereichs für ETRS89 / UTM 32N (EPSG:25832).", f[2].Trim()); }
+        if (!double.IsNaN(hw) && (hw < 4000000 || hw > 6500000)) { E("Aufschlüsse, Zeile {0}: Hochwert {1} liegt außerhalb des Bereichs für ETRS89 / UTM 32N (EPSG:25832).", f[3].Trim()); }
+        if (!double.IsNaN(hoehe) && (hoehe < -500 || hoehe > 5000)) { E("Aufschlüsse, Zeile {0}: Ansatzhoehe_mNHN {1} ist nicht plausibel.", f[4].Trim()); }
+        if (!double.IsNaN(endteufe) && endteufe <= 0) { E("Aufschlüsse, Zeile {0}: Endteufe_m muss größer als 0 sein."); }
 
         DateOnly datum = default;
         string d = f[6].Trim();
-        if (d.Length == 0) { E("Datum fehlt (Format TT.MM.JJJJ)."); }
+        if (d.Length == 0) { E("Aufschlüsse, Zeile {0}: Datum fehlt (Format TT.MM.JJJJ)."); }
         else if (!DateOnly.TryParseExact(d, "dd.MM.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out datum))
         {
-            E($"Ungültiges Datum \"{d}\" (Format TT.MM.JJJJ).");
+            E("Aufschlüsse, Zeile {0}: Ungültiges Datum {1} (Format TT.MM.JJJJ).", Q(d));
         }
 
         double? gw = null;
         string g = f[7].Trim();
         if (g.Length > 0)
         {
-            if (!TryNumber(g, out double gv)) { E($"Grundwasser_m \"{g}\" ist keine Zahl."); }
-            else if (gv < 0) { E("Grundwasser_m darf nicht negativ sein."); }
-            else if (!double.IsNaN(endteufe) && gv > endteufe + Tol) { E($"Grundwasser_m ({M(gv)}) liegt tiefer als die Endteufe ({M(endteufe)})."); }
+            if (!TryNumber(g, out double gv)) { E("Aufschlüsse, Zeile {0}: Grundwasser_m {1} ist keine Zahl.", Q(g)); }
+            else if (gv < 0) { E("Aufschlüsse, Zeile {0}: Grundwasser_m darf nicht negativ sein."); }
+            else if (!double.IsNaN(endteufe) && gv > endteufe + Tol)
+            {
+                E("Aufschlüsse, Zeile {0}: Grundwasser_m ({1}) liegt tiefer als die Endteufe ({2}).", M(gv), M(endteufe));
+            }
             else { gw = gv; }
         }
 
@@ -344,38 +378,40 @@ public class CsvImportService
         };
     }
 
-    /// <summary>Returns the number, or NaN after reporting an error.</summary>
-    private static double Required(string text, string column, Action<string> error)
-    {
-        if (text.Trim().Length == 0) { error($"{column} fehlt."); return double.NaN; }
-        if (!TryNumber(text, out double v)) { error($"{column} \"{text.Trim()}\" ist keine Zahl."); return double.NaN; }
-        return v;
-    }
-
     // ---------- Schicht row ----------
 
-    private static Schicht? ParseSchicht(int line, string[] f, Action<string, int, string> err)
+    private static Schicht? ParseSchicht(int line, string[] f, ZeilenFehler err)
     {
         bool ok = true;
-        void E(string message) { ok = false; err(FileS, line, message); }
+        void E(string vorlage, params string[] argumente) { ok = false; err(vorlage, line, argumente); }
 
-        double von = Required(f[1], "Von_m", E);
-        double bis = Required(f[2], "Bis_m", E);
-        if (!double.IsNaN(von) && von < 0) { E("Von_m darf nicht negativ sein."); }
-        if (!double.IsNaN(von) && !double.IsNaN(bis) && bis <= von) { E($"Bis_m ({M(bis)}) muss größer sein als Von_m ({M(von)})."); }
+        double Pflicht(string text, string spalte)
+        {
+            if (text.Trim().Length == 0) { E("Schichten, Zeile {0}: {1} fehlt.", spalte); return double.NaN; }
+            if (!TryNumber(text, out double v)) { E("Schichten, Zeile {0}: {1} {2} ist keine Zahl.", spalte, Q(text.Trim())); return double.NaN; }
+            return v;
+        }
+
+        double von = Pflicht(f[1], "Von_m");
+        double bis = Pflicht(f[2], "Bis_m");
+        if (!double.IsNaN(von) && von < 0) { E("Schichten, Zeile {0}: Von_m darf nicht negativ sein."); }
+        if (!double.IsNaN(von) && !double.IsNaN(bis) && bis <= von)
+        {
+            E("Schichten, Zeile {0}: Bis_m ({1}) muss größer sein als Von_m ({2}).", M(bis), M(von));
+        }
 
         string kurz = f[3].Trim();
-        if (kurz.Length == 0) { E("Kurzzeichen fehlt."); }
-        else if (kurz.Length > 40) { E("Kurzzeichen ist länger als 40 Zeichen."); }
+        if (kurz.Length == 0) { E("Schichten, Zeile {0}: Kurzzeichen fehlt."); }
+        else if (kurz.Length > 40) { E("Schichten, Zeile {0}: Kurzzeichen ist länger als 40 Zeichen."); }
 
         string beschr = f[4].Trim();
-        if (beschr.Length == 0) { E("Beschreibung fehlt."); }
-        else if (beschr.Length > 400) { E("Beschreibung ist länger als 400 Zeichen."); }
+        if (beschr.Length == 0) { E("Schichten, Zeile {0}: Beschreibung fehlt."); }
+        else if (beschr.Length > 400) { E("Schichten, Zeile {0}: Beschreibung ist länger als 400 Zeichen."); }
 
-        string? Opt(string v, int max, string column)
+        string? Opt(string v, int max, string spalte)
         {
             string t = v.Trim();
-            if (t.Length > max) { E($"{column} ist länger als {max} Zeichen."); }
+            if (t.Length > max) { E("Schichten, Zeile {0}: {1} ist länger als {2} Zeichen.", spalte, max.ToString(De)); }
             return t.Length == 0 ? null : t;
         }
 
@@ -394,7 +430,7 @@ public class CsvImportService
             }
             else
             {
-                E($"Ungültige Frostklasse \"{fr}\" (erlaubt: F1, F2, F3 oder leer).");
+                E("Schichten, Zeile {0}: Ungültige Frostklasse {1} (erlaubt: F1, F2, F3 oder leer).", Q(fr));
             }
         }
 
@@ -402,8 +438,8 @@ public class CsvImportService
         string k = f[10].Trim();
         if (k.Length > 0)
         {
-            if (!TryNumber(k, out double kv)) { E($"kf_m_s \"{k}\" ist keine Zahl (erlaubt z. B. 5E-08, 5,0E-08, 0,00000005)."); }
-            else if (kv <= 0) { E("kf_m_s muss größer als 0 sein."); }
+            if (!TryNumber(k, out double kv)) { E("Schichten, Zeile {0}: kf_m_s {1} ist keine Zahl (erlaubt z. B. 5E-08, 5,0E-08, 0,00000005).", Q(k)); }
+            else if (kv <= 0) { E("Schichten, Zeile {0}: kf_m_s muss größer als 0 sein."); }
             else { kf = kv; }
         }
 

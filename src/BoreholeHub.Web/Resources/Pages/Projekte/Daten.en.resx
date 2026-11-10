@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Daten" xml:space="preserve">
+    <value>Data</value>
+  </data>
+  <data name="Projekte" xml:space="preserve">
+    <value>Projects</value>
+  </data>
+  <data name="Brotkrumen" xml:space="preserve">
+    <value>Breadcrumb</value>
+  </data>
+  <data name="Import abgeschlossen" xml:space="preserve">
+    <value>Import complete</value>
+  </data>
+  <data name="und" xml:space="preserve">
+    <value>and</value>
+  </data>
+  <data name="importiert." xml:space="preserve">
+    <value>imported.</value>
+  </data>
+  <data name="Prüfung" xml:space="preserve">
+    <value>Data check</value>
+  </data>
+  <data name="1 Aufschluss" xml:space="preserve">
+    <value>1 exploration point</value>
+  </data>
+  <data name="{0} Aufschlüsse" xml:space="preserve">
+    <value>{0} exploration points</value>
+  </data>
+  <data name="1 Schicht" xml:space="preserve">
+    <value>1 layer</value>
+  </data>
+  <data name="{0} Schichten" xml:space="preserve">
+    <value>{0} layers</value>
+  </data>
+  <data name="1 Fehler" xml:space="preserve">
+    <value>1 error</value>
+  </data>
+  <data name="{0} Fehler" xml:space="preserve">
+    <value>{0} errors</value>
+  </data>
+  <data name="1 Hinweis" xml:space="preserve">
+    <value>1 notice</value>
+  </data>
+  <data name="{0} Hinweise" xml:space="preserve">
+    <value>{0} notices</value>
+  </data>
+  <data name="Zur Prüfung" xml:space="preserve">
+    <value>Go to the data check</value>
+  </data>
+  <data name="Auf der Karte ansehen" xml:space="preserve">
+    <value>View on the map</value>
+  </data>
+  <data name="Import nicht möglich" xml:space="preserve">
+    <value>Import not possible</value>
+  </data>
+  <data name="Es wurde nichts gespeichert. Bitte die Dateien korrigieren und erneut hochladen." xml:space="preserve">
+    <value>Nothing has been saved. Please correct the files and upload them again.</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="GeoJSON mit allen Aufschlüssen dieses Projekts (WGS84)." xml:space="preserve">
+    <value>GeoJSON with all exploration points of this project (WGS84).</value>
+  </data>
+  <data name="GeoJSON herunterladen" xml:space="preserve">
+    <value>Download GeoJSON</value>
+  </data>
+  <data name="Öffnet direkt in QGIS (Ebene hinzufügen › Vektor)" xml:space="preserve">
+    <value>Opens directly in QGIS (add layer › vector)</value>
+  </data>
+  <data name="Import" xml:space="preserve">
+    <value>Import</value>
+  </data>
+  <data name="Aufschlüsse und Schichten aus CSV-Dateien zum Projekt hinzufügen. Es wird entweder alles oder nichts importiert." xml:space="preserve">
+    <value>Add exploration points and layers from CSV files to the project. Either everything or nothing is imported.</value>
+  </data>
+  <data name="Aufschlüsse (CSV)" xml:space="preserve">
+    <value>Exploration points (CSV)</value>
+  </data>
+  <data name="Schichten (CSV)" xml:space="preserve">
+    <value>Layers (CSV)</value>
+  </data>
+  <data name="Importieren" xml:space="preserve">
+    <value>Import</value>
+  </data>
+  <data name="Vorlagen:" xml:space="preserve">
+    <value>Templates:</value>
+  </data>
+  <data name="Regeln" xml:space="preserve">
+    <value>Rules</value>
+  </data>
+  <data name="Semikolon als Trennzeichen, Dezimalkomma, UTF-8 (mit oder ohne BOM), höchstens 1 MB je Datei." xml:space="preserve">
+    <value>Semicolon as separator, decimal comma, UTF-8 (with or without BOM), at most 1 MB per file.</value>
+  </data>
+  <data name="Koordinaten in ETRS89 / UTM 32N (EPSG:25832); Datum als TT.MM.JJJJ; Art ist KRB oder DPH." xml:space="preserve">
+    <value>Coordinates in ETRS89 / UTM 32N (EPSG:25832); date as DD.MM.YYYY; type is KRB or DPH.</value>
+  </data>
+  <data name="Eine Bezeichnung, die im Projekt schon vorhanden ist, wird nicht importiert (Fehler)." xml:space="preserve">
+    <value>A designation that already exists in the project is not imported (error).</value>
+  </data>
+  <data name="Schichten einer Kleinrammbohrung müssen lückenlos von 0 bis zur Endteufe reichen." xml:space="preserve">
+    <value>Layers of a small percussion borehole (KRB) must cover 0 to the final depth without gaps.</value>
+  </data>
+  <data name="Frostklasse leer oder F1, F2, F3; kf z. B. 5E-08, 5,0E-08 oder 0,00000005." xml:space="preserve">
+    <value>Frost class empty or F1, F2, F3; kf e.g. 5E-08, 5,0E-08 or 0,00000005.</value>
+  </data>
+  <data name="Beide Dateien sind optional; Schichten können sich auf Aufschlüsse derselben Sitzung oder des Projekts beziehen." xml:space="preserve">
+    <value>Both files are optional; layers can refer to exploration points of the same upload or of the project.</value>
+  </data>
+</root>

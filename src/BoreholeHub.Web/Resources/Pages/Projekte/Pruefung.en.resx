@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Prüfung" xml:space="preserve">
+    <value>Data check</value>
+  </data>
+  <data name="Projekte" xml:space="preserve">
+    <value>Projects</value>
+  </data>
+  <data name="Brotkrumen" xml:space="preserve">
+    <value>Breadcrumb</value>
+  </data>
+  <data name="Noch keine Aufschlüsse erfasst." xml:space="preserve">
+    <value>No exploration points recorded yet.</value>
+  </data>
+  <data name="Kennzahlen Prüfung" xml:space="preserve">
+    <value>Key figures for the data check</value>
+  </data>
+  <data name="Fehler" xml:space="preserve">
+    <value>Errors</value>
+  </data>
+  <data name="Hinweise" xml:space="preserve">
+    <value>Notices</value>
+  </data>
+  <data name="Ohne Befund" xml:space="preserve">
+    <value>Without findings</value>
+  </data>
+  <data name="Befunde" xml:space="preserve">
+    <value>Findings</value>
+  </data>
+  <data name="Befunde der Datenprüfung je Aufschluss" xml:space="preserve">
+    <value>Findings of the data check by exploration point</value>
+  </data>
+  <data name="Stufe" xml:space="preserve">
+    <value>Level</value>
+  </data>
+  <data name="Aufschluss" xml:space="preserve">
+    <value>Exploration point</value>
+  </data>
+  <data name="Regel" xml:space="preserve">
+    <value>Rule</value>
+  </data>
+  <data name="Meldung" xml:space="preserve">
+    <value>Message</value>
+  </data>
+  <data name="Automatische Plausibilitätsprüfung der erfassten Daten. Sie ersetzt keine fachliche Prüfung." xml:space="preserve">
+    <value>Automatic plausibility check of the recorded data. It does not replace a professional review.</value>
+  </data>
+</root>

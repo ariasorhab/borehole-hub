@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Geeignet" xml:space="preserve">
+    <value>Suitable</value>
+  </data>
+  <data name="Zu gering durchlässig" xml:space="preserve">
+    <value>Permeability too low</value>
+  </data>
+  <data name="Zu durchlässig" xml:space="preserve">
+    <value>Too permeable</value>
+  </data>
+  <data name="Unbekannt" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="kf zwischen {0} und {1} m/s" xml:space="preserve">
+    <value>kf between {0} and {1} m/s</value>
+  </data>
+  <data name="kf &lt; {0} m/s" xml:space="preserve">
+    <value>kf &lt; {0} m/s</value>
+  </data>
+  <data name="kf &gt; {0} m/s" xml:space="preserve">
+    <value>kf &gt; {0} m/s</value>
+  </data>
+  <data name="kein kf-Wert" xml:space="preserve">
+    <value>no kf value</value>
+  </data>
+</root>

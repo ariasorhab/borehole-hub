@@ -5,10 +5,11 @@ using BoreholeHub.Web.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 
 namespace BoreholeHub.Web.Pages.Projekte;
 
-public class LaborModel(BoreholeDbContext db) : PageModel
+public class LaborModel(BoreholeDbContext db, IStringLocalizer<LaborModel> loc) : PageModel
 {
     public const string Beispielhinweis = "Beispielwerte zur Demonstration – keine amtlichen Werte der Ersatzbaustoffverordnung (EBV).";
 
@@ -137,17 +138,26 @@ public class LaborModel(BoreholeDbContext db) : PageModel
 
     private static string Limit(double v) => Aufschluesse.DetailsModel.KfText(v).Replace("1,0 · ", "1 · ");
 
-    private static VersickerungZeile BuildVersickerung(Aufschluss a, Schicht s)
+    private VersickerungZeile BuildVersickerung(Aufschluss a, Schicht s)
     {
-        var (css, text) = Aufschluesse.DetailsModel.Versickerung(s.KfWertMs);
+        var (css, _) = Aufschluesse.DetailsModel.Versickerung(s.KfWertMs);
         string grund = InfiltrationService.Assess(s.KfWertMs) switch
         {
-            InfiltrationResult.Geeignet => $"kf zwischen {Limit(InfiltrationService.KfMin)} und {Limit(InfiltrationService.KfMax)} m/s",
-            InfiltrationResult.ZuGeringDurchlaessig => $"kf < {Limit(InfiltrationService.KfMin)} m/s",
-            InfiltrationResult.ZuDurchlaessig => $"kf > {Limit(InfiltrationService.KfMax)} m/s",
-            _ => "kein kf-Wert",
+            InfiltrationResult.Geeignet => loc["kf zwischen {0} und {1} m/s", Limit(InfiltrationService.KfMin), Limit(InfiltrationService.KfMax)].Value,
+            InfiltrationResult.ZuGeringDurchlaessig => loc["kf < {0} m/s", Limit(InfiltrationService.KfMin)].Value,
+            InfiltrationResult.ZuDurchlaessig => loc["kf > {0} m/s", Limit(InfiltrationService.KfMax)].Value,
+            _ => loc["kein kf-Wert"].Value,
         };
         string schicht = $"{s.VonM.ToString("0.00", De)}–{s.BisM.ToString("0.00", De)} m · {s.Kurzzeichen}";
-        return new VersickerungZeile(a.Bezeichnung, schicht, Aufschluesse.DetailsModel.KfText(s.KfWertMs), css, text, grund);
+        return new VersickerungZeile(a.Bezeichnung, schicht, Aufschluesse.DetailsModel.KfText(s.KfWertMs), css, ErgebnisText(s.KfWertMs), grund);
     }
+
+    /// <summary>Infiltration result in the UI language. The CSS class comes from the Details helper.</summary>
+    private string ErgebnisText(double? kf) => InfiltrationService.Assess(kf) switch
+    {
+        InfiltrationResult.Geeignet => loc["Geeignet"].Value,
+        InfiltrationResult.ZuGeringDurchlaessig => loc["Zu gering durchlässig"].Value,
+        InfiltrationResult.ZuDurchlaessig => loc["Zu durchlässig"].Value,
+        _ => loc["Unbekannt"].Value,
+    };
 }

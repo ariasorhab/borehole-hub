@@ -1,7 +1,8 @@
 @page "/Projekte/{id:int}/Pruefung"
 @model BoreholeHub.Web.Pages.Projekte.PruefungModel
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer L
 @{
-    ViewData["Title"] = Model.Projekt.Name + " · Prüfung";
+    ViewData["Title"] = Model.Projekt.Name + " · " + L["Prüfung"].Value;
 }
 
 @section Head {
@@ -9,16 +10,16 @@
 }
 
 <div class="container">
-    <nav class="breadcrumb" aria-label="Brotkrumen">
+    <nav class="breadcrumb" aria-label="@L["Brotkrumen"]">
         <ol>
-            <li><a href="/Projekte">Projekte</a></li>
+            <li><a href="/Projekte">@L["Projekte"]</a></li>
             <li><a href="/Projekte/@Model.Projekt.Id">@Model.Projekt.Name</a></li>
-            <li aria-current="page">Prüfung</li>
+            <li aria-current="page">@L["Prüfung"]</li>
         </ol>
     </nav>
 
     <header class="page-header">
-        <h1>Prüfung</h1>
+        <h1>@L["Prüfung"]</h1>
         <p class="muted">@Model.Projekt.Name</p>
     </header>
 
@@ -26,36 +27,36 @@
 
     @if (Model.AnzahlAufschluesse == 0)
     {
-        <div class="empty-state"><p>Noch keine Aufschlüsse erfasst.</p></div>
+        <div class="empty-state"><p>@L["Noch keine Aufschlüsse erfasst."]</p></div>
     }
     else
     {
-        <section class="kpi-row pruefung-kpis" aria-label="Kennzahlen Prüfung">
+        <section class="kpi-row pruefung-kpis" aria-label="@L["Kennzahlen Prüfung"]">
             <div class="kpi kpi-bad">
                 <div class="kpi-value">@Model.AnzahlFehler</div>
-                <div class="kpi-label">Fehler</div>
+                <div class="kpi-label">@L["Fehler"]</div>
             </div>
             <div class="kpi kpi-warn">
                 <div class="kpi-value">@Model.AnzahlHinweise</div>
-                <div class="kpi-label">Hinweise</div>
+                <div class="kpi-label">@L["Hinweise"]</div>
             </div>
             <div class="kpi kpi-ok">
                 <div class="kpi-value">@Model.OhneBefund / @Model.AnzahlAufschluesse</div>
-                <div class="kpi-label">Ohne Befund</div>
+                <div class="kpi-label">@L["Ohne Befund"]</div>
             </div>
         </section>
 
         <section aria-labelledby="pruefung-titel">
-            <h2 class="section-title" id="pruefung-titel">Befunde</h2>
+            <h2 class="section-title" id="pruefung-titel">@L["Befunde"]</h2>
             <div class="table-wrap">
                 <table class="data-table pruefung-table">
-                    <caption class="sr-only">Befunde der Datenprüfung je Aufschluss</caption>
+                    <caption class="sr-only">@L["Befunde der Datenprüfung je Aufschluss"]</caption>
                     <thead>
                         <tr>
-                            <th scope="col">Stufe</th>
-                            <th scope="col">Aufschluss</th>
-                            <th scope="col">Regel</th>
-                            <th scope="col">Meldung</th>
+                            <th scope="col">@L["Stufe"]</th>
+                            <th scope="col">@L["Aufschluss"]</th>
+                            <th scope="col">@L["Regel"]</th>
+                            <th scope="col">@L["Meldung"]</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -74,5 +75,5 @@
         </section>
     }
 
-    <p class="note">Automatische Plausibilitätsprüfung der erfassten Daten. Sie ersetzt keine fachliche Prüfung.</p>
+    <p class="note">@L["Automatische Plausibilitätsprüfung der erfassten Daten. Sie ersetzt keine fachliche Prüfung."]</p>
 </div>

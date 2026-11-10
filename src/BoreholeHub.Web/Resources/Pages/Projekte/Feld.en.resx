@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Feldaufnahme" xml:space="preserve">
+    <value>Field log</value>
+  </data>
+  <data name="Brotkrumen" xml:space="preserve">
+    <value>Breadcrumb</value>
+  </data>
+  <data name="Projekte" xml:space="preserve">
+    <value>Projects</value>
+  </data>
+  <data name="{0} gespeichert." xml:space="preserve">
+    <value>{0} saved.</value>
+  </data>
+  <data name="Hinweis" xml:space="preserve">
+    <value>Notice</value>
+  </data>
+  <data name="Profil öffnen" xml:space="preserve">
+    <value>Open profile</value>
+  </data>
+  <data name="Zur Prüfung" xml:space="preserve">
+    <value>Go to the data check</value>
+  </data>
+  <data name="Nichts gespeichert" xml:space="preserve">
+    <value>Nothing saved</value>
+  </data>
+  <data name="1 Fehler" xml:space="preserve">
+    <value>1 error</value>
+  </data>
+  <data name="{0} Fehler" xml:space="preserve">
+    <value>{0} errors</value>
+  </data>
+  <data name="Bitte die Angaben korrigieren. Alle eingegebenen Werte sind erhalten geblieben." xml:space="preserve">
+    <value>Please correct the entries. All values you entered have been kept.</value>
+  </data>
+  <data name="Hinweise der Prüfung" xml:space="preserve">
+    <value>Data check notices</value>
+  </data>
+  <data name="Aufschluss" xml:space="preserve">
+    <value>Exploration point</value>
+  </data>
+  <data name="Art" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Kleinrammbohrung (KRB)" xml:space="preserve">
+    <value>Small percussion borehole (KRB)</value>
+  </data>
+  <data name="Rammsondierung (DPH)" xml:space="preserve">
+    <value>Dynamic probing (DPH)</value>
+  </data>
+  <data name="Bezeichnung" xml:space="preserve">
+    <value>Designation</value>
+  </data>
+  <data name="Datum" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="Rechtswert [m, EPSG:25832]" xml:space="preserve">
+    <value>Easting [m, EPSG:25832]</value>
+  </data>
+  <data name="Hochwert [m, EPSG:25832]" xml:space="preserve">
+    <value>Northing [m, EPSG:25832]</value>
+  </data>
+  <data name="Standort übernehmen" xml:space="preserve">
+    <value>Use my location</value>
+  </data>
+  <data name="Ansatzhöhe [m NHN]" xml:space="preserve">
+    <value>Start height [m NHN]</value>
+  </data>
+  <data name="Endteufe [m]" xml:space="preserve">
+    <value>Final depth [m]</value>
+  </data>
+  <data name="Grundwasser [m u. GOK]" xml:space="preserve">
+    <value>Groundwater [m below GOK]</value>
+  </data>
+  <data name="(optional)" xml:space="preserve">
+    <value>(optional)</value>
+  </data>
+  <data name="Bemerkung" xml:space="preserve">
+    <value>Remarks</value>
+  </data>
+  <data name="Schichten" xml:space="preserve">
+    <value>Layers</value>
+  </data>
+  <data name="Von oben nach unten, lückenlos von 0 bis zur Endteufe. Leere Zeilen werden ignoriert." xml:space="preserve">
+    <value>From top to bottom, without gaps from 0 to the final depth. Empty rows are ignored.</value>
+  </data>
+  <data name="Schicht" xml:space="preserve">
+    <value>Layer</value>
+  </data>
+  <data name="Von [m]" xml:space="preserve">
+    <value>From [m]</value>
+  </data>
+  <data name="Bis [m]" xml:space="preserve">
+    <value>To [m]</value>
+  </data>
+  <data name="Kurzzeichen" xml:space="preserve">
+    <value>Short code</value>
+  </data>
+  <data name="Beschreibung" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="Bodengruppe" xml:space="preserve">
+    <value>Soil group</value>
+  </data>
+  <data name="Farbe" xml:space="preserve">
+    <value>Colour</value>
+  </data>
+  <data name="Zustand" xml:space="preserve">
+    <value>Condition</value>
+  </data>
+  <data name="Homogenbereich" xml:space="preserve">
+    <value>Homogeneous zone</value>
+  </data>
+  <data name="Frostklasse" xml:space="preserve">
+    <value>Frost class</value>
+  </data>
+  <data name="z. B. 2e-5" xml:space="preserve">
+    <value>e.g. 2e-5</value>
+  </data>
+  <data name="Entfernen" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="Schicht hinzufügen" xml:space="preserve">
+    <value>Add layer</value>
+  </data>
+  <data name="Schlagzahlen N10" xml:space="preserve">
+    <value>Blow counts N10</value>
+  </data>
+  <data name="Schläge je 0,10 m, von 0,10 m bis zur Endteufe. Leere Felder werden nicht gespeichert." xml:space="preserve">
+    <value>Blows per 0,10 m, from 0,10 m to the final depth. Empty fields are not saved.</value>
+  </data>
+  <data name="Speichern" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Zurücksetzen" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+</root>

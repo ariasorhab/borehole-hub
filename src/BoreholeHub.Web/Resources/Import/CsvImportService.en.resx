@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+    <data name="Es wurde keine Datei ausgewählt oder die Datei ist leer." xml:space="preserve">
+    <value>No file was selected, or the file is empty.</value>
+  </data>
+  <data name="Aufschlüsse, Zeile {0}: Kopfzeile stimmt nicht. Erwartet: {1}" xml:space="preserve">
+    <value>Exploration points, line {0}: header does not match. Expected: {1}</value>
+  </data>
+  <data name="Schichten, Zeile {0}: Kopfzeile stimmt nicht. Erwartet: {1}" xml:space="preserve">
+    <value>Layers, line {0}: header does not match. Expected: {1}</value>
+  </data>
+  <data name="Aufschlüsse, Zeile {0}: {1} Spalten erwartet, {2} gefunden (Trennzeichen ist das Semikolon)." xml:space="preserve">
+    <value>Exploration points, line {0}: {1} columns expected, {2} found (the separator is the semicolon).</value>
+  </data>
+  <data name="Schichten, Zeile {0}: {1} Spalten erwartet, {2} gefunden (Trennzeichen ist das Semikolon)." xml:space="preserve">
+    <value>Layers, line {0}: {1} columns expected, {2} found (the separator is the semicolon).</value>
+  </data>
+  <data name="Schichten, Zeile {0}: Bezeichnung fehlt." xml:space="preserve">
+    <value>Layers, line {0}: designation missing.</value>
+  </data>
+  <data name="Schichten, Zeile {0}: Aufschluss {1} ist weder in der Aufschlüsse-Datei noch im Projekt vorhanden." xml:space="preserve">
+    <value>Layers, line {0}: exploration point {1} is neither in the exploration points file nor in the project.</value>
+  </data>
+  <data name="Schichten, Zeile {0}: Aufschluss {1} hat im Projekt bereits Schichten; sie können nicht nachträglich ergänzt werden." xml:space="preserve">
+    <value>Layers, line {0}: exploration point {1} already has layers in the project; they cannot be added later.</value>
+  </data>
+  <data name="Schichten, Zeile {0}: Rammsondierung {1} kann keine Schichten haben." xml:space="preserve">
+    <value>Layers, line {0}: dynamic probing {1} cannot have layers.</value>
+  </data>
+  <data name="Schichten, Zeile {0}: Die erste Schicht von {1} beginnt bei {2}, nicht bei 0,00 m." xml:space="preserve">
+    <value>Layers, line {0}: the first layer of {1} starts at {2}, not at 0,00 m.</value>
+  </data>
+  <data name="Schichten, Zeile {0}: Lücke zwischen {1} und {2} bei {3}" xml:space="preserve">
+    <value>Layers, line {0}: gap between {1} and {2} at {3}</value>
+  </data>
+  <data name="Schichten, Zeile {0}: Überlappung zwischen {1} und {2} bei {3}" xml:space="preserve">
+    <value>Layers, line {0}: overlap between {1} and {2} at {3}</value>
+  </data>
+  <data name="Schichten, Zeile {0}: Die letzte Schicht von {1} endet bei {2}, die Endteufe ist {3}." xml:space="preserve">
+    <value>Layers, line {0}: the last layer of {1} ends at {2}, the final depth is {3}.</value>
+  </data>
+  <data name="Weitere Fehler werden nicht angezeigt (Anzeige begrenzt auf {0})." xml:space="preserve">
+    <value>Further errors are not shown (display limited to {0}).</value>
+  </data>
+  <data name="Aufschlüsse, Zeile {0}: Bezeichnung fehlt." xml:space="preserve">
+    <value>Exploration points, line {0}: designation missing.</value>
+  </data>
+  <data name="Aufschlüsse, Zeile {0}: Bezeichnung {1} ist länger als 20 Zeichen." xml:space="preserve">
+    <value>Exploration points, line {0}: designation {1} is longer than 20 characters.</value>
+  </data>
+  <data name="Aufschlüsse, Zeile {0}: Bezeichnung {1} existiert bereits im Projekt." xml:space="preserve">
+    <value>Exploration points, line {0}: designation {1} already exists in the project.</value>
+  </data>
+  <data name="Aufschlüsse, Zeile {0}: Bezeichnung {1} kommt in dieser Datei mehrfach vor (zuerst in Zeile {2})." xml:space="preserve">
+    <value>Exploration points, line {0}: designation {1} occurs more than once in this file (first in line {2}).</value>
+  </data>
+  <data name="Aufschlüsse, Zeile {0}: Art fehlt (erlaubt: KRB, DPH, Kleinrammbohrung, Rammsondierung)." xml:space="preserve">
+    <value>Exploration points, line {0}: type missing (allowed: KRB, DPH, Kleinrammbohrung, Rammsondierung).</value>
+  </data>
+  <data name="Aufschlüsse, Zeile {0}: Ungültige Art {1} (erlaubt: KRB, DPH, Kleinrammbohrung, Rammsondierung)." xml:space="preserve">
+    <value>Exploration points, line {0}: invalid type {1} (allowed: KRB, DPH, Kleinrammbohrung, Rammsondierung).</value>
+  </data>
+  <data name="Aufschlüsse, Zeile {0}: {1} fehlt." xml:space="preserve">
+    <value>Exploration points, line {0}: {1} missing.</value>
+  </data>
+  <data name="Aufschlüsse, Zeile {0}: {1} {2} ist keine Zahl." xml:space="preserve">
+    <value>Exploration points, line {0}: {1} {2} is not a number.</value>
+  </data>
+  <data name="Aufschlüsse, Zeile {0}: Rechtswert {1} liegt außerhalb des Bereichs für ETRS89 / UTM 32N (EPSG:25832)." xml:space="preserve">
+    <value>Exploration points, line {0}: easting {1} is outside the range for ETRS89 / UTM 32N (EPSG:25832).</value>
+  </data>
+  <data name="Aufschlüsse, Zeile {0}: Hochwert {1} liegt außerhalb des Bereichs für ETRS89 / UTM 32N (EPSG:25832)." xml:space="preserve">
+    <value>Exploration points, line {0}: northing {1} is outside the range for ETRS89 / UTM 32N (EPSG:25832).</value>
+  </data>
+  <data name="Aufschlüsse, Zeile {0}: Ansatzhoehe_mNHN {1} ist nicht plausibel." xml:space="preserve">
+    <value>Exploration points, line {0}: Ansatzhoehe_mNHN {1} is not plausible.</value>
+  </data>
+  <data name="Aufschlüsse, Zeile {0}: Endteufe_m muss größer als 0 sein." xml:space="preserve">
+    <value>Exploration points, line {0}: Endteufe_m must be greater than 0.</value>
+  </data>
+  <data name="Aufschlüsse, Zeile {0}: Datum fehlt (Format TT.MM.JJJJ)." xml:space="preserve">
+    <value>Exploration points, line {0}: date missing (format DD.MM.YYYY).</value>
+  </data>
+  <data name="Aufschlüsse, Zeile {0}: Ungültiges Datum {1} (Format TT.MM.JJJJ)." xml:space="preserve">
+    <value>Exploration points, line {0}: invalid date {1} (format DD.MM.YYYY).</value>
+  </data>
+  <data name="Aufschlüsse, Zeile {0}: Grundwasser_m {1} ist keine Zahl." xml:space="preserve">
+    <value>Exploration points, line {0}: Grundwasser_m {1} is not a number.</value>
+  </data>
+  <data name="Aufschlüsse, Zeile {0}: Grundwasser_m darf nicht negativ sein." xml:space="preserve">
+    <value>Exploration points, line {0}: Grundwasser_m must not be negative.</value>
+  </data>
+  <data name="Aufschlüsse, Zeile {0}: Grundwasser_m ({1}) liegt tiefer als die Endteufe ({2})." xml:space="preserve">
+    <value>Exploration points, line {0}: Grundwasser_m ({1}) is deeper than the final depth ({2}).</value>
+  </data>
+  <data name="Schichten, Zeile {0}: {1} fehlt." xml:space="preserve">
+    <value>Layers, line {0}: {1} missing.</value>
+  </data>
+  <data name="Schichten, Zeile {0}: {1} {2} ist keine Zahl." xml:space="preserve">
+    <value>Layers, line {0}: {1} {2} is not a number.</value>
+  </data>
+  <data name="Schichten, Zeile {0}: Von_m darf nicht negativ sein." xml:space="preserve">
+    <value>Layers, line {0}: Von_m must not be negative.</value>
+  </data>
+  <data name="Schichten, Zeile {0}: Bis_m ({1}) muss größer sein als Von_m ({2})." xml:space="preserve">
+    <value>Layers, line {0}: Bis_m ({1}) must be greater than Von_m ({2}).</value>
+  </data>
+  <data name="Schichten, Zeile {0}: Kurzzeichen fehlt." xml:space="preserve">
+    <value>Layers, line {0}: Kurzzeichen missing.</value>
+  </data>
+  <data name="Schichten, Zeile {0}: Kurzzeichen ist länger als 40 Zeichen." xml:space="preserve">
+    <value>Layers, line {0}: Kurzzeichen is longer than 40 characters.</value>
+  </data>
+  <data name="Schichten, Zeile {0}: Beschreibung fehlt." xml:space="preserve">
+    <value>Layers, line {0}: Beschreibung missing.</value>
+  </data>
+  <data name="Schichten, Zeile {0}: Beschreibung ist länger als 400 Zeichen." xml:space="preserve">
+    <value>Layers, line {0}: Beschreibung is longer than 400 characters.</value>
+  </data>
+  <data name="Schichten, Zeile {0}: {1} ist länger als {2} Zeichen." xml:space="preserve">
+    <value>Layers, line {0}: {1} is longer than {2} characters.</value>
+  </data>
+  <data name="Schichten, Zeile {0}: Ungültige Frostklasse {1} (erlaubt: F1, F2, F3 oder leer)." xml:space="preserve">
+    <value>Layers, line {0}: invalid frost class {1} (allowed: F1, F2, F3 or empty).</value>
+  </data>
+  <data name="Schichten, Zeile {0}: kf_m_s {1} ist keine Zahl (erlaubt z. B. 5E-08, 5,0E-08, 0,00000005)." xml:space="preserve">
+    <value>Layers, line {0}: kf_m_s {1} is not a number (allowed e.g. 5E-08, 5,0E-08, 0,00000005).</value>
+  </data>
+  <data name="Schichten, Zeile {0}: kf_m_s muss größer als 0 sein." xml:space="preserve">
+    <value>Layers, line {0}: kf_m_s must be greater than 0.</value>
+  </data>
+  <data name="Aufschlüsse-Datei: Die Datei ist größer als 1 MB." xml:space="preserve">
+    <value>Exploration points file: the file is larger than 1 MB.</value>
+  </data>
+  <data name="Schichten-Datei: Die Datei ist größer als 1 MB." xml:space="preserve">
+    <value>Layers file: the file is larger than 1 MB.</value>
+  </data>
+</root>
