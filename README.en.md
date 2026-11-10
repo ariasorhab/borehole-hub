@@ -34,7 +34,7 @@ The console prints `Now listening on: http://localhost:5000`. Open that address 
 
 ### B: Windows package with SQL Server
 
-`scripts\publish-win.cmd` (run from the repository folder, .NET 8 SDK required) builds the self-contained package `publish\BoreholeHub-1.0.0-win-x64`. Inside it, `Start-BoreholeHub.cmd` starts the app with `Database:Provider` = `SqlServer` and opens `http://localhost:5080`. The connection string in `appsettings.json` is `Server=.;Database=BoreholeHub;Trusted_Connection=True;TrustServerCertificate=True`; the database is created on first start.
+`scripts\publish-win.cmd` (run from the repository folder, .NET 8 SDK required) builds the self-contained package `publish\BoreholeHub-1.0.1-win-x64`. Inside it, `Start-BoreholeHub.cmd` starts the app with `Database:Provider` = `SqlServer` and opens `http://localhost:5080`. The connection string in `appsettings.json` is `Server=.;Database=BoreholeHub;Trusted_Connection=True;TrustServerCertificate=True`; the database is created on first start.
 
 ## Tests
 
@@ -46,7 +46,7 @@ There are currently 180 tests, and all of them pass. The tests use xUnit. For th
 
 ## Tech stack
 
-- .NET 8 (`net8.0`), ASP.NET Core Razor Pages, C# with nullable reference types enabled. The version 1.0.0 is set in `Directory.Build.props`.
+- .NET 8 (`net8.0`), ASP.NET Core Razor Pages, C# with nullable reference types enabled. The version 1.0.1 is set in `Directory.Build.props`.
 - Entity Framework Core 8.0.33 with SQLite (default) and SQL Server. The application creates the schema at startup with `EnsureCreated`.
 - QuestPDF 2026.9.1 generates the PDF report.
 - The drawings (borehole log, cross-section, ramming chart, site plan) are SVG created on the server.
@@ -91,7 +91,7 @@ There are currently 180 tests, and all of them pass. The tests use xUnit. For th
 
 ## AI note
 
-The app's footer reads: "Mit KI-Unterstützung erstellt, entworfen und geprüft von Sohrab Talebian Far · Version 1.0.0" (Created, designed and checked with AI assistance by Sohrab Talebian Far · Version 1.0.0).
+The app's footer reads: "Mit KI-Unterstützung erstellt, entworfen und geprüft von Sohrab Talebian Far · Version 1.0.1" (Created, designed and checked with AI assistance by Sohrab Talebian Far · Version 1.0.1).
 
 ## Contact
 

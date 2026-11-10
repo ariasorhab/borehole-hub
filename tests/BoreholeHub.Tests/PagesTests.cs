@@ -6,7 +6,7 @@ namespace BoreholeHub.Tests;
 public class PagesTests : IClassFixture<WebAppFactory>
 {
     private const string Footer =
-        "Demo mit synthetischen Daten · Mit KI-Unterstützung erstellt, entworfen und geprüft von Sohrab Talebian Far · Version 1.0.0";
+        "Demo mit synthetischen Daten · Mit KI-Unterstützung erstellt, entworfen und geprüft von Sohrab Talebian Far · Version 1.0.1";
 
     private readonly WebAppFactory _factory;
 

@@ -34,7 +34,7 @@ Die Konsole zeigt `Now listening on: http://localhost:5000`. Öffnen Sie diese A
 
 ### B: Windows-Paket mit SQL Server
 
-`scripts\publish-win.cmd` (aus dem Repository-Ordner, .NET 8 SDK nötig) erzeugt das eigenständige Paket `publish\BoreholeHub-1.0.0-win-x64`. Darin startet `Start-BoreholeHub.cmd` die App mit `Database:Provider` = `SqlServer` und öffnet `http://localhost:5080`. Die Verbindungszeichenfolge aus `appsettings.json` lautet `Server=.;Database=BoreholeHub;Trusted_Connection=True;TrustServerCertificate=True`; die Datenbank wird beim ersten Start angelegt.
+`scripts\publish-win.cmd` (aus dem Repository-Ordner, .NET 8 SDK nötig) erzeugt das eigenständige Paket `publish\BoreholeHub-1.0.1-win-x64`. Darin startet `Start-BoreholeHub.cmd` die App mit `Database:Provider` = `SqlServer` und öffnet `http://localhost:5080`. Die Verbindungszeichenfolge aus `appsettings.json` lautet `Server=.;Database=BoreholeHub;Trusted_Connection=True;TrustServerCertificate=True`; die Datenbank wird beim ersten Start angelegt.
 
 ## Tests
 
@@ -46,7 +46,7 @@ Aktuell laufen 180 Tests, alle bestehen. Die Tests verwenden xUnit. Die Web-App 
 
 ## Technik
 
-- .NET 8 (`net8.0`), ASP.NET Core Razor Pages, C# mit aktivierten Nullable-Referenztypen. Die Version 1.0.0 steht in `Directory.Build.props`.
+- .NET 8 (`net8.0`), ASP.NET Core Razor Pages, C# mit aktivierten Nullable-Referenztypen. Die Version 1.0.1 steht in `Directory.Build.props`.
 - Entity Framework Core 8.0.33 mit SQLite (Standard) und SQL Server. Das Schema legt die Anwendung beim Start mit `EnsureCreated` an.
 - QuestPDF 2026.9.1 erzeugt den PDF-Bericht.
 - Die Zeichnungen (Bohrprofil, Profilschnitt, Rammdiagramm, Lageplan) entstehen als SVG auf dem Server.
@@ -91,7 +91,7 @@ Aktuell laufen 180 Tests, alle bestehen. Die Tests verwenden xUnit. Die Web-App 
 
 ## KI-Hinweis
 
-Der Footer der App lautet: „Mit KI-Unterstützung erstellt, entworfen und geprüft von Sohrab Talebian Far · Version 1.0.0“.
+Der Footer der App lautet: „Mit KI-Unterstützung erstellt, entworfen und geprüft von Sohrab Talebian Far · Version 1.0.1“.
 
 ## Kontakt
 
