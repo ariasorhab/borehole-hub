@@ -93,7 +93,10 @@
         if (!row) { return; }
         schichten.appendChild(row);
         var von = row.querySelector('input[name$=".Von"]');
-        if (von && previousBis && previousBis.value.trim() !== "") { von.value = previousBis.value.trim(); }
+        if (von && previousBis && previousBis.value.trim() !== "") {
+            von.value = previousBis.value.trim();
+            von.setAttribute("data-auto-von", von.value);
+        }
         renumber();
         var first = row.querySelector("input, select");
         if (first) { first.focus(); }
@@ -102,6 +105,20 @@
     function removeRow(row) {
         row.parentNode.removeChild(row);
         if (rows().length === 0) { addRow(); } else { renumber(); }
+    }
+
+    // D74: the next row's Von follows this row's Bis while it is empty or still holds the value written here before.
+    function syncNextVon(row, bis) {
+        var list = rows();
+        var next = list[list.indexOf(row) + 1];
+        if (!next) { return; }
+        var von = next.querySelector('input[name$=".Von"]');
+        if (!von) { return; }
+        var auto = von.getAttribute("data-auto-von");
+        if (von.value.trim() !== "" && von.value !== auto) { return; }   // the user typed their own Von
+        var value = bis.value.trim();
+        von.value = value;
+        von.setAttribute("data-auto-von", value);
     }
 
     // A row that only has the prefilled Von counts as empty: clear it so the server ignores it.
@@ -231,6 +248,13 @@
     if (addButton) { addButton.addEventListener("click", addRow); }
 
     if (schichten) {
+        schichten.addEventListener("input", function (event) {
+            var target = event.target;
+            if (!target || !/\.Bis$/.test(target.name || "")) { return; }
+            var row = target.closest ? target.closest("[data-row]") : null;
+            if (row) { syncNextVon(row, target); }
+        });
+
         schichten.addEventListener("click", function (event) {
             var button = event.target.closest ? event.target.closest('[data-action="remove"]') : null;
             if (!button) { return; }
