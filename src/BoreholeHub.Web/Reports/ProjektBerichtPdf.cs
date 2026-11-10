@@ -23,6 +23,10 @@ public static class ProjektBerichtPdf
     public const string VersickerungHinweis = "Vereinfachte Vorprüfung: Der kf-Wert ersetzt keine Bemessung nach DWA-A 138-1.";
 
     private const string Ink = "#22201c", Muted = "#6b645a", Line = "#d9d2c3", Sand = "#f3efe6", Rust = "#94461f", Water = "#2d6a86";
+
+    // A4 landscape is 841.9 pt wide; minus the 2 x 1.6 cm margins of the page frame the content is about 751 pt wide.
+    private const double MaxWidthPt = 740;
+
     private static readonly CultureInfo De = CultureInfo.GetCultureInfo("de-DE");
     private static readonly object InitLock = new();
     private static bool _initialised;
@@ -385,10 +389,11 @@ public static class ProjektBerichtPdf
                 string svg = SvgPrint.Apply(ProfilschnittSvg.Render(sel, dict));
                 dec.Before().Location("anlage-3").Element(x => Titel(x, "Anlage 3", "Profilschnitt " + string.Join(" – ", sel.Select(a => a.Bezeichnung)),
                     "Geologischer Schnitt durch die Kleinrammbohrungen, Höhen in m NHN"));
-                // the drawing is sized by width so that it fits the space left on the landscape page (about 385 pt below the title)
+                // the drawing is sized by width so that it fits the space left on the landscape page (about 385 pt below the title):
+                // width = the smaller of the content width (MaxWidthPt) and the width at which the height is 385 pt
                 var vb = System.Text.RegularExpressions.Regex.Match(svg, "viewBox=\"0 0 ([0-9.]+) ([0-9.]+)\"");
                 double ratio = double.Parse(vb.Groups[2].Value, CultureInfo.InvariantCulture) / double.Parse(vb.Groups[1].Value, CultureInfo.InvariantCulture);
-                float width = (float)Math.Min(760, 385 / ratio);
+                float width = (float)Math.Min(MaxWidthPt, 385 / ratio);
                 dec.Content().AlignCenter().Width(width).Svg(svg);
             });
         }

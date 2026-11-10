@@ -8,3 +8,6 @@ obj/
 
 ## Local databases
 *.db
+
+# Windows package output (scripts/publish-win.cmd)
+publish/

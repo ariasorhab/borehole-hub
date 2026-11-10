@@ -1,5 +1,22 @@
 /* BoreholeHub – "technical report on good paper". Plain CSS, no framework. */
 
+/* ---------- Web fonts (served by the app, no request to Google; licences: fonts/OFL-Inter.txt, fonts/OFL-SpaceGrotesk.txt) ---------- */
+@font-face {
+    font-family: "Inter";
+    src: url("../fonts/Inter[opsz,wght].ttf") format("truetype");
+    font-weight: 400 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Space Grotesk";
+    src: url("../fonts/SpaceGrotesk[wght].ttf") format("truetype");
+    font-weight: 500 700;
+    font-style: normal;
+    font-display: swap;
+}
+
 /* ---------- Tokens ---------- */
 :root {
     --ink: #22201c;
@@ -95,6 +112,7 @@ body {
     font-family: var(--font-text);
     font-size: var(--fs-2);
     line-height: 1.55;
+    font-optical-sizing: none; /* Inter: keep the default text cut at every size, as the former Google Fonts file did */
     -webkit-font-smoothing: antialiased;
 }
 

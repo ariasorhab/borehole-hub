@@ -21,7 +21,7 @@ builder.Services.AddDbContext<BoreholeDbContext>(options =>
             options.UseSqlite(builder.Configuration.GetConnectionString("Sqlite"));
             break;
         default:
-            // Unknown provider values are rejected at startup (see open question in return.md).
+            // Unknown provider values are rejected at startup.
             throw new InvalidOperationException($"Unbekannter Datenbank-Provider: '{provider}'.");
     }
 });

@@ -34,7 +34,7 @@ The console prints `Now listening on: http://localhost:5000`. Open that address 
 
 ### B: Windows package with SQL Server
 
-The package is called `BoreholeHub-1.0.0-win-x64`. Its `appsettings.json` sets `Database:Provider` to `SqlServer` and uses the connection string `Server=.;Database=BoreholeHub;Trusted_Connection=True;TrustServerCertificate=True`. The file `Start-BoreholeHub.cmd` then opens `http://localhost:5080`.
+`scripts\publish-win.cmd` (run from the repository folder, .NET 8 SDK required) builds the self-contained package `publish\BoreholeHub-1.0.0-win-x64`. Inside it, `Start-BoreholeHub.cmd` starts the app with `Database:Provider` = `SqlServer` and opens `http://localhost:5080`. The connection string in `appsettings.json` is `Server=.;Database=BoreholeHub;Trusted_Connection=True;TrustServerCertificate=True`; the database is created on first start.
 
 ## Tests
 
