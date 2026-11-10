@@ -246,7 +246,7 @@ public static class BohrprofilSvg
         string gw = a.GrundwasserM is double g
             ? Txt(loc, " Grundwasser bei {0} m u. GOK.", Fmt(g, 2))
             : Txt(loc, " Grundwasser nicht angetroffen.");
-        return Txt(loc, "Schichtenprofil der Kleinrammbohrung {0}, Endteufe {1} m.", a.Bezeichnung, Fmt(a.EndteufeM, 2))
+        return Txt(loc, "Schichtenprofil der Kleinrammbohrung {0}, Endteufe {1} m.", a.Bezeichnung, Fmt(a.EndteufeM, 2)) + " "
             + string.Join("; ", parts) + "." + gw;
     }
 
