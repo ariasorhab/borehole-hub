@@ -1,14 +1,15 @@
 @page "/NotFound"
 @model BoreholeHub.Web.Pages.NotFoundModel
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer L
 @{
-    ViewData["Title"] = "Seite nicht gefunden";
+    ViewData["Title"] = L["Seite nicht gefunden"].Value;
 }
 
 <div class="container">
     <div class="message-page">
-        <p class="eyebrow">Fehler 404</p>
-        <h1>Seite nicht gefunden</h1>
-        <p>Diese Adresse gibt es nicht, oder das Projekt wurde entfernt.</p>
-        <a class="btn btn-primary" href="/Projekte">Zu den Projekten</a>
+        <p class="eyebrow">@L["Fehler 404"]</p>
+        <h1>@L["Seite nicht gefunden"]</h1>
+        <p>@L["Diese Adresse gibt es nicht, oder das Projekt wurde entfernt."]</p>
+        <a class="btn btn-primary" href="/Projekte">@L["Zu den Projekten"]</a>
     </div>
 </div>

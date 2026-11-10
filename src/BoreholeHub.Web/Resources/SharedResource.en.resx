@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Zum Inhalt springen" xml:space="preserve">
+    <value>Skip to content</value>
+  </data>
+  <data name="Hauptnavigation" xml:space="preserve">
+    <value>Main navigation</value>
+  </data>
+  <data name="Projekte" xml:space="preserve">
+    <value>Projects</value>
+  </data>
+  <data name="Dunkelmodus ein" xml:space="preserve">
+    <value>Turn dark mode on</value>
+  </data>
+  <data name="Dunkelmodus aus" xml:space="preserve">
+    <value>Turn dark mode off</value>
+  </data>
+  <data name="Sprache" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="Demo mit synthetischen Daten · Mit KI-Unterstützung erstellt, entworfen und geprüft von Sohrab Talebian Far · Version 1.0.0" xml:space="preserve">
+    <value>Demo with synthetic data · Created with AI assistance, designed and checked by Sohrab Talebian Far · Version 1.0.0</value>
+  </data>
+</root>

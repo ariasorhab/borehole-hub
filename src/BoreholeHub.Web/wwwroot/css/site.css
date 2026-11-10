@@ -221,6 +221,36 @@ a:hover { color: var(--ink); }
 [data-theme="dark"] .theme-toggle .icon-sun { display: block; }
 [data-theme="dark"] .theme-toggle .icon-moon { display: none; }
 
+/* DE | EN language switch: segmented control, same 40 px height as the theme toggle. */
+.lang-switch {
+    display: inline-flex;
+    align-items: stretch;
+    height: 40px;
+    margin: 0;
+    overflow: hidden;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+}
+.lang-switch button {
+    min-width: 36px;
+    height: 100%;
+    margin: 0;
+    padding: 0 var(--s2);
+    color: var(--muted);
+    background: transparent;
+    border: 0;
+    font: inherit;
+    font-size: var(--fs-1);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+.lang-switch button + button { border-left: 1px solid var(--line-strong); }
+.lang-switch button:hover { background: var(--sand); color: var(--ink); }
+.lang-switch button.is-active { background: var(--ink); color: var(--paper); }
+.lang-switch button:focus-visible { outline: 3px solid var(--water); outline-offset: -3px; border-radius: 0; }
+
 .site-footer {
     flex-shrink: 0;
     border-top: 1px solid var(--line);

@@ -5,7 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddRazorPages();
+// UI strings: German is the key, English lives in Resources/*.en.resx (see docs/i18n.md).
+builder.Services.AddLocalization(o => o.ResourcesPath = "Resources");
+builder.Services.AddRazorPages().AddViewLocalization();
 
 // Provider is "Sqlite" (default) or "SqlServer", set in appsettings.json.
 string provider = builder.Configuration["Database:Provider"] ?? "Sqlite";
@@ -33,15 +35,17 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Error");
 }
 
-// German number and date formats (decimal comma, dd.MM.yyyy) for the whole app.
+// German number and date formats (decimal comma, dd.MM.yyyy) in both UI languages.
+// Only the UI language changes; the language choice is read from the "bh-lang" cookie
+// (set by the DE | EN switch on /Sprache). No browser or query-string language detection.
 var deDe = new CultureInfo("de-DE");
+var en = new CultureInfo("en");
 app.UseRequestLocalization(new RequestLocalizationOptions
 {
-    DefaultRequestCulture = new RequestCulture(deDe),
+    DefaultRequestCulture = new RequestCulture(culture: "de-DE", uiCulture: "de-DE"),
     SupportedCultures = [deDe],
-    SupportedUICultures = [deDe],
-    // Ignore the browser's Accept-Language so every viewer sees the same formats.
-    RequestCultureProviders = [],
+    SupportedUICultures = [deDe, en],
+    RequestCultureProviders = [new CookieRequestCultureProvider { CookieName = "bh-lang" }],
 });
 
 // Unknown URLs (and NotFound() results) render Pages/NotFound.cshtml with status 404.
