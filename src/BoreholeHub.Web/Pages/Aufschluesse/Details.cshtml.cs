@@ -6,12 +6,16 @@ using BoreholeHub.Web.Drawing;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 
 namespace BoreholeHub.Web.Pages.Aufschluesse;
 
-public class DetailsModel(BoreholeDbContext db) : PageModel
+public class DetailsModel(BoreholeDbContext db, IStringLocalizer<DetailsModel> loc) : PageModel
 {
     private static readonly CultureInfo De = CultureInfo.GetCultureInfo("de-DE");
+
+    /// <summary>Localizer of this page model (keys in Resources/Pages/Aufschluesse/DetailsModel.en.resx); used by the view for the helper texts.</summary>
+    public IStringLocalizer<DetailsModel> Loc => loc;
 
     public Aufschluss Aufschluss { get; private set; } = null!;
 
@@ -97,12 +101,12 @@ public class DetailsModel(BoreholeDbContext db) : PageModel
 
         if (Bohrung is not null)
         {
-            BohrprofilSvgHtml = BohrprofilSvg.Render(Bohrung, Schichten, ScaleMaxM);
+            BohrprofilSvgHtml = BohrprofilSvg.Render(Bohrung, Schichten, ScaleMaxM, loc);
         }
 
         if (Sonde is not null)
         {
-            RammdiagrammSvgHtml = RammdiagrammSvg.Render(Sonde, Sonde.Messwerte.OrderBy(m => m.TiefeBisM).ToList(), ScaleMaxM);
+            RammdiagrammSvgHtml = RammdiagrammSvg.Render(Sonde, Sonde.Messwerte.OrderBy(m => m.TiefeBisM).ToList(), ScaleMaxM, loc);
         }
 
         return Page();
@@ -124,16 +128,22 @@ public class DetailsModel(BoreholeDbContext db) : PageModel
 
     public static string Meter(double v) => v.ToString("0.00", De);
 
-    public static string AbstandText(double m) => m.ToString("0.0", De) + " m entfernt";
+    /// <summary>Distance text, e.g. "2,2 m entfernt"; pass a localizer for English (null = German).</summary>
+    public static string AbstandText(double m, IStringLocalizer? loc = null) => Txt(loc, "{0} m entfernt", m.ToString("0.0", De));
 
-    public static string FrostText(string? klasse) => klasse switch
+    /// <summary>Frost class text; pass a localizer for English (null = German). Other values are shown as they are.</summary>
+    public static string FrostText(string? klasse, IStringLocalizer? loc = null) => klasse switch
     {
-        "F1" => "F1 nicht frostempfindlich",
-        "F2" => "F2 gering bis mittel frostempfindlich",
-        "F3" => "F3 sehr frostempfindlich",
+        "F1" => Txt(loc, "F1 nicht frostempfindlich"),
+        "F2" => Txt(loc, "F2 gering bis mittel frostempfindlich"),
+        "F3" => Txt(loc, "F3 sehr frostempfindlich"),
         null or "" => "–",
         _ => klasse,
     };
+
+    /// <summary>German text when no localizer is passed; otherwise the localized value (docs/i18n.md, rule (b)/(c)).</summary>
+    private static string Txt(IStringLocalizer? loc, string key, params object[] args) =>
+        loc is null ? string.Format(key, args) : loc[key, args].Value;
 
     private const string Superscripts = "⁰¹²³⁴⁵⁶⁷⁸⁹";
 
@@ -148,11 +158,15 @@ public class DetailsModel(BoreholeDbContext db) : PageModel
         return mant.ToString("0.0", De) + " · 10" + e;
     }
 
-    public static (string Css, string Text) Versickerung(double? kf) => InfiltrationService.Assess(kf) switch
+    /// <summary>Infiltration badge (CSS class and German text), as used by the lab page.</summary>
+    public static (string Css, string Text) Versickerung(double? kf) => Versickerung(kf, null);
+
+    /// <summary>Infiltration badge (CSS class and text) with the page localizer; null gives the German text.</summary>
+    public static (string Css, string Text) Versickerung(double? kf, IStringLocalizer? loc) => InfiltrationService.Assess(kf) switch
     {
-        InfiltrationResult.Geeignet => ("badge-ok", "Geeignet"),
-        InfiltrationResult.ZuGeringDurchlaessig => ("badge-warn", "Zu gering durchlässig"),
-        InfiltrationResult.ZuDurchlaessig => ("badge-warn", "Zu durchlässig"),
-        _ => ("badge-muted", "Unbekannt"),
+        InfiltrationResult.Geeignet => ("badge-ok", Txt(loc, "Geeignet")),
+        InfiltrationResult.ZuGeringDurchlaessig => ("badge-warn", Txt(loc, "Zu gering durchlässig")),
+        InfiltrationResult.ZuDurchlaessig => ("badge-warn", Txt(loc, "Zu durchlässig")),
+        _ => ("badge-muted", Txt(loc, "Unbekannt")),
     };
 }

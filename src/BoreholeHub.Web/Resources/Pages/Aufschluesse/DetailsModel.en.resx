@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="F1 nicht frostempfindlich" xml:space="preserve">
+    <value>F1 not frost susceptible</value>
+  </data>
+  <data name="F2 gering bis mittel frostempfindlich" xml:space="preserve">
+    <value>F2 low to medium frost susceptibility</value>
+  </data>
+  <data name="F3 sehr frostempfindlich" xml:space="preserve">
+    <value>F3 very frost susceptible</value>
+  </data>
+  <data name="{0} m entfernt" xml:space="preserve">
+    <value>{0} m away</value>
+  </data>
+  <data name="Geeignet" xml:space="preserve">
+    <value>Suitable</value>
+  </data>
+  <data name="Zu gering durchlässig" xml:space="preserve">
+    <value>Permeability too low</value>
+  </data>
+  <data name="Zu durchlässig" xml:space="preserve">
+    <value>Too permeable</value>
+  </data>
+  <data name="Unbekannt" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="Bohrprofil {0}" xml:space="preserve">
+    <value>Borehole log {0}</value>
+  </data>
+  <data name="{0} · Kleinrammbohrung" xml:space="preserve">
+    <value>{0} · Small percussion borehole</value>
+  </data>
+  <data name="Ansatzhöhe {0} m NHN · {1} · {2}" xml:space="preserve">
+    <value>Start level {0} m NHN · {1} · {2}</value>
+  </data>
+  <data name="R {0} / H {1} (EPSG:25832)" xml:space="preserve">
+    <value>E {0} / N {1} (EPSG:25832)</value>
+  </data>
+  <data name="m u. GOK" xml:space="preserve">
+    <value>Depth [m]</value>
+  </data>
+  <data name="Schichtenprofil der Kleinrammbohrung {0}, Endteufe {1} m." xml:space="preserve">
+    <value>Layer profile of small percussion borehole {0}, final depth {1} m.</value>
+  </data>
+  <data name="{0} bis {1} m: {2}" xml:space="preserve">
+    <value>{0} to {1} m: {2}</value>
+  </data>
+  <data name=" Grundwasser bei {0} m u. GOK." xml:space="preserve">
+    <value> Groundwater at {0} m below ground level.</value>
+  </data>
+  <data name=" Grundwasser nicht angetroffen." xml:space="preserve">
+    <value> Groundwater not encountered.</value>
+  </data>
+  <data name="Rammdiagramm {0}" xml:space="preserve">
+    <value>Probing diagram {0}</value>
+  </data>
+  <data name="Schlagzahlen N10 je 10 cm der schweren Rammsonde {0} bis {1} m Tiefe, höchster Wert {2}." xml:space="preserve">
+    <value>Blow counts N10 per 10 cm of the heavy dynamic probe {0} to {1} m depth, highest value {2}.</value>
+  </data>
+  <data name="{0} · schwere Rammsonde (DIN EN ISO 22476-2)" xml:space="preserve">
+    <value>{0} · heavy dynamic probe (DIN EN ISO 22476-2)</value>
+  </data>
+  <data name="Endteufe {0} m · {1} · Ansatzhöhe {2} m NHN" xml:space="preserve">
+    <value>Final depth {0} m · {1} · Start level {2} m NHN</value>
+  </data>
+  <data name="N10 (Schläge je 10 cm)" xml:space="preserve">
+    <value>N10 (blows per 10 cm)</value>
+  </data>
+  <data name="Kies" xml:space="preserve">
+    <value>Gravel</value>
+  </data>
+  <data name="Sand" xml:space="preserve">
+    <value>Sand</value>
+  </data>
+  <data name="Schluff" xml:space="preserve">
+    <value>Silt</value>
+  </data>
+  <data name="Ton" xml:space="preserve">
+    <value>Clay</value>
+  </data>
+  <data name="Mutterboden" xml:space="preserve">
+    <value>Topsoil</value>
+  </data>
+  <data name="Boden (nicht näher bestimmt)" xml:space="preserve">
+    <value>Soil (not further specified)</value>
+  </data>
+  <data name="Auffüllung" xml:space="preserve">
+    <value>Made ground</value>
+  </data>
+  <data name=", sandig" xml:space="preserve">
+    <value>, sandy</value>
+  </data>
+  <data name=", kiesig" xml:space="preserve">
+    <value>, gravelly</value>
+  </data>
+  <data name=", schluffig" xml:space="preserve">
+    <value>, silty</value>
+  </data>
+  <data name=", tonig" xml:space="preserve">
+    <value>, clayey</value>
+  </data>
+</root>

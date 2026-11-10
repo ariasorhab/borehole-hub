@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Brotkrumen" xml:space="preserve">
+    <value>Breadcrumb</value>
+  </data>
+  <data name="Projekte" xml:space="preserve">
+    <value>Projects</value>
+  </data>
+  <data name="Profilschnitt" xml:space="preserve">
+    <value>Cross-section</value>
+  </data>
+  <data name="geologischer Schnitt durch 2 bis 4 Kleinrammbohrungen" xml:space="preserve">
+    <value>geological section through 2 to 4 small percussion boreholes</value>
+  </data>
+  <data name="Bohrungen wählen" xml:space="preserve">
+    <value>Select boreholes</value>
+  </data>
+  <data name="2 bis 4 Kleinrammbohrungen; die Reihenfolge der Liste ist die Zeichenreihenfolge." xml:space="preserve">
+    <value>2 to 4 small percussion boreholes; the order in the list is the drawing order.</value>
+  </data>
+  <data name="Schnitt zeichnen" xml:space="preserve">
+    <value>Draw section</value>
+  </data>
+  <data name="Daten zum Schnitt" xml:space="preserve">
+    <value>Data for the section</value>
+  </data>
+  <data name="Aufschlüsse des Profilschnitts mit Abstand, Höhen, Endteufe, Grundwasser und Homogenbereichen" xml:space="preserve">
+    <value>Exploration points of the cross-section with distance, heights, final depth, groundwater and homogeneous zones</value>
+  </data>
+  <data name="Aufschluss" xml:space="preserve">
+    <value>Exploration point</value>
+  </data>
+  <data name="Abstand [m]" xml:space="preserve">
+    <value>Distance [m]</value>
+  </data>
+  <data name="Ansatzhöhe [m NHN]" xml:space="preserve">
+    <value>Start level [m NHN]</value>
+  </data>
+  <data name="Endteufe [m]" xml:space="preserve">
+    <value>Final depth [m]</value>
+  </data>
+  <data name="Grundwasser [m u. GOK]" xml:space="preserve">
+    <value>Groundwater [m below ground level]</value>
+  </data>
+  <data name="Grundwasser [m NHN]" xml:space="preserve">
+    <value>Groundwater [m NHN]</value>
+  </data>
+  <data name="Homogenbereiche [m u. GOK]" xml:space="preserve">
+    <value>Homogeneous zones [m below ground level]</value>
+  </data>
+  <data name="Abstände entlang des Linienzugs durch die gewählten Punkte (EPSG:25832)." xml:space="preserve">
+    <value>Distances along the polyline through the selected points (EPSG:25832).</value>
+  </data>
+</root>

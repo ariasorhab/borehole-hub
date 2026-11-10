@@ -1,5 +1,6 @@
 using System.Text;
 using BoreholeHub.Core.Entities;
+using Microsoft.Extensions.Localization;
 using static BoreholeHub.Web.Drawing.DrawingLayout;
 
 namespace BoreholeHub.Web.Drawing;
@@ -11,14 +12,15 @@ internal static class ProfilschnittLageplan
     private const double H = 210;
     private const double Pad = 30;
 
-    public static string Render(IReadOnlyList<Aufschluss> alle, IReadOnlyList<Aufschluss> schnitt)
+    /// <summary>Renders the site plan. <paramref name="loc"/> is the page model's localizer; null gives the German text.</summary>
+    public static string Render(IReadOnlyList<Aufschluss> alle, IReadOnlyList<Aufschluss> schnitt, IStringLocalizer? loc = null)
     {
         ArgumentNullException.ThrowIfNull(alle);
         ArgumentNullException.ThrowIfNull(schnitt);
 
         var sb = new StringBuilder();
         sb.Append($"<svg class=\"ps-plan\" viewBox=\"0 0 {N(W)} {N(H)}\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-labelledby=\"pl-title\">");
-        sb.Append("<title id=\"pl-title\">Lageplan der Aufschlüsse mit Schnittlinie</title>");
+        sb.Append($"<title id=\"pl-title\">{Esc(T(loc, "Lageplan der Aufschlüsse mit Schnittlinie"))}</title>");
         if (alle.Count == 0)
         {
             sb.Append("</svg>");
@@ -59,8 +61,11 @@ internal static class ProfilschnittLageplan
             }
         }
 
-        sb.Append($"<text class=\"pl-note\" x=\"10\" y=\"{N(H - 8)}\">● KRB (Nr.)   ◆ DPH   — Schnitt</text>");
+        sb.Append($"<text class=\"pl-note\" x=\"10\" y=\"{N(H - 8)}\">{Esc(T(loc, "● KRB (Nr.)   ◆ DPH   — Schnitt"))}</text>");
         sb.Append("</svg>");
         return sb.ToString();
     }
+
+    /// <summary>German text when no localizer is passed; otherwise the localized value (docs/i18n.md, rule (c)).</summary>
+    private static string T(IStringLocalizer? loc, string key) => loc is null ? key : loc[key].Value;
 }

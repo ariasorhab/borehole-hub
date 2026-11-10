@@ -1,5 +1,6 @@
 using System.Text;
 using BoreholeHub.Core.Entities;
+using Microsoft.Extensions.Localization;
 using static BoreholeHub.Web.Drawing.DrawingLayout;
 using static BoreholeHub.Web.Drawing.SoilPatterns;
 
@@ -32,7 +33,11 @@ public static class ProfilschnittSvg
 
     private sealed record Column(Aufschluss A, double Station, double X, List<Schicht> Layers, List<SoilKind> Kinds, List<Body> Bodies);
 
-    public static string Render(IReadOnlyList<Aufschluss> punkte, IReadOnlyDictionary<int, IReadOnlyList<Schicht>> schichten)
+    /// <summary>
+    /// Renders the section. <paramref name="loc"/> is the page model's localizer (keys in ProfilschnittModel.en.resx);
+    /// null gives the German text, as used by the PDF report.
+    /// </summary>
+    public static string Render(IReadOnlyList<Aufschluss> punkte, IReadOnlyDictionary<int, IReadOnlyList<Schicht>> schichten, IStringLocalizer? loc = null)
     {
         ArgumentNullException.ThrowIfNull(punkte);
         ArgumentNullException.ThrowIfNull(schichten);
@@ -120,8 +125,8 @@ public static class ProfilschnittSvg
         var sb = new StringBuilder();
         string names = string.Join(" – ", punkte.Select(p => p.Bezeichnung));
         sb.Append($"<svg class=\"profilschnitt\" viewBox=\"0 0 {N(Width)} {N(height)}\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-labelledby=\"ps-title ps-desc\" preserveAspectRatio=\"xMinYMin meet\">");
-        sb.Append($"<title id=\"ps-title\">Profilschnitt {Esc(names)}</title>");
-        sb.Append($"<desc id=\"ps-desc\">{Esc(Describe(cols, length, n))}</desc>");
+        sb.Append($"<title id=\"ps-title\">{Esc(T(loc, "Profilschnitt {0}", names))}</title>");
+        sb.Append($"<desc id=\"ps-desc\">{Esc(Describe(cols, length, n, loc))}</desc>");
 
         // ---- patterns ----
         sb.Append("<defs>");
@@ -132,8 +137,8 @@ public static class ProfilschnittSvg
 
         sb.Append("</defs>");
 
-        Header(sb, Width, $"Profilschnitt {names}",
-            $"Länge {Fmt(length, 1)} m · Höhen {Fmt(minBottom, 1)} bis {Fmt(maxTop, 1)} m NHN · Überhöhung 1:{n}");
+        Header(sb, Width, T(loc, "Profilschnitt {0}", names),
+            T(loc, "Länge {0} m · Höhen {1} bis {2} m NHN · Überhöhung 1:{3}", Fmt(length, 1), Fmt(minBottom, 1), Fmt(maxTop, 1), n));
 
         // ---- grid and axes ----
         for (double e = eMin; e <= eMax + 1e-9; e += 1)
@@ -162,7 +167,7 @@ public static class ProfilschnittSvg
         sb.Append($"<line class=\"ps-axis\" x1=\"{N(PlotLeft)}\" y1=\"{N(plotBottom)}\" x2=\"{N(PlotRight)}\" y2=\"{N(plotBottom)}\"/>");
         sb.Append($"<text class=\"ps-axislabel\" x=\"{N(PlotLeft - 10)}\" y=\"{N(yTop - 12)}\" text-anchor=\"end\">m NHN</text>");
         sb.Append($"<text class=\"ps-axislabel\" x=\"{N(PlotRight + 10)}\" y=\"{N(yTop - 12)}\">m NHN</text>");
-        sb.Append($"<text class=\"ps-axislabel\" x=\"{N((PlotLeft + PlotRight) / 2)}\" y=\"{N(plotBottom + 46)}\" text-anchor=\"middle\">Abstand entlang des Schnitts [m]</text>");
+        sb.Append($"<text class=\"ps-axislabel\" x=\"{N((PlotLeft + PlotRight) / 2)}\" y=\"{N(plotBottom + 46)}\" text-anchor=\"middle\">{Esc(T(loc, "Abstand entlang des Schnitts [m]"))}</text>");
 
         // ---- interpreted bodies between the columns ----
         sb.Append("<g class=\"ps-bodies\">");
@@ -252,23 +257,23 @@ public static class ProfilschnittSvg
         {
             b.Append($"<line class=\"ps-gw-line\" x1=\"{N(x)}\" y1=\"{N(y + 8)}\" x2=\"{N(x + 30)}\" y2=\"{N(y + 8)}\"/>");
             b.Append($"<path class=\"ps-gw-sym\" d=\"M{N(x + 8)},{N(y + 1)} L{N(x + 22)},{N(y + 1)} L{N(x + 15)},{N(y + 10)} Z\"/>");
-            b.Append($"<text class=\"ps-legend-text\" x=\"{N(x + 38)}\" y=\"{N(y + 12)}\">Grundwasser (m NHN)</text>");
+            b.Append($"<text class=\"ps-legend-text\" x=\"{N(x + 38)}\" y=\"{N(y + 12)}\">{Esc(T(loc, "Grundwasser (m NHN)"))}</text>");
         });
         items.Add((b, x, y) =>
         {
             b.Append($"<line class=\"ps-et\" x1=\"{N(x)}\" y1=\"{N(y + 8)}\" x2=\"{N(x + 30)}\" y2=\"{N(y + 8)}\"/>");
-            b.Append($"<text class=\"ps-legend-text\" x=\"{N(x + 38)}\" y=\"{N(y + 12)}\">Endteufe (ET)</text>");
+            b.Append($"<text class=\"ps-legend-text\" x=\"{N(x + 38)}\" y=\"{N(y + 12)}\">{Esc(T(loc, "Endteufe (ET)"))}</text>");
         });
         items.Add((b, x, y) =>
         {
             b.Append($"<line class=\"ps-interp\" x1=\"{N(x)}\" y1=\"{N(y + 8)}\" x2=\"{N(x + 30)}\" y2=\"{N(y + 8)}\"/>");
-            b.Append($"<text class=\"ps-legend-text\" x=\"{N(x + 38)}\" y=\"{N(y + 12)}\">Interpretierte Grenze</text>");
+            b.Append($"<text class=\"ps-legend-text\" x=\"{N(x + 38)}\" y=\"{N(y + 12)}\">{Esc(T(loc, "Interpretierte Grenze"))}</text>");
         });
         items.Add((b, x, y) =>
         {
             b.Append($"<rect class=\"ps-hb\" x=\"{N(x + 3)}\" y=\"{N(y + 1)}\" width=\"24\" height=\"14\" rx=\"7\"/>");
             b.Append($"<text class=\"ps-hb-text\" x=\"{N(x + 15)}\" y=\"{N(y + 12)}\" text-anchor=\"middle\">B2</text>");
-            b.Append($"<text class=\"ps-legend-text\" x=\"{N(x + 38)}\" y=\"{N(y + 12)}\">Homogenbereich</text>");
+            b.Append($"<text class=\"ps-legend-text\" x=\"{N(x + 38)}\" y=\"{N(y + 12)}\">{Esc(T(loc, "Homogenbereich"))}</text>");
         });
 
         for (int i = 0; i < items.Count; i++)
@@ -277,8 +282,8 @@ public static class ProfilschnittSvg
         }
 
         // ---- caption ----
-        sb.Append($"<text class=\"ps-caption\" x=\"16\" y=\"{N(captionTop + 14)}\"><tspan class=\"ps-caption-strong\">{Esc(Caption)}</tspan></text>");
-        sb.Append($"<text class=\"ps-caption\" x=\"16\" y=\"{N(captionTop + 34)}\">Überhöhung 1:{n} (Höhen {n}-fach gegenüber den Längen) · Abstände entlang des Linienzugs in EPSG:25832 · Höhen in m NHN</text>");
+        sb.Append($"<text class=\"ps-caption\" x=\"16\" y=\"{N(captionTop + 14)}\"><tspan class=\"ps-caption-strong\">{Esc(T(loc, Caption))}</tspan></text>");
+        sb.Append($"<text class=\"ps-caption\" x=\"16\" y=\"{N(captionTop + 34)}\">{Esc(T(loc, "Überhöhung 1:{0} (Höhen {0}-fach gegenüber den Längen) · Abstände entlang des Linienzugs in EPSG:25832 · Höhen in m NHN", n))}</text>");
 
         sb.Append("</svg>");
         return sb.ToString();
@@ -371,13 +376,21 @@ public static class ProfilschnittSvg
         return 1000;
     }
 
-    private static string Describe(List<Column> cols, double length, int n)
+    private static string Describe(List<Column> cols, double length, int n, IStringLocalizer? loc)
     {
         var parts = cols.Select(c =>
         {
-            string gw = c.A.GrundwasserM is double g ? $", Grundwasser bei {Fmt(g, 2)} m u. GOK ({Fmt(c.A.AnsatzhoeheMNhn - g, 2)} m NHN)" : ", Grundwasser nicht angetroffen";
-            return $"{c.A.Bezeichnung} bei {Fmt(c.Station, 1)} m, Ansatzhöhe {Fmt(c.A.AnsatzhoeheMNhn, 2)} m NHN, Endteufe {Fmt(c.A.EndteufeM, 2)} m{gw}";
+            string gw = c.A.GrundwasserM is double g
+                ? T(loc, ", Grundwasser bei {0} m u. GOK ({1} m NHN)", Fmt(g, 2), Fmt(c.A.AnsatzhoeheMNhn - g, 2))
+                : T(loc, ", Grundwasser nicht angetroffen");
+            return T(loc, "{0} bei {1} m, Ansatzhöhe {2} m NHN, Endteufe {3} m{4}",
+                c.A.Bezeichnung, Fmt(c.Station, 1), Fmt(c.A.AnsatzhoeheMNhn, 2), Fmt(c.A.EndteufeM, 2), gw);
         });
-        return $"Geologischer Schnitt über {Fmt(length, 1)} m mit {cols.Count} Aufschlüssen, Überhöhung 1:{n}. " + string.Join("; ", parts) + ". " + Caption;
+        return T(loc, "Geologischer Schnitt über {0} m mit {1} Aufschlüssen, Überhöhung 1:{2}. {3}. {4}",
+            Fmt(length, 1), cols.Count, n, string.Join("; ", parts), T(loc, Caption));
     }
+
+    /// <summary>German text when no localizer is passed (PDF report, tests); otherwise the localized value (docs/i18n.md, rule (c)).</summary>
+    private static string T(IStringLocalizer? loc, string key, params object[] args) =>
+        loc is null ? string.Format(key, args) : loc[key, args].Value;
 }

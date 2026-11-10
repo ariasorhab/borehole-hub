@@ -5,10 +5,11 @@ using BoreholeHub.Web.Drawing;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 
 namespace BoreholeHub.Web.Pages.Projekte;
 
-public class ProfilschnittModel(BoreholeDbContext db) : PageModel
+public class ProfilschnittModel(BoreholeDbContext db, IStringLocalizer<ProfilschnittModel> loc) : PageModel
 {
     private static readonly CultureInfo De = CultureInfo.GetCultureInfo("de-DE");
 
@@ -58,8 +59,8 @@ public class ProfilschnittModel(BoreholeDbContext db) : PageModel
 
         if (Kleinrammbohrungen.Count < MinPunkte)
         {
-            KeinSchnittText = "Für einen Profilschnitt werden mindestens zwei Kleinrammbohrungen im Projekt benötigt.";
-            LageplanSvgHtml = ProfilschnittLageplan.Render(alle, []);
+            KeinSchnittText = loc["Für einen Profilschnitt werden mindestens zwei Kleinrammbohrungen im Projekt benötigt."].Value;
+            LageplanSvgHtml = ProfilschnittLageplan.Render(alle, [], loc);
             return Page();
         }
 
@@ -68,28 +69,32 @@ public class ProfilschnittModel(BoreholeDbContext db) : PageModel
         {
             auswahl = StandardAuswahl(Kleinrammbohrungen);
         }
-        else if (TryParse(punkte, Kleinrammbohrungen, out var gewaehlt, out var fehler))
+        else if (TryParse(punkte, Kleinrammbohrungen, out var gewaehlt, out var fehler, loc))
         {
             auswahl = gewaehlt;
         }
         else
         {
-            Hinweis = fehler + " Gezeigt wird der Standardschnitt.";
+            Hinweis = fehler + " " + loc["Gezeigt wird der Standardschnitt."].Value;
             auswahl = StandardAuswahl(Kleinrammbohrungen);
         }
 
         Auswahl = auswahl.Select(a => a.Id).ToList();
         var schichten = auswahl.ToDictionary(a => a.Id, a => (IReadOnlyList<Schicht>)a.Schichten.OrderBy(s => s.VonM).ToList());
-        SchnittSvgHtml = ProfilschnittSvg.Render(auswahl, schichten);
-        LageplanSvgHtml = ProfilschnittLageplan.Render(alle, auswahl);
+        SchnittSvgHtml = ProfilschnittSvg.Render(auswahl, schichten, loc);
+        LageplanSvgHtml = ProfilschnittLageplan.Render(alle, auswahl, loc);
         Tabelle = BuildTabelle(auswahl);
         return Page();
     }
 
+    /// <summary>German text when no localizer is passed; otherwise the localized value (docs/i18n.md, rule (b)).</summary>
+    private static string Txt(IStringLocalizer? loc, string key, params object[] args) =>
+        loc is null ? string.Format(key, args) : loc[key, args].Value;
+
     /// <summary>
     /// Parses a comma-separated id list. Accepts only 2 to 4 different Kleinrammbohrungen of the project.
     /// </summary>
-    public static bool TryParse(string text, IReadOnlyList<Aufschluss> kandidaten, out List<Aufschluss> ergebnis, out string fehler)
+    public static bool TryParse(string text, IReadOnlyList<Aufschluss> kandidaten, out List<Aufschluss> ergebnis, out string fehler, IStringLocalizer? loc = null)
     {
         ergebnis = [];
         fehler = string.Empty;
@@ -99,7 +104,7 @@ public class ProfilschnittModel(BoreholeDbContext db) : PageModel
         {
             if (!int.TryParse(t, NumberStyles.None, CultureInfo.InvariantCulture, out int v))
             {
-                fehler = $"„{t}“ ist keine gültige Kennung eines Aufschlusses.";
+                fehler = Txt(loc, "„{0}“ ist keine gültige Kennung eines Aufschlusses.", t);
                 return false;
             }
 
@@ -108,13 +113,13 @@ public class ProfilschnittModel(BoreholeDbContext db) : PageModel
 
         if (ids.Count != ids.Distinct().Count())
         {
-            fehler = "Jede Bohrung kann nur einmal im Schnitt vorkommen.";
+            fehler = Txt(loc, "Jede Bohrung kann nur einmal im Schnitt vorkommen.");
             return false;
         }
 
         if (ids.Count < MinPunkte || ids.Count > MaxPunkte)
         {
-            fehler = $"Bitte {MinPunkte} bis {MaxPunkte} Kleinrammbohrungen wählen.";
+            fehler = Txt(loc, "Bitte {0} bis {1} Kleinrammbohrungen wählen.", MinPunkte, MaxPunkte);
             return false;
         }
 
@@ -123,7 +128,7 @@ public class ProfilschnittModel(BoreholeDbContext db) : PageModel
             var a = kandidaten.FirstOrDefault(k => k.Id == v);
             if (a is null)
             {
-                fehler = $"Die Kennung {v} gehört zu keiner Kleinrammbohrung dieses Projekts.";
+                fehler = Txt(loc, "Die Kennung {0} gehört zu keiner Kleinrammbohrung dieses Projekts.", v);
                 return false;
             }
 

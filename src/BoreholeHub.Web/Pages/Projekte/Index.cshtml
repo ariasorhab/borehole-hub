@@ -1,28 +1,29 @@
 @page "/Projekte"
 @model BoreholeHub.Web.Pages.Projekte.IndexModel
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer L
 @{
-    ViewData["Title"] = "Projekte";
+    ViewData["Title"] = L["Projekte"].Value;
 }
 
 <div class="container">
-    <nav class="breadcrumb" aria-label="Brotkrumen">
+    <nav class="breadcrumb" aria-label="@L["Brotkrumen"]">
         <ol>
-            <li><a href="/">Start</a></li>
-            <li aria-current="page">Projekte</li>
+            <li><a href="/">@L["Start"]</a></li>
+            <li aria-current="page">@L["Projekte"]</li>
         </ol>
     </nav>
 
     <header class="page-header">
-        <h1>Projekte</h1>
+        <h1>@L["Projekte"]</h1>
     </header>
 
     @if (Model.Projekte.Count == 0)
     {
         <div class="empty-state">
-            <p>Noch keine Projekte vorhanden.</p>
+            <p>@L["Noch keine Projekte vorhanden."]</p>
             <form method="post" action="/Demo" class="inline-form">
                 @Html.AntiForgeryToken()
-                <button type="submit" class="btn btn-primary">Demo-Projekt laden</button>
+                <button type="submit" class="btn btn-primary">@L["Demo-Projekt laden"]</button>
             </form>
         </div>
     }
@@ -35,10 +36,10 @@
                     <h2>@p.Name</h2>
                     <p class="muted">@p.Ort · @p.Auftraggeber</p>
                     <div class="card-meta">
-                        <span class="badge badge-krb">@p.Kleinrammbohrungen @(p.Kleinrammbohrungen == 1 ? "Kleinrammbohrung" : "Kleinrammbohrungen")</span>
-                        <span class="badge badge-dph">@p.Rammsondierungen @(p.Rammsondierungen == 1 ? "Rammsondierung" : "Rammsondierungen")</span>
+                        <span class="badge badge-krb">@p.Kleinrammbohrungen @(p.Kleinrammbohrungen == 1 ? L["Kleinrammbohrung"] : L["Kleinrammbohrungen"])</span>
+                        <span class="badge badge-dph">@p.Rammsondierungen @(p.Rammsondierungen == 1 ? L["Rammsondierung"] : L["Rammsondierungen"])</span>
                     </div>
-                    <p class="card-foot">Erstellt am @p.ErstelltAm.ToString("dd.MM.yyyy")</p>
+                    <p class="card-foot">@L["Erstellt am {0}", p.ErstelltAm.ToString("dd.MM.yyyy")]</p>
                 </a>
             }
         </div>

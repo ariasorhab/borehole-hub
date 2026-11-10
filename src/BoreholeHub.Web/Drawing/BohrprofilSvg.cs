@@ -1,5 +1,6 @@
 using System.Text;
 using BoreholeHub.Core.Entities;
+using Microsoft.Extensions.Localization;
 using static BoreholeHub.Web.Drawing.DrawingLayout;
 
 namespace BoreholeHub.Web.Drawing;
@@ -22,7 +23,11 @@ public static class BohrprofilSvg
     private const double LineH = 15;
     private const int WrapChars = 70;
 
-    public static string Render(Aufschluss a, IReadOnlyList<Schicht> schichten, double scaleMaxM)
+    /// <summary>
+    /// Renders the log. <paramref name="loc"/> is the page model's localizer (keys in DetailsModel.en.resx);
+    /// null gives the German text, as used by the PDF report.
+    /// </summary>
+    public static string Render(Aufschluss a, IReadOnlyList<Schicht> schichten, double scaleMaxM, IStringLocalizer? loc = null)
     {
         ArgumentNullException.ThrowIfNull(a);
         ArgumentNullException.ThrowIfNull(schichten);
@@ -30,10 +35,10 @@ public static class BohrprofilSvg
         var layers = schichten.OrderBy(s => s.VonM).ToList();
         double height = Height(scaleMaxM);
         var sb = new StringBuilder();
-        string title = $"Bohrprofil {a.Bezeichnung}";
+        string title = Txt(loc, "Bohrprofil {0}", a.Bezeichnung);
         sb.Append($"<svg class=\"bohrprofil\" viewBox=\"0 0 {N(Width)} {N(height)}\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-labelledby=\"bp-title bp-desc\" preserveAspectRatio=\"xMinYMin meet\">");
         sb.Append($"<title id=\"bp-title\">{Esc(title)}</title>");
-        sb.Append($"<desc id=\"bp-desc\">{Esc(Describe(a, layers))}</desc>");
+        sb.Append($"<desc id=\"bp-desc\">{Esc(Describe(a, layers, loc))}</desc>");
 
         // ---- patterns (one per distinct soil combination) ----
         var kinds = layers.Select(SoilPatterns.Classify).ToList();
@@ -46,15 +51,15 @@ public static class BohrprofilSvg
         sb.Append("</defs>");
 
         // ---- header ----
-        string coords = $"R {Fmt(a.Rechtswert, 0)} / H {Fmt(a.Hochwert, 0)} (EPSG:25832)";
-        Header(sb, Width, $"{a.Bezeichnung} · Kleinrammbohrung",
-            $"Ansatzhöhe {Fmt(a.AnsatzhoeheMNhn, 2)} m NHN · {a.Datum:dd.MM.yyyy} · {coords}");
+        string coords = Txt(loc, "R {0} / H {1} (EPSG:25832)", Fmt(a.Rechtswert, 0), Fmt(a.Hochwert, 0));
+        Header(sb, Width, Txt(loc, "{0} · Kleinrammbohrung", a.Bezeichnung),
+            Txt(loc, "Ansatzhöhe {0} m NHN · {1} · {2}", Fmt(a.AnsatzhoeheMNhn, 2), a.Datum.ToString("dd.MM.yyyy"), coords));
 
         double y0 = Y(0);
         double yEnd = Y(a.EndteufeM);
 
         // ---- depth axis ----
-        sb.Append($"<text class=\"dr-colhead\" x=\"4\" y=\"{N(y0 - 16)}\">m u. GOK</text>");
+        sb.Append($"<text class=\"dr-colhead\" x=\"4\" y=\"{N(y0 - 16)}\">{Esc(Txt(loc, "m u. GOK"))}</text>");
         sb.Append($"<text class=\"dr-colhead\" x=\"{N(NhnRight)}\" y=\"{N(y0 - 16)}\" text-anchor=\"end\">m NHN</text>");
         sb.Append($"<line class=\"dr-axis\" x1=\"{N(AxisX)}\" y1=\"{N(y0)}\" x2=\"{N(AxisX)}\" y2=\"{N(Y(scaleMaxM))}\"/>");
         for (double d = 0; d <= scaleMaxM + 1e-9; d += 0.5)
@@ -235,10 +240,17 @@ public static class BohrprofilSvg
         }
     }
 
-    private static string Describe(Aufschluss a, List<Schicht> layers)
+    private static string Describe(Aufschluss a, List<Schicht> layers, IStringLocalizer? loc)
     {
-        var parts = layers.Select(s => $"{Fmt(s.VonM, 2)} bis {Fmt(s.BisM, 2)} m: {s.Beschreibung}");
-        string gw = a.GrundwasserM is double g ? $" Grundwasser bei {Fmt(g, 2)} m u. GOK." : " Grundwasser nicht angetroffen.";
-        return $"Schichtenprofil der Kleinrammbohrung {a.Bezeichnung}, Endteufe {Fmt(a.EndteufeM, 2)} m. " + string.Join("; ", parts) + "." + gw;
+        var parts = layers.Select(s => Txt(loc, "{0} bis {1} m: {2}", Fmt(s.VonM, 2), Fmt(s.BisM, 2), s.Beschreibung));
+        string gw = a.GrundwasserM is double g
+            ? Txt(loc, " Grundwasser bei {0} m u. GOK.", Fmt(g, 2))
+            : Txt(loc, " Grundwasser nicht angetroffen.");
+        return Txt(loc, "Schichtenprofil der Kleinrammbohrung {0}, Endteufe {1} m.", a.Bezeichnung, Fmt(a.EndteufeM, 2))
+            + string.Join("; ", parts) + "." + gw;
     }
+
+    /// <summary>German text when no localizer is passed (PDF report); otherwise the localized value (docs/i18n.md, rule (c)).</summary>
+    private static string Txt(IStringLocalizer? loc, string key, params object[] args) =>
+        loc is null ? string.Format(key, args) : loc[key, args].Value;
 }

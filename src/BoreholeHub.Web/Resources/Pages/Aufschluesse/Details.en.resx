@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Brotkrumen" xml:space="preserve">
+    <value>Breadcrumb</value>
+  </data>
+  <data name="Projekte" xml:space="preserve">
+    <value>Projects</value>
+  </data>
+  <data name="Kleinrammbohrung" xml:space="preserve">
+    <value>Small percussion borehole</value>
+  </data>
+  <data name="Rammsondierung" xml:space="preserve">
+    <value>Dynamic probing</value>
+  </data>
+  <data name="Endteufe" xml:space="preserve">
+    <value>Final depth</value>
+  </data>
+  <data name="Ansatzhöhe" xml:space="preserve">
+    <value>Start level</value>
+  </data>
+  <data name="Grundwasser" xml:space="preserve">
+    <value>Groundwater</value>
+  </data>
+  <data name="m u. GOK" xml:space="preserve">
+    <value>m below ground level</value>
+  </data>
+  <data name="Grundwasser nicht angetroffen" xml:space="preserve">
+    <value>Groundwater not encountered</value>
+  </data>
+  <data name="Zurück zur Karte" xml:space="preserve">
+    <value>Back to map</value>
+  </data>
+  <data name="Bohrprofil und Rammdiagramm" xml:space="preserve">
+    <value>Borehole log and probing diagram</value>
+  </data>
+  <data name="(nächstgelegene Kleinrammbohrung)" xml:space="preserve">
+    <value>(nearest small percussion borehole)</value>
+  </data>
+  <data name="Darstellung in Anlehnung an DIN 4023 (vereinfacht) · Bezug: DIN 4023:2023-02" xml:space="preserve">
+    <value>Drawing based on DIN 4023, simplified · Reference: DIN 4023:2023-02</value>
+  </data>
+  <data name="In diesem Projekt gibt es keine Kleinrammbohrung für ein Bohrprofil." xml:space="preserve">
+    <value>This project has no small percussion borehole for a borehole log.</value>
+  </data>
+  <data name="(nächstgelegene Rammsondierung)" xml:space="preserve">
+    <value>(nearest dynamic probing)</value>
+  </data>
+  <data name="N10 = Schläge je 10 cm Eindringung" xml:space="preserve">
+    <value>N10 = blow count per 10 cm of penetration</value>
+  </data>
+  <data name="In diesem Projekt gibt es keine Rammsondierung." xml:space="preserve">
+    <value>This project has no dynamic probing.</value>
+  </data>
+  <data name="Schichtenverzeichnis" xml:space="preserve">
+    <value>Layer description log</value>
+  </data>
+  <data name="Schichten von" xml:space="preserve">
+    <value>Layers of</value>
+  </data>
+  <data name="Von–Bis [m]" xml:space="preserve">
+    <value>From–To [m]</value>
+  </data>
+  <data name="Kurzzeichen" xml:space="preserve">
+    <value>Code</value>
+  </data>
+  <data name="Beschreibung" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="Bodengruppe" xml:space="preserve">
+    <value>Soil group (DIN 18196)</value>
+  </data>
+  <data name="Farbe" xml:space="preserve">
+    <value>Colour</value>
+  </data>
+  <data name="Zustand" xml:space="preserve">
+    <value>Condition</value>
+  </data>
+  <data name="Homogenbereich" xml:space="preserve">
+    <value>Homogeneous zone</value>
+  </data>
+  <data name="Frostklasse" xml:space="preserve">
+    <value>Frost class</value>
+  </data>
+  <data name="Versickerung" xml:space="preserve">
+    <value>Infiltration</value>
+  </data>
+  <data name="Vereinfachte Vorprüfung: Der kf-Wert ersetzt keine Bemessung nach DWA-A 138-1." xml:space="preserve">
+    <value>Simplified pre-check: the kf value does not replace a design to DWA-A 138-1.</value>
+  </data>
+  <data name="Proben" xml:space="preserve">
+    <value>Samples</value>
+  </data>
+  <data name="Aus {0} wurden keine Proben entnommen." xml:space="preserve">
+    <value>No samples were taken from {0}.</value>
+  </data>
+  <data name="Laborwerte" xml:space="preserve">
+    <value>Lab values</value>
+  </data>
+</root>

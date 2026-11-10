@@ -1,5 +1,6 @@
 @page "/"
 @model BoreholeHub.Web.Pages.IndexModel
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer L
 @{
     ViewData["Title"] = null;
 }
@@ -7,23 +8,23 @@
 <div class="container">
     <section class="hero">
         <div>
-            <p class="eyebrow">Bohrdaten · Karte · Prüfung</p>
+            <p class="eyebrow">@L["Bohrdaten · Karte · Prüfung"]</p>
             <h1>BoreholeHub</h1>
-            <p class="lead">Aufschlüsse erfassen, auf der Karte sehen, Schichten und Laborwerte prüfen.</p>
+            <p class="lead">@L["Aufschlüsse erfassen, auf der Karte sehen, Schichten und Laborwerte prüfen."]</p>
             <div class="hero-actions">
                 <form method="post" action="/Demo" class="inline-form">
                     @Html.AntiForgeryToken()
-                    <button type="submit" class="btn btn-primary">Demo-Projekt laden</button>
+                    <button type="submit" class="btn btn-primary">@L["Demo-Projekt laden"]</button>
                 </form>
-                <a class="btn btn-secondary" href="/Projekte">Projekte ansehen</a>
+                <a class="btn btn-secondary" href="/Projekte">@L["Projekte ansehen"]</a>
             </div>
             <p class="hero-stats">
-                @Model.ProjektAnzahl @(Model.ProjektAnzahl == 1 ? "Projekt" : "Projekte") · @Model.AufschlussAnzahl @(Model.AufschlussAnzahl == 1 ? "Aufschluss" : "Aufschlüsse") in der Datenbank
+                @Model.ProjektAnzahl @(Model.ProjektAnzahl == 1 ? L["Projekt"] : L["Projekte"]) · @Model.AufschlussAnzahl @(Model.AufschlussAnzahl == 1 ? L["Aufschluss"] : L["Aufschlüsse"]) @L["in der Datenbank"]
             </p>
         </div>
 
         <figure class="profile-figure">
-            <svg viewBox="0 0 440 340" role="img" aria-label="Schematisches Schichtenprofil mit Grundwasserstand">
+            <svg viewBox="0 0 440 340" role="img" aria-label="@L["Schematisches Schichtenprofil mit Grundwasserstand"]">
                 <rect class="pf-bg" x="0" y="0" width="440" height="340" />
                 <!-- ground line -->
                 <text class="pf-muted" x="24" y="34" font-size="12" font-family="Inter, system-ui, sans-serif">0,0 m</text>
@@ -36,7 +37,7 @@
                 <!-- ground water -->
                 <line class="pf-gw" x1="60" y1="214" x2="196" y2="214" />
                 <path class="pf-water" d="M44 208 l8 12 h-16 z" transform="translate(0 -4)" />
-                <!-- labels -->
+                <!-- labels: soil layer names stay German (layer descriptions, see FLAGS) -->
                 <g class="pf-ink" font-family="Inter, system-ui, sans-serif" font-size="13">
                     <text x="212" y="63">Oberboden</text>
                     <text x="212" y="127">Auenlehm</text>
@@ -49,7 +50,7 @@
                     <line class="pf-lead" x1="176" y1="246" x2="204" y2="246" />
                     <line class="pf-lead" x1="176" y1="289" x2="204" y2="289" />
                 </g>
-                <text class="pf-water" x="212" y="208" font-family="Inter, system-ui, sans-serif" font-size="12">Grundwasser</text>
+                <text class="pf-water" x="212" y="208" font-family="Inter, system-ui, sans-serif" font-size="12">@L["Grundwasser"]</text>
                 <!-- depth scale -->
                 <g class="pf-muted" font-family="Inter, system-ui, sans-serif" font-size="12">
                     <text x="24" y="135">1</text>
@@ -57,26 +58,26 @@
                     <text x="24" y="308">3 m</text>
                 </g>
             </svg>
-            <figcaption>Schematische Darstellung, keine Messdaten.</figcaption>
+            <figcaption>@L["Schematische Darstellung, keine Messdaten."]</figcaption>
         </figure>
     </section>
 
-    <section class="steps" aria-label="Ablauf">
+    <section class="steps" aria-label="@L["Ablauf"]">
         <div class="card-grid cols-3">
             <div class="card">
                 <p class="step-no">01</p>
-                <h2>Erfassen</h2>
-                <p>Kleinrammbohrungen und Rammsondierungen mit Koordinaten, Endteufe und Grundwasser.</p>
+                <h2>@L["Erfassen"]</h2>
+                <p>@L["Kleinrammbohrungen und Rammsondierungen mit Koordinaten, Endteufe und Grundwasser."]</p>
             </div>
             <div class="card">
                 <p class="step-no">02</p>
-                <h2>Sehen</h2>
-                <p>Alle Aufschlüsse auf der Karte, optional mit Geologie und Boden als Überlagerung.</p>
+                <h2>@L["Sehen"]</h2>
+                <p>@L["Alle Aufschlüsse auf der Karte, optional mit Geologie und Boden als Überlagerung."]</p>
             </div>
             <div class="card">
                 <p class="step-no">03</p>
-                <h2>Prüfen</h2>
-                <p>Schichten, Rammsondierung und Laborwerte im Überblick, mit Beispielgrenzwerten.</p>
+                <h2>@L["Prüfen"]</h2>
+                <p>@L["Schichten, Rammsondierung und Laborwerte im Überblick, mit Beispielgrenzwerten."]</p>
             </div>
         </div>
     </section>

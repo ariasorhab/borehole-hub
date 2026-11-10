@@ -1,5 +1,6 @@
 using System.Text;
 using BoreholeHub.Core.Entities;
+using Microsoft.Extensions.Localization;
 
 namespace BoreholeHub.Web.Drawing;
 
@@ -109,10 +110,13 @@ internal static class SoilPatterns
         return sb.ToString();
     }
 
-    /// <summary>German legend text of a soil kind, e.g. "Auffüllung: Schluff, sandig".</summary>
-    internal static string Name(SoilKind k)
+    /// <summary>
+    /// Legend text of a soil kind, e.g. "Auffüllung: Schluff, sandig". German when <paramref name="loc"/> is null
+    /// (the PDF report); otherwise localized from DetailsModel.en.resx (docs/i18n.md, rule (c)).
+    /// </summary>
+    internal static string Name(SoilKind k, IStringLocalizer? loc = null)
     {
-        string main = k.Main switch
+        string main = Txt(loc, k.Main switch
         {
             Soil.Kies => "Kies",
             Soil.Sand => "Sand",
@@ -120,15 +124,17 @@ internal static class SoilPatterns
             Soil.Ton => "Ton",
             Soil.Oberboden => "Mutterboden",
             _ => "Boden (nicht näher bestimmt)",
-        };
+        });
         string second = k.Second switch
         {
-            's' => ", sandig",
-            'g' => ", kiesig",
-            'u' => ", schluffig",
-            't' => ", tonig",
+            's' => Txt(loc, ", sandig"),
+            'g' => Txt(loc, ", kiesig"),
+            'u' => Txt(loc, ", schluffig"),
+            't' => Txt(loc, ", tonig"),
             _ => string.Empty,
         };
-        return (k.Fill ? "Auffüllung: " : string.Empty) + main + second;
+        return (k.Fill ? Txt(loc, "Auffüllung") + ": " : string.Empty) + main + second;
     }
+
+    private static string Txt(IStringLocalizer? loc, string key) => loc is null ? key : loc[key].Value;
 }

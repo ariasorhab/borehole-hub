@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Projekte" xml:space="preserve">
+    <value>Projects</value>
+  </data>
+  <data name="Brotkrumen" xml:space="preserve">
+    <value>Breadcrumb</value>
+  </data>
+  <data name="Start" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="Noch keine Projekte vorhanden." xml:space="preserve">
+    <value>No projects yet.</value>
+  </data>
+  <data name="Demo-Projekt laden" xml:space="preserve">
+    <value>Load demo project</value>
+  </data>
+  <data name="Kleinrammbohrung" xml:space="preserve">
+    <value>small percussion borehole</value>
+  </data>
+  <data name="Kleinrammbohrungen" xml:space="preserve">
+    <value>small percussion boreholes</value>
+  </data>
+  <data name="Rammsondierung" xml:space="preserve">
+    <value>dynamic probing</value>
+  </data>
+  <data name="Rammsondierungen" xml:space="preserve">
+    <value>dynamic probings</value>
+  </data>
+  <data name="Erstellt am {0}" xml:space="preserve">
+    <value>Created on {0}</value>
+  </data>
+</root>

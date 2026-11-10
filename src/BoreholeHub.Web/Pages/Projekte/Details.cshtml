@@ -1,15 +1,16 @@
 @page "/Projekte/{id:int}"
 @model BoreholeHub.Web.Pages.Projekte.DetailsModel
 @using System.Globalization
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer L
 @{
     ViewData["Title"] = Model.Projekt.Name;
     var de = CultureInfo.GetCultureInfo("de-DE");
 }
 
 <div class="container">
-    <nav class="breadcrumb" aria-label="Brotkrumen">
+    <nav class="breadcrumb" aria-label="@L["Brotkrumen"]">
         <ol>
-            <li><a href="/Projekte">Projekte</a></li>
+            <li><a href="/Projekte">@L["Projekte"]</a></li>
             <li aria-current="page">@Model.Projekt.Name</li>
         </ol>
     </nav>
@@ -18,8 +19,8 @@
         <h1>@Model.Projekt.Name</h1>
         <p class="muted">@Model.Projekt.Ort · @Model.Projekt.Auftraggeber</p>
         <div class="page-actions">
-            <a class="btn btn-primary" href="/Projekte/@Model.Projekt.Id/Karte">Karte öffnen</a>
-            <a class="btn btn-secondary" href="/Projekte/@Model.Projekt.Id?handler=Pdf">PDF-Bericht</a>
+            <a class="btn btn-primary" href="/Projekte/@Model.Projekt.Id/Karte">@L["Karte öffnen"]</a>
+            <a class="btn btn-secondary" href="/Projekte/@Model.Projekt.Id?handler=Pdf">@L["PDF-Bericht"]</a>
         </div>
     </header>
 
@@ -30,50 +31,50 @@
         <p class="lead-text">@Model.Projekt.Beschreibung</p>
     }
 
-    <section class="kpi-row" aria-label="Kennzahlen">
+    <section class="kpi-row" aria-label="@L["Kennzahlen"]">
         <div class="kpi">
             <div class="kpi-value">@Model.Gesamt.ToString(de)</div>
-            <div class="kpi-label">Aufschlüsse</div>
+            <div class="kpi-label">@L["Aufschlüsse"]</div>
         </div>
         <div class="kpi kpi-rust">
             <div class="kpi-value">@Model.Kleinrammbohrungen.ToString(de)</div>
-            <div class="kpi-label">Kleinrammbohrungen</div>
+            <div class="kpi-label">@L["Kleinrammbohrungen"]</div>
         </div>
         <div class="kpi kpi-water">
             <div class="kpi-value">@Model.Rammsondierungen.ToString(de)</div>
-            <div class="kpi-label">Rammsondierungen</div>
+            <div class="kpi-label">@L["Rammsondierungen"]</div>
         </div>
         <div class="kpi">
             <div class="kpi-value">@(Model.MaxEndteufeM is double max ? DetailsModel.Meter(max) : "–")</div>
-            <div class="kpi-label">Max. Endteufe</div>
+            <div class="kpi-label">@L["Max. Endteufe"]</div>
         </div>
         <div class="kpi kpi-water">
             <div class="kpi-value">@Model.MitGrundwasser.ToString(de)</div>
-            <div class="kpi-label">Grundwasser angetroffen</div>
+            <div class="kpi-label">@L["Grundwasser angetroffen"]</div>
         </div>
     </section>
 
     @if (Model.Aufschluesse.Count == 0)
     {
         <div class="empty-state">
-            <p>Für dieses Projekt sind noch keine Aufschlüsse erfasst.</p>
+            <p>@L["Für dieses Projekt sind noch keine Aufschlüsse erfasst."]</p>
         </div>
     }
     else
     {
-        <h2 class="section-title">Aufschlüsse</h2>
+        <h2 class="section-title">@L["Aufschlüsse"]</h2>
         <div class="table-wrap">
             <table class="data-table">
                 <thead>
                     <tr>
-                        <th scope="col">Bezeichnung</th>
-                        <th scope="col">Art</th>
-                        <th scope="col">Datum</th>
-                        <th scope="col" class="num">Ansatzhöhe [m NHN]</th>
-                        <th scope="col" class="num">Endteufe [m]</th>
-                        <th scope="col" class="num">Grundwasser [m u. GOK]</th>
-                        <th scope="col" class="num">Rechtswert</th>
-                        <th scope="col" class="num">Hochwert</th>
+                        <th scope="col">@L["Bezeichnung"]</th>
+                        <th scope="col">@L["Art"]</th>
+                        <th scope="col">@L["Datum"]</th>
+                        <th scope="col" class="num">@L["Ansatzhöhe [m NHN]"]</th>
+                        <th scope="col" class="num">@L["Endteufe [m]"]</th>
+                        <th scope="col" class="num">@L["Grundwasser [m u. GOK]"]</th>
+                        <th scope="col" class="num">@L["Rechtswert"]</th>
+                        <th scope="col" class="num">@L["Hochwert"]</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -84,11 +85,11 @@
                             <td>
                                 @if (a.Art == AufschlussArt.Kleinrammbohrung)
                                 {
-                                    <span class="badge badge-krb">Kleinrammbohrung</span>
+                                    <span class="badge badge-krb">@L["Kleinrammbohrung"]</span>
                                 }
                                 else
                                 {
-                                    <span class="badge badge-dph">Rammsondierung</span>
+                                    <span class="badge badge-dph">@L["Rammsondierung"]</span>
                                 }
                             </td>
                             <td>@a.Datum.ToString("dd.MM.yyyy", de)</td>
@@ -102,6 +103,6 @@
                 </tbody>
             </table>
         </div>
-        <p class="muted" style="margin-top: var(--s3); font-size: var(--fs-1);">Koordinaten: ETRS89 / UTM 32N (EPSG:25832)</p>
+        <p class="muted" style="margin-top: var(--s3); font-size: var(--fs-1);">@L["Koordinaten: ETRS89 / UTM 32N (EPSG:25832)"]</p>
     }
 </div>

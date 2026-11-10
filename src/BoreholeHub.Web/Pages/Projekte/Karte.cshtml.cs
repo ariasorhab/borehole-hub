@@ -5,10 +5,11 @@ using BoreholeHub.Web.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 
 namespace BoreholeHub.Web.Pages.Projekte;
 
-public class KarteModel(BoreholeDbContext db) : PageModel
+public class KarteModel(BoreholeDbContext db, IStringLocalizer<KarteModel> loc) : PageModel
 {
     private static readonly CultureInfo De = CultureInfo.GetCultureInfo("de-DE");
 
@@ -79,8 +80,8 @@ public class KarteModel(BoreholeDbContext db) : PageModel
         return new JsonResult(new { type = "FeatureCollection", features });
     }
 
-    /// <summary>Short line for the side panel, e.g. "3,5 m · Grundwasser 2,8 m".</summary>
-    public static string Kurzinfo(ListeneintragZeile z) =>
+    /// <summary>Short line for the side panel, e.g. "3,5 m · Grundwasser 2,8 m" (English: "3,5 m · groundwater 2,8 m").</summary>
+    public string Kurzinfo(ListeneintragZeile z) =>
         z.EndteufeM.ToString("0.0", De) + " m"
-        + (z.GrundwasserM is double gw ? " · Grundwasser " + gw.ToString("0.0", De) + " m" : string.Empty);
+        + (z.GrundwasserM is double gw ? " · " + loc["Grundwasser"].Value + " " + gw.ToString("0.0", De) + " m" : string.Empty);
 }

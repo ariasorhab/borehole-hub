@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Brotkrumen" xml:space="preserve">
+    <value>Breadcrumb</value>
+  </data>
+  <data name="Projekte" xml:space="preserve">
+    <value>Projects</value>
+  </data>
+  <data name="Karte" xml:space="preserve">
+    <value>Map</value>
+  </data>
+  <data name="Koordinaten: ETRS89 / UTM 32N (EPSG:25832)" xml:space="preserve">
+    <value>Coordinates: ETRS89 / UTM 32N (EPSG:25832)</value>
+  </data>
+  <data name="Ebenen" xml:space="preserve">
+    <value>Layers</value>
+  </data>
+  <data name="Geologie (GK 25, HLNUG)" xml:space="preserve">
+    <value>Geology (GK 25, HLNUG)</value>
+  </data>
+  <data name="Deckkraft Geologie (GK 25)" xml:space="preserve">
+    <value>Opacity, geology (GK 25)</value>
+  </data>
+  <data name="Geologie (GÜK 300, HLNUG)" xml:space="preserve">
+    <value>Geology (GÜK 300, HLNUG)</value>
+  </data>
+  <data name="Deckkraft Geologie (GÜK 300)" xml:space="preserve">
+    <value>Opacity, geology (GÜK 300)</value>
+  </data>
+  <data name="Boden (BFD 50, HLNUG)" xml:space="preserve">
+    <value>Soil (BFD 50, HLNUG)</value>
+  </data>
+  <data name="Deckkraft Boden (BFD 50)" xml:space="preserve">
+    <value>Opacity, soil (BFD 50)</value>
+  </data>
+  <data name="GK 25: Klick in die Karte zeigt die Kartiereinheit. GÜK 300 ist nur bei Maßstäben kleiner als etwa 1:22.000 sichtbar. Bodenkarte: nur private Nutzung erlaubt. Quelle: © HLNUG." xml:space="preserve">
+    <value>GK 25: a click on the map shows the map unit. GÜK 300 is only visible at scales smaller than about 1:22.000. Soil map: private use only. Source: © HLNUG.</value>
+  </data>
+  <data name="Profilschnitt" xml:space="preserve">
+    <value>Cross-section</value>
+  </data>
+  <data name="Kleinrammbohrungen" xml:space="preserve">
+    <value>Small percussion boreholes</value>
+  </data>
+  <data name="Rammsondierungen" xml:space="preserve">
+    <value>Dynamic probings</value>
+  </data>
+  <data name="Kartenleiste" xml:space="preserve">
+    <value>Map panel</value>
+  </data>
+  <data name="Karte der Aufschlüsse" xml:space="preserve">
+    <value>Map of exploration points</value>
+  </data>
+  <data name="Legende" xml:space="preserve">
+    <value>Legend</value>
+  </data>
+  <data name="Kleinrammbohrung (KRB)" xml:space="preserve">
+    <value>Small percussion borehole (KRB)</value>
+  </data>
+  <data name="Rammsondierung (DPH)" xml:space="preserve">
+    <value>Dynamic probing (DPH)</value>
+  </data>
+  <data name="Grundwasser angetroffen" xml:space="preserve">
+    <value>Groundwater encountered</value>
+  </data>
+  <data name="Geologie (GK 25)" xml:space="preserve">
+    <value>Geology (GK 25)</value>
+  </data>
+  <data name="Hier ist keine Kartiereinheit verzeichnet." xml:space="preserve">
+    <value>No map unit is recorded here.</value>
+  </data>
+  <data name="Kartiereinheit" xml:space="preserve">
+    <value>Map unit</value>
+  </data>
+  <data name="Kürzel" xml:space="preserve">
+    <value>Code</value>
+  </data>
+  <data name="Kleinrammbohrung" xml:space="preserve">
+    <value>Small percussion borehole</value>
+  </data>
+  <data name="Rammsondierung" xml:space="preserve">
+    <value>Dynamic probing</value>
+  </data>
+  <data name="Art" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Endteufe" xml:space="preserve">
+    <value>Final depth</value>
+  </data>
+  <data name="Ansatzhöhe" xml:space="preserve">
+    <value>Start level</value>
+  </data>
+  <data name="Grundwasser" xml:space="preserve">
+    <value>Groundwater</value>
+  </data>
+  <data name="nicht angetroffen" xml:space="preserve">
+    <value>not encountered</value>
+  </data>
+  <data name="m u. GOK" xml:space="preserve">
+    <value>m below ground level</value>
+  </data>
+  <data name="Rechtswert" xml:space="preserve">
+    <value>Easting</value>
+  </data>
+  <data name="Hochwert" xml:space="preserve">
+    <value>Northing</value>
+  </data>
+  <data name="Profil öffnen" xml:space="preserve">
+    <value>Open profile</value>
+  </data>
+  <data name="Die Punkte konnten nicht geladen werden." xml:space="preserve">
+    <value>The points could not be loaded.</value>
+  </data>
+  <data name="© OpenStreetMap-Mitwirkende" xml:space="preserve">
+    <value>© OpenStreetMap contributors</value>
+  </data>
+</root>

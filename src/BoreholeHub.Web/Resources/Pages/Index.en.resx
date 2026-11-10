@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Bohrdaten · Karte · Prüfung" xml:space="preserve">
+    <value>Borehole data · Map · Data check</value>
+  </data>
+  <data name="Aufschlüsse erfassen, auf der Karte sehen, Schichten und Laborwerte prüfen." xml:space="preserve">
+    <value>Record exploration points, view them on the map, check layers and lab values.</value>
+  </data>
+  <data name="Demo-Projekt laden" xml:space="preserve">
+    <value>Load demo project</value>
+  </data>
+  <data name="Projekte ansehen" xml:space="preserve">
+    <value>View projects</value>
+  </data>
+  <data name="Projekt" xml:space="preserve">
+    <value>project</value>
+  </data>
+  <data name="Projekte" xml:space="preserve">
+    <value>projects</value>
+  </data>
+  <data name="Aufschluss" xml:space="preserve">
+    <value>exploration point</value>
+  </data>
+  <data name="Aufschlüsse" xml:space="preserve">
+    <value>exploration points</value>
+  </data>
+  <data name="in der Datenbank" xml:space="preserve">
+    <value>in the database</value>
+  </data>
+  <data name="Schematisches Schichtenprofil mit Grundwasserstand" xml:space="preserve">
+    <value>Schematic layer profile with groundwater level</value>
+  </data>
+  <data name="Grundwasser" xml:space="preserve">
+    <value>Groundwater</value>
+  </data>
+  <data name="Schematische Darstellung, keine Messdaten." xml:space="preserve">
+    <value>Schematic illustration, not measured data.</value>
+  </data>
+  <data name="Ablauf" xml:space="preserve">
+    <value>Workflow</value>
+  </data>
+  <data name="Erfassen" xml:space="preserve">
+    <value>Record</value>
+  </data>
+  <data name="Kleinrammbohrungen und Rammsondierungen mit Koordinaten, Endteufe und Grundwasser." xml:space="preserve">
+    <value>Small percussion boreholes and dynamic probings with coordinates, final depth and groundwater.</value>
+  </data>
+  <data name="Sehen" xml:space="preserve">
+    <value>See</value>
+  </data>
+  <data name="Alle Aufschlüsse auf der Karte, optional mit Geologie und Boden als Überlagerung." xml:space="preserve">
+    <value>All exploration points on the map, optionally with geology and soil as an overlay.</value>
+  </data>
+  <data name="Prüfen" xml:space="preserve">
+    <value>Check</value>
+  </data>
+  <data name="Schichten, Rammsondierung und Laborwerte im Überblick, mit Beispielgrenzwerten." xml:space="preserve">
+    <value>Layers, dynamic probing and lab values at a glance, with example limit values.</value>
+  </data>
+</root>

@@ -1,5 +1,7 @@
 @model BoreholeHub.Web.Pages.Shared.ProjektTabsModel
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer L
 @{
+    // The texts are German keys, localized where they are displayed (docs/i18n.md, rule (b)).
     var tabs = new (string Key, string Text, string Url)[]
     {
         ("uebersicht", "Übersicht", $"/Projekte/{Model.ProjektId}"),
@@ -11,16 +13,16 @@
         ("feld", "Feldaufnahme", $"/Projekte/{Model.ProjektId}/Feld"),
     };
 }
-<nav class="tabs" aria-label="Projektbereiche">
+<nav class="tabs" aria-label="@L["Projektbereiche"]">
     @foreach (var t in tabs)
     {
         if (t.Key == Model.Aktiv)
         {
-            <a class="tab" href="@t.Url" aria-current="page">@t.Text</a>
+            <a class="tab" href="@t.Url" aria-current="page">@L[t.Text].Value</a>
         }
         else
         {
-            <a class="tab" href="@t.Url">@t.Text</a>
+            <a class="tab" href="@t.Url">@L[t.Text].Value</a>
         }
     }
 </nav>

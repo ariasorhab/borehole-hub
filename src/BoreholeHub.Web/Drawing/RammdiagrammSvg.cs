@@ -1,5 +1,6 @@
 using System.Text;
 using BoreholeHub.Core.Entities;
+using Microsoft.Extensions.Localization;
 using static BoreholeHub.Web.Drawing.DrawingLayout;
 
 namespace BoreholeHub.Web.Drawing;
@@ -11,7 +12,11 @@ public static class RammdiagrammSvg
     private const double PlotX = 48;
     private const double PlotW = 416;
 
-    public static string Render(Aufschluss dph, IReadOnlyList<RammMesswert> werte, double scaleMaxM)
+    /// <summary>
+    /// Renders the probing chart. <paramref name="loc"/> is the page model's localizer (keys in DetailsModel.en.resx);
+    /// null gives the German text, as used by the PDF report.
+    /// </summary>
+    public static string Render(Aufschluss dph, IReadOnlyList<RammMesswert> werte, double scaleMaxM, IStringLocalizer? loc = null)
     {
         ArgumentNullException.ThrowIfNull(dph);
         ArgumentNullException.ThrowIfNull(werte);
@@ -23,11 +28,11 @@ public static class RammdiagrammSvg
 
         var sb = new StringBuilder();
         sb.Append($"<svg class=\"rammdiagramm\" viewBox=\"0 0 {N(Width)} {N(height)}\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-labelledby=\"rd-title rd-desc\" preserveAspectRatio=\"xMinYMin meet\">");
-        sb.Append($"<title id=\"rd-title\">Rammdiagramm {Esc(dph.Bezeichnung)}</title>");
-        sb.Append($"<desc id=\"rd-desc\">{Esc($"Schlagzahlen N10 je 10 cm der schweren Rammsonde {dph.Bezeichnung} bis {Fmt(dph.EndteufeM, 2)} m Tiefe, höchster Wert {maxN}.")}</desc>");
+        sb.Append($"<title id=\"rd-title\">{Esc(Txt(loc, "Rammdiagramm {0}", dph.Bezeichnung))}</title>");
+        sb.Append($"<desc id=\"rd-desc\">{Esc(Txt(loc, "Schlagzahlen N10 je 10 cm der schweren Rammsonde {0} bis {1} m Tiefe, höchster Wert {2}.", dph.Bezeichnung, Fmt(dph.EndteufeM, 2), maxN))}</desc>");
 
-        Header(sb, Width, $"{dph.Bezeichnung} · schwere Rammsonde (DIN EN ISO 22476-2)",
-            $"Endteufe {Fmt(dph.EndteufeM, 2)} m · {dph.Datum:dd.MM.yyyy} · Ansatzhöhe {Fmt(dph.AnsatzhoeheMNhn, 2)} m NHN");
+        Header(sb, Width, Txt(loc, "{0} · schwere Rammsonde (DIN EN ISO 22476-2)", dph.Bezeichnung),
+            Txt(loc, "Endteufe {0} m · {1} · Ansatzhöhe {2} m NHN", Fmt(dph.EndteufeM, 2), dph.Datum.ToString("dd.MM.yyyy"), Fmt(dph.AnsatzhoeheMNhn, 2)));
 
         double y0 = Y(0), yBottom = Y(scaleMaxM);
 
@@ -38,14 +43,14 @@ public static class RammdiagrammSvg
             sb.Append($"<text class=\"dr-tick\" x=\"{N(PlotX - 8)}\" y=\"{N(Y(d) + 4)}\" text-anchor=\"end\">{Fmt(d, 1)}</text>");
         }
 
-        sb.Append($"<text class=\"dr-colhead\" x=\"4\" y=\"{N(y0 - 16)}\">m u. GOK</text>");
+        sb.Append($"<text class=\"dr-colhead\" x=\"4\" y=\"{N(y0 - 16)}\">{Esc(Txt(loc, "m u. GOK"))}</text>");
         for (int n = 0; n <= xMax; n += 5)
         {
             sb.Append($"<line class=\"dr-grid\" x1=\"{N(X(n))}\" y1=\"{N(y0)}\" x2=\"{N(X(n))}\" y2=\"{N(yBottom)}\"/>");
             sb.Append($"<text class=\"dr-tick\" x=\"{N(X(n))}\" y=\"{N(yBottom + 16)}\" text-anchor=\"middle\">{n}</text>");
         }
 
-        sb.Append($"<text class=\"dr-axislabel\" x=\"{N(PlotX + PlotW / 2)}\" y=\"{N(yBottom + 34)}\" text-anchor=\"middle\">N10 (Schläge je 10 cm)</text>");
+        sb.Append($"<text class=\"dr-axislabel\" x=\"{N(PlotX + PlotW / 2)}\" y=\"{N(yBottom + 34)}\" text-anchor=\"middle\">{Esc(Txt(loc, "N10 (Schläge je 10 cm)"))}</text>");
 
         // bars: one per 10 cm step
         sb.Append("<g class=\"rd-bars\">");
@@ -65,4 +70,8 @@ public static class RammdiagrammSvg
     }
 
     private static double PlotWidthStep() => 0.1 * PxPerM;
+
+    /// <summary>German text when no localizer is passed (PDF report); otherwise the localized value (docs/i18n.md, rule (c)).</summary>
+    private static string Txt(IStringLocalizer? loc, string key, params object[] args) =>
+        loc is null ? string.Format(key, args) : loc[key, args].Value;
 }

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Brotkrumen" xml:space="preserve">
+    <value>Breadcrumb</value>
+  </data>
+  <data name="Projekte" xml:space="preserve">
+    <value>Projects</value>
+  </data>
+  <data name="Karte öffnen" xml:space="preserve">
+    <value>Open map</value>
+  </data>
+  <data name="PDF-Bericht" xml:space="preserve">
+    <value>PDF report</value>
+  </data>
+  <data name="Kennzahlen" xml:space="preserve">
+    <value>Key figures</value>
+  </data>
+  <data name="Aufschlüsse" xml:space="preserve">
+    <value>Exploration points</value>
+  </data>
+  <data name="Kleinrammbohrungen" xml:space="preserve">
+    <value>Small percussion boreholes</value>
+  </data>
+  <data name="Rammsondierungen" xml:space="preserve">
+    <value>Dynamic probings</value>
+  </data>
+  <data name="Max. Endteufe" xml:space="preserve">
+    <value>Max. final depth</value>
+  </data>
+  <data name="Grundwasser angetroffen" xml:space="preserve">
+    <value>Groundwater encountered</value>
+  </data>
+  <data name="Für dieses Projekt sind noch keine Aufschlüsse erfasst." xml:space="preserve">
+    <value>No exploration points have been recorded for this project yet.</value>
+  </data>
+  <data name="Bezeichnung" xml:space="preserve">
+    <value>Designation</value>
+  </data>
+  <data name="Art" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Datum" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="Ansatzhöhe [m NHN]" xml:space="preserve">
+    <value>Start level [m NHN]</value>
+  </data>
+  <data name="Endteufe [m]" xml:space="preserve">
+    <value>Final depth [m]</value>
+  </data>
+  <data name="Grundwasser [m u. GOK]" xml:space="preserve">
+    <value>Groundwater [m below ground level]</value>
+  </data>
+  <data name="Rechtswert" xml:space="preserve">
+    <value>Easting</value>
+  </data>
+  <data name="Hochwert" xml:space="preserve">
+    <value>Northing</value>
+  </data>
+  <data name="Kleinrammbohrung" xml:space="preserve">
+    <value>Small percussion borehole</value>
+  </data>
+  <data name="Rammsondierung" xml:space="preserve">
+    <value>Dynamic probing</value>
+  </data>
+  <data name="Koordinaten: ETRS89 / UTM 32N (EPSG:25832)" xml:space="preserve">
+    <value>Coordinates: ETRS89 / UTM 32N (EPSG:25832)</value>
+  </data>
+</root>

@@ -1,7 +1,8 @@
 @page "/Projekte/{id:int}/Profilschnitt"
 @model BoreholeHub.Web.Pages.Projekte.ProfilschnittModel
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer L
 @{
-    ViewData["Title"] = Model.Projekt.Name + " · Profilschnitt";
+    ViewData["Title"] = Model.Projekt.Name + " · " + L["Profilschnitt"].Value;
 }
 
 @section Head {
@@ -9,17 +10,17 @@
 }
 
 <div class="container">
-    <nav class="breadcrumb" aria-label="Brotkrumen">
+    <nav class="breadcrumb" aria-label="@L["Brotkrumen"]">
         <ol>
-            <li><a href="/Projekte">Projekte</a></li>
+            <li><a href="/Projekte">@L["Projekte"]</a></li>
             <li><a href="/Projekte/@Model.Projekt.Id">@Model.Projekt.Name</a></li>
-            <li aria-current="page">Profilschnitt</li>
+            <li aria-current="page">@L["Profilschnitt"]</li>
         </ol>
     </nav>
 
     <header class="page-header">
-        <h1>Profilschnitt</h1>
-        <p class="muted">@Model.Projekt.Name · geologischer Schnitt durch 2 bis 4 Kleinrammbohrungen</p>
+        <h1>@L["Profilschnitt"]</h1>
+        <p class="muted">@Model.Projekt.Name · @L["geologischer Schnitt durch 2 bis 4 Kleinrammbohrungen"]</p>
     </header>
 
     @await Html.PartialAsync("_ProjektTabs", new BoreholeHub.Web.Pages.Shared.ProjektTabsModel(Model.Projekt.Id, "profilschnitt"))
@@ -32,8 +33,8 @@
     {
         <section class="ps-select" aria-labelledby="ps-select-title">
             <form method="get" action="/Projekte/@Model.Projekt.Id/Profilschnitt" class="ps-form" id="ps-form">
-                <h2 class="ps-select-title" id="ps-select-title">Bohrungen wählen</h2>
-                <p class="ps-select-hint">2 bis 4 Kleinrammbohrungen; die Reihenfolge der Liste ist die Zeichenreihenfolge.</p>
+                <h2 class="ps-select-title" id="ps-select-title">@L["Bohrungen wählen"]</h2>
+                <p class="ps-select-hint">@L["2 bis 4 Kleinrammbohrungen; die Reihenfolge der Liste ist die Zeichenreihenfolge."]</p>
                 @if (Model.Hinweis is not null)
                 {
                     <p class="ps-alert" role="alert">@Model.Hinweis</p>
@@ -49,7 +50,7 @@
                         </li>
                     }
                 </ul>
-                <button type="submit" class="btn btn-primary" id="ps-submit">Schnitt zeichnen</button>
+                <button type="submit" class="btn btn-primary" id="ps-submit">@L["Schnitt zeichnen"]</button>
             </form>
             <div class="ps-inset">
                 @Html.Raw(Model.LageplanSvgHtml)
@@ -61,19 +62,19 @@
         </figure>
 
         <section aria-labelledby="ps-table-title" class="ps-tablebox">
-            <h2 class="section-title" id="ps-table-title">Daten zum Schnitt</h2>
+            <h2 class="section-title" id="ps-table-title">@L["Daten zum Schnitt"]</h2>
             <div class="table-wrap">
                 <table class="data-table">
-                    <caption class="sr-only">Aufschlüsse des Profilschnitts mit Abstand, Höhen, Endteufe, Grundwasser und Homogenbereichen</caption>
+                    <caption class="sr-only">@L["Aufschlüsse des Profilschnitts mit Abstand, Höhen, Endteufe, Grundwasser und Homogenbereichen"]</caption>
                     <thead>
                         <tr>
-                            <th scope="col">Aufschluss</th>
-                            <th scope="col" class="num">Abstand [m]</th>
-                            <th scope="col" class="num">Ansatzhöhe [m NHN]</th>
-                            <th scope="col" class="num">Endteufe [m]</th>
-                            <th scope="col" class="num">Grundwasser [m u. GOK]</th>
-                            <th scope="col" class="num">Grundwasser [m NHN]</th>
-                            <th scope="col">Homogenbereiche [m u. GOK]</th>
+                            <th scope="col">@L["Aufschluss"]</th>
+                            <th scope="col" class="num">@L["Abstand [m]"]</th>
+                            <th scope="col" class="num">@L["Ansatzhöhe [m NHN]"]</th>
+                            <th scope="col" class="num">@L["Endteufe [m]"]</th>
+                            <th scope="col" class="num">@L["Grundwasser [m u. GOK]"]</th>
+                            <th scope="col" class="num">@L["Grundwasser [m NHN]"]</th>
+                            <th scope="col">@L["Homogenbereiche [m u. GOK]"]</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -92,7 +93,7 @@
                     </tbody>
                 </table>
             </div>
-            <p class="ps-note">Abstände entlang des Linienzugs durch die gewählten Punkte (EPSG:25832).</p>
+            <p class="ps-note">@L["Abstände entlang des Linienzugs durch die gewählten Punkte (EPSG:25832)."]</p>
         </section>
     }
 </div>

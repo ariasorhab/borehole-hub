@@ -5,6 +5,12 @@
     var root = document.getElementById('karte');
     if (!root || typeof L === 'undefined') { return; }
 
+    // Texts come from data-t-* attributes rendered by Karte.cshtml (docs/i18n.md, rule (e)); the German is the fallback.
+    function T(name, fallback) {
+        var value = root.getAttribute('data-t-' + name);
+        return value === null ? fallback : value;
+    }
+
     // German number formats: one decimal for depths and heights, no decimals and no grouping for coordinates.
     var nf1 = new Intl.NumberFormat('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
     var nf0 = new Intl.NumberFormat('de-DE', { maximumFractionDigits: 0, useGrouping: false });
@@ -14,7 +20,7 @@
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         className: 'karte-basemap', // lets the dark theme darken the base map only (see site.css)
-        attribution: '&copy; OpenStreetMap-Mitwirkende'
+        attribution: T('osm', '&copy; OpenStreetMap-Mitwirkende')
     }).addTo(map);
 
     var GEOLOGY_MAX_ZOOM = 14;
@@ -84,12 +90,12 @@
                 var hit = data.results && data.results[0];
                 var box = el('div', 'karte-popup');
                 if (!hit) {
-                    box.appendChild(el('strong', 'karte-popup-title', 'Geologie (GK 25)'));
-                    box.appendChild(el('p', 'karte-popup-note', 'Hier ist keine Kartiereinheit verzeichnet.'));
+                    box.appendChild(el('strong', 'karte-popup-title', T('gk25', 'Geologie (GK 25)')));
+                    box.appendChild(el('p', 'karte-popup-note', T('no-unit', 'Hier ist keine Kartiereinheit verzeichnet.')));
                 } else {
                     var a = hit.attributes;
-                    box.appendChild(el('strong', 'karte-popup-title', a['Kartiereinheit'] || 'Kartiereinheit'));
-                    var lines = [a['Kürzel'] ? 'Kürzel: ' + a['Kürzel'] : null, a['Stratigraphische Zuordnung'], a['Hauptgesteinseinheit']];
+                    box.appendChild(el('strong', 'karte-popup-title', a['Kartiereinheit'] || T('unit', 'Kartiereinheit')));
+                    var lines = [a['Kürzel'] ? T('code', 'Kürzel') + ': ' + a['Kürzel'] : null, a['Stratigraphische Zuordnung'], a['Hauptgesteinseinheit']];
                     lines.forEach(function (t) { if (t && t !== 'Null') { box.appendChild(el('p', 'karte-popup-note', t)); } });
                     box.appendChild(el('p', 'karte-popup-note', 'GK 25, \u00a9 HLNUG'));
                 }
@@ -151,16 +157,23 @@
         return L.divIcon({ className: 'karte-icon', html: '<span class="' + cls + '"></span>', iconSize: [20, 20], iconAnchor: [10, 10], popupAnchor: [0, -12] });
     }
 
+    // Kleinrammbohrung / Rammsondierung are the enum names from the server; the popup shows their translated labels.
+    function artLabel(art) {
+        if (art === 'Kleinrammbohrung') { return T('krb', art); }
+        if (art === 'Rammsondierung') { return T('dph', art); }
+        return art;
+    }
+
     function popupContent(p) {
         var box = el('div', 'karte-popup');
         box.appendChild(el('strong', 'karte-popup-title', p.bezeichnung));
         var rows = [
-            ['Art', p.art],
-            ['Endteufe', nf1.format(p.endteufeM) + ' m'],
-            ['Ansatzhöhe', nf1.format(p.ansatzhoeheMNhn) + ' m NHN'],
-            ['Grundwasser', p.grundwasserM !== null ? nf1.format(p.grundwasserM) + ' m u. GOK' : 'nicht angetroffen'],
-            ['Rechtswert', nf0.format(p.rechtswert)],
-            ['Hochwert', nf0.format(p.hochwert)]
+            [T('type', 'Art'), artLabel(p.art)],
+            [T('depth', 'Endteufe'), nf1.format(p.endteufeM) + ' m'],
+            [T('start', 'Ansatzhöhe'), nf1.format(p.ansatzhoeheMNhn) + ' m NHN'],
+            [T('groundwater', 'Grundwasser'), p.grundwasserM !== null ? nf1.format(p.grundwasserM) + ' ' + T('below', 'm u. GOK') : T('none', 'nicht angetroffen')],
+            [T('easting', 'Rechtswert'), nf0.format(p.rechtswert)],
+            [T('northing', 'Hochwert'), nf0.format(p.hochwert)]
         ];
         var dl = el('dl', 'karte-popup-list');
         rows.forEach(function (r) {
@@ -171,7 +184,7 @@
         box.appendChild(el('p', 'karte-popup-note', 'EPSG:25832'));
         var actions = el('div', 'karte-popup-actions');
         actions.style.marginTop = 'var(--s3)';
-        var link = el('a', 'btn btn-primary btn-sm', 'Profil öffnen');
+        var link = el('a', 'btn btn-primary btn-sm', T('profile', 'Profil öffnen'));
         link.href = '/Aufschluesse/' + p.id;
         actions.appendChild(link);
         box.appendChild(actions);
@@ -214,7 +227,7 @@
             updateLabels();
         })
         .catch(function () {
-            var notice = el('div', 'notice karte-error', 'Die Punkte konnten nicht geladen werden.');
+            var notice = el('div', 'notice karte-error', T('load-error', 'Die Punkte konnten nicht geladen werden.'));
             root.querySelector('.karte-panel').prepend(notice);
         });
 
