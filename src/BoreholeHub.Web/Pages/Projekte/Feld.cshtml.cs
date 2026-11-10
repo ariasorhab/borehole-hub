@@ -4,9 +4,11 @@ using BoreholeHub.Core.Entities;
 using BoreholeHub.Core.Services;
 using BoreholeHub.Web.Data;
 using BoreholeHub.Web.Import;
+using BoreholeHub.Web.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 
 namespace BoreholeHub.Web.Pages.Projekte;
 
@@ -14,7 +16,7 @@ namespace BoreholeHub.Web.Pages.Projekte;
 /// Tablet-friendly field form: records one new Kleinrammbohrung (with layers) or Rammsondierung (with N10 values).
 /// The candidate is checked with <see cref="DataQualityService"/> before it is saved; a Fehler blocks saving.
 /// </summary>
-public class FeldModel(BoreholeDbContext db) : PageModel
+public class FeldModel(BoreholeDbContext db, IStringLocalizer<FeldModel> loc, IStringLocalizer<PruefTexte> pruefTexte) : PageModel
 {
     public const int StandardSchritte = 40;   // 4,00 m
     public const int MaxSchritte = 100;       // 10,00 m
@@ -35,8 +37,12 @@ public class FeldModel(BoreholeDbContext db) : PageModel
     private const string TempAufschlussId = "FeldAufschlussId";
     private const string TempHinweise = "FeldHinweise";
 
-    /// <summary>One error message; <see cref="Key"/> is the id of the field (or section) it belongs to.</summary>
-    public record FeldFehler(string Key, string Text);
+    /// <summary>
+    /// One error message. <see cref="Key"/> is the id of the field (or section) it belongs to.
+    /// <see cref="Text"/> is the German text; <see cref="Vorlage"/> and <see cref="Argumente"/> are the German
+    /// template and arguments that the view localizes (rule b); <see cref="Befund"/> is set for data-check findings.
+    /// </summary>
+    public record FeldFehler(string Key, string Text, string Vorlage = "", IReadOnlyList<string>? Argumente = null, PruefBefund? Befund = null);
 
     /// <summary>One layer row as typed by the user (all values are kept as text).</summary>
     public class SchichtZeile
@@ -97,13 +103,33 @@ public class FeldModel(BoreholeDbContext db) : PageModel
     public bool Gespeichert { get; private set; }
     public string GespeichertName { get; private set; } = "";
     public int GespeichertId { get; private set; }
-    public IReadOnlyList<string> GespeichertHinweise { get; private set; } = [];
+    public IReadOnlyList<PruefBefund> GespeichertHinweise { get; private set; } = [];
 
     public bool IstDph => string.Equals(Art, "DPH", StringComparison.Ordinal);
 
     public IEnumerable<FeldFehler> FehlerFuer(string key) => Fehler.Where(f => f.Key == key);
 
     public bool HatFehler(string key) => Fehler.Any(f => f.Key == key);
+
+    // ---------- texts for the view and the script (rule b and rule e) ----------
+
+    /// <summary>The text of one error, in the current language.</summary>
+    public string Fehlertext(FeldFehler f)
+    {
+        if (f.Befund is not null) { return BefundText(f.Befund); }
+        return f.Vorlage.Length == 0 ? f.Text : loc[f.Vorlage, (f.Argumente ?? []).ToArray<object>()].Value;
+    }
+
+    /// <summary>A data-check finding as "Rule: message", in the current language.</summary>
+    public string BefundText(PruefBefund b) => PruefTexte.Regel(pruefTexte, b.Regel) + ": " + PruefTexte.Meldung(pruefTexte, b);
+
+    public string MsgStandortNichtVerfuegbar => loc["Standort nicht verfügbar – bitte Koordinaten eingeben."].Value;
+    public string MsgStandortErmittelt => loc["Standort wird ermittelt …"].Value;
+    public string MsgGenauigkeit => loc["Genauigkeit ± {0} m", "{0}"].Value;
+    public string MsgN10Bis => loc["N10 bis {0} m", "{0}"].Value;
+
+    /// <summary>Accessible name of one N10 input, for example "N10 up to 0,10 m".</summary>
+    public string N10Beschriftung(int schritt) => loc["N10 bis {0} m", (schritt / 10.0).ToString("0.00", De)].Value;
 
     // ========== GET ==========
 
@@ -155,7 +181,9 @@ public class FeldModel(BoreholeDbContext db) : PageModel
             Gespeichert = true;
             GespeichertName = n;
             GespeichertId = aid;
-            GespeichertHinweise = hinweise is string h && h.Length > 0 ? h.Split('\n') : [];
+            GespeichertHinweise = hinweise is string h && h.Length > 0
+                ? h.Split('\n').Select(DekodiereHinweis).ToList()
+                : new List<PruefBefund>();
         }
     }
 
@@ -200,7 +228,9 @@ public class FeldModel(BoreholeDbContext db) : PageModel
         var fehlerBefunde = befunde.Where(b => b.Stufe == PruefStufe.Fehler).ToList();
         if (fehlerBefunde.Count > 0)
         {
-            Fehler = fehlerBefunde.Select(b => new FeldFehler(FeldFuerRegel(b.Regel), $"{b.Regel}: {b.Meldung}")).ToList();
+            Fehler = fehlerBefunde
+                .Select(b => new FeldFehler(FeldFuerRegel(b.Regel), $"{b.Regel}: {b.Meldung}", "", null, b))
+                .ToList();
             return Page();
         }
 
@@ -208,12 +238,24 @@ public class FeldModel(BoreholeDbContext db) : PageModel
         db.Aufschluesse.Add(kandidat);
         await db.SaveChangesAsync();
 
-        var hinweise = befunde.Where(b => b.Stufe == PruefStufe.Hinweis).Select(b => $"{b.Regel}: {b.Meldung}").ToList();
+        var hinweise = befunde.Where(b => b.Stufe == PruefStufe.Hinweis).Select(KodiereHinweis).ToList();
         TempData[TempProjekt] = id;
         TempData[TempBezeichnung] = kandidat.Bezeichnung;
         TempData[TempAufschlussId] = kandidat.Id;
         TempData[TempHinweise] = string.Join('\n', hinweise);
         return RedirectToPage(new { id });
+    }
+
+    // A hinweis is kept between POST and GET as German rule, German text, German template and arguments (rule b).
+    private const char Trenner = '\u001F';
+
+    private static string KodiereHinweis(PruefBefund b) =>
+        string.Join(Trenner, new[] { b.Regel, b.Meldung, b.Vorlage }.Concat(b.Argumente));
+
+    private static PruefBefund DekodiereHinweis(string zeile)
+    {
+        var teile = zeile.Split(Trenner);
+        return new PruefBefund(teile[0], PruefStufe.Hinweis, 0, "", teile[1]) { Vorlage = teile[2], Argumente = teile.Skip(3).ToList() };
     }
 
     private static string FeldFuerRegel(string regel) => regel switch
@@ -225,6 +267,10 @@ public class FeldModel(BoreholeDbContext db) : PageModel
         "Rammsondierung" => "n10",
         _ => "bezeichnung",
     };
+
+    /// <summary>A German error: the template is formatted with de-DE, the arguments are already German text.</summary>
+    private static FeldFehler Fehl(string key, string vorlage, params string[] argumente) =>
+        new(key, string.Format(De, vorlage, argumente.ToArray<object>()), vorlage, argumente);
 
     // ---------- reading the raw form ----------
 
@@ -277,32 +323,32 @@ public class FeldModel(BoreholeDbContext db) : PageModel
     {
         bool krb = Art == "KRB";
         bool dph = Art == "DPH";
-        if (!krb && !dph) { fehler.Add(new FeldFehler("art", "Art: Bitte Kleinrammbohrung oder Rammsondierung wählen.")); }
+        if (!krb && !dph) { fehler.Add(Fehl("art", "Art: Bitte Kleinrammbohrung oder Rammsondierung wählen.")); }
 
         string name = Bezeichnung ?? "";
-        if (name.Length == 0) { fehler.Add(new FeldFehler("bezeichnung", "Bezeichnung: Bitte eine Bezeichnung eingeben.")); }
-        else if (name.Length > MaxBezeichnung) { fehler.Add(new FeldFehler("bezeichnung", $"Bezeichnung: Höchstens {MaxBezeichnung} Zeichen.")); }
+        if (name.Length == 0) { fehler.Add(Fehl("bezeichnung", "Bezeichnung: Bitte eine Bezeichnung eingeben.")); }
+        else if (name.Length > MaxBezeichnung) { fehler.Add(Fehl("bezeichnung", "Bezeichnung: Höchstens {0} Zeichen.", MaxBezeichnung.ToString(De))); }
         else if (existing.Any(a => string.Equals(a.Bezeichnung?.Trim(), name, StringComparison.OrdinalIgnoreCase)))
         {
-            fehler.Add(new FeldFehler("bezeichnung", $"Bezeichnung „{name}“ ist in diesem Projekt bereits vergeben."));
+            fehler.Add(Fehl("bezeichnung", "Bezeichnung „{0}“ ist in diesem Projekt bereits vergeben.", name));
         }
 
         var datum = default(DateOnly);
         if (!DateOnly.TryParseExact(Datum, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out datum))
         {
-            fehler.Add(new FeldFehler("datum", "Datum: Bitte ein Datum eingeben."));
+            fehler.Add(Fehl("datum", "Datum: Bitte ein Datum eingeben."));
         }
 
-        double rechts = Pflichtzahl(Rechtswert, "rechtswert", "Rechtswert", fehler);
-        double hoch = Pflichtzahl(Hochwert, "hochwert", "Hochwert", fehler);
-        double hoehe = Pflichtzahl(Ansatzhoehe, "ansatzhoehe", "Ansatzhöhe", fehler);
-        double endteufe = Pflichtzahl(Endteufe, "endteufe", "Endteufe", fehler);
+        double rechts = Pflichtzahl(Rechtswert, "rechtswert", "Rechtswert: Bitte eine Zahl eingeben.", fehler);
+        double hoch = Pflichtzahl(Hochwert, "hochwert", "Hochwert: Bitte eine Zahl eingeben.", fehler);
+        double hoehe = Pflichtzahl(Ansatzhoehe, "ansatzhoehe", "Ansatzhöhe: Bitte eine Zahl eingeben.", fehler);
+        double endteufe = Pflichtzahl(Endteufe, "endteufe", "Endteufe: Bitte eine Zahl eingeben.", fehler);
 
         double? grundwasser = null;
         if (!string.IsNullOrEmpty(Grundwasser))
         {
             if (CsvImportService.TryNumber(Grundwasser, out double gw)) { grundwasser = gw; }
-            else { fehler.Add(new FeldFehler("grundwasser", "Grundwasser: Bitte eine Zahl eingeben.")); }
+            else { fehler.Add(Fehl("grundwasser", "Grundwasser: Bitte eine Zahl eingeben.")); }
         }
 
         var schichten = new List<Schicht>();
@@ -329,10 +375,10 @@ public class FeldModel(BoreholeDbContext db) : PageModel
         return a;
     }
 
-    private static double Pflichtzahl(string? text, string key, string label, List<FeldFehler> fehler)
+    private static double Pflichtzahl(string? text, string key, string vorlage, List<FeldFehler> fehler)
     {
         if (!string.IsNullOrEmpty(text) && CsvImportService.TryNumber(text, out double v)) { return v; }
-        fehler.Add(new FeldFehler(key, $"{label}: Bitte eine Zahl eingeben."));
+        fehler.Add(Fehl(key, vorlage));
         return 0;
     }
 
@@ -344,39 +390,39 @@ public class FeldModel(BoreholeDbContext db) : PageModel
             if (z.IstLeer) { continue; }
 
             string key = $"schicht-{i}";
-            string pre = $"Schicht {i + 1}";
+            string nr = (i + 1).ToString(De);
             int vorher = fehler.Count;
 
             bool vonOk = CsvImportService.TryNumber(z.Von, out double von);
             bool bisOk = CsvImportService.TryNumber(z.Bis, out double bis);
-            if (!vonOk) { fehler.Add(new FeldFehler(key, $"{pre}, Von: Bitte eine Zahl eingeben.")); }
-            if (!bisOk) { fehler.Add(new FeldFehler(key, $"{pre}, Bis: Bitte eine Zahl eingeben.")); }
+            if (!vonOk) { fehler.Add(Fehl(key, "Schicht {0}, Von: Bitte eine Zahl eingeben.", nr)); }
+            if (!bisOk) { fehler.Add(Fehl(key, "Schicht {0}, Bis: Bitte eine Zahl eingeben.", nr)); }
             if (z.Bodengruppe.Length == 0 && z.Kurzzeichen.Length == 0)
             {
-                fehler.Add(new FeldFehler(key, $"{pre}: Bodengruppe oder Kurzzeichen angeben."));
+                fehler.Add(Fehl(key, "Schicht {0}: Bodengruppe oder Kurzzeichen angeben.", nr));
             }
 
             double? kf = null;
             if (z.Kf.Length > 0)
             {
-                if (!CsvImportService.TryNumber(z.Kf, out double k)) { fehler.Add(new FeldFehler(key, $"{pre}, kf: Bitte eine Zahl eingeben (z. B. 2e-5 oder 0,00002).")); }
-                else if (k <= 0) { fehler.Add(new FeldFehler(key, $"{pre}, kf: Der Wert muss größer als 0 sein.")); }
+                if (!CsvImportService.TryNumber(z.Kf, out double k)) { fehler.Add(Fehl(key, "Schicht {0}, kf: Bitte eine Zahl eingeben (z. B. 2e-5 oder 0,00002).", nr)); }
+                else if (k <= 0) { fehler.Add(Fehl(key, "Schicht {0}, kf: Der Wert muss größer als 0 sein.", nr)); }
                 else { kf = k; }
             }
 
-            Laenge(z.Kurzzeichen, 40, "Kurzzeichen", key, pre, fehler);
-            Laenge(z.Beschreibung, 400, "Beschreibung", key, pre, fehler);
-            Laenge(z.Bodengruppe, 10, "Bodengruppe", key, pre, fehler);
-            Laenge(z.Farbe, 60, "Farbe", key, pre, fehler);
-            Laenge(z.Zustand, 60, "Zustand", key, pre, fehler);
-            Laenge(z.Homogenbereich, 10, "Homogenbereich", key, pre, fehler);
+            Laenge(z.Kurzzeichen, 40, "Schicht {0}, Kurzzeichen: Höchstens {1} Zeichen.", key, nr, fehler);
+            Laenge(z.Beschreibung, 400, "Schicht {0}, Beschreibung: Höchstens {1} Zeichen.", key, nr, fehler);
+            Laenge(z.Bodengruppe, 10, "Schicht {0}, Bodengruppe: Höchstens {1} Zeichen.", key, nr, fehler);
+            Laenge(z.Farbe, 60, "Schicht {0}, Farbe: Höchstens {1} Zeichen.", key, nr, fehler);
+            Laenge(z.Zustand, 60, "Schicht {0}, Zustand: Höchstens {1} Zeichen.", key, nr, fehler);
+            Laenge(z.Homogenbereich, 10, "Schicht {0}, Homogenbereich: Höchstens {1} Zeichen.", key, nr, fehler);
 
             string? frost = null;
             if (z.Frostklasse.Length > 0)
             {
                 string f = z.Frostklasse.ToUpperInvariant();
                 if (Frostklassen.Contains(f)) { frost = f; }
-                else { fehler.Add(new FeldFehler(key, $"{pre}, Frostklasse: Erlaubt sind F1, F2, F3 oder leer.")); }
+                else { fehler.Add(Fehl(key, "Schicht {0}, Frostklasse: Erlaubt sind F1, F2, F3 oder leer.", nr)); }
             }
 
             if (fehler.Count != vorher) { continue; }
@@ -397,9 +443,9 @@ public class FeldModel(BoreholeDbContext db) : PageModel
         }
     }
 
-    private static void Laenge(string wert, int max, string label, string key, string pre, List<FeldFehler> fehler)
+    private static void Laenge(string wert, int max, string vorlage, string key, string nr, List<FeldFehler> fehler)
     {
-        if (wert.Length > max) { fehler.Add(new FeldFehler(key, $"{pre}, {label}: Höchstens {max} Zeichen.")); }
+        if (wert.Length > max) { fehler.Add(Fehl(key, vorlage, nr, max.ToString(De))); }
     }
 
     private void PruefeN10(List<RammMesswert> messwerte, List<FeldFehler> fehler)
@@ -415,7 +461,7 @@ public class FeldModel(BoreholeDbContext db) : PageModel
             else
             {
                 ungueltig.Add(schritt);
-                fehler.Add(new FeldFehler("n10", $"N10 bei {tiefe.ToString("0.00", De)} m: Bitte eine ganze Zahl ab 0 eingeben."));
+                fehler.Add(Fehl("n10", "N10 bei {0} m: Bitte eine ganze Zahl ab 0 eingeben.", tiefe.ToString("0.00", De)));
             }
         }
 
@@ -486,6 +532,8 @@ public class FeldModel(BoreholeDbContext db) : PageModel
     public static string Plural(int n, string einzahl, string mehrzahl) => n == 1 ? $"{n} {einzahl}" : $"{n} {mehrzahl}";
 
     public string PruefungText => GespeichertHinweise.Count == 0
-        ? "Prüfung: keine Befunde."
-        : GespeichertHinweise.Count == 1 ? "Prüfung: 1 Hinweis." : $"Prüfung: {GespeichertHinweise.Count} Hinweise.";
+        ? loc["Prüfung: keine Befunde."].Value
+        : GespeichertHinweise.Count == 1
+            ? loc["Prüfung: 1 Hinweis."].Value
+            : loc["Prüfung: {0} Hinweise.", GespeichertHinweise.Count.ToString(De)].Value;
 }

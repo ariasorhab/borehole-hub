@@ -5,6 +5,14 @@
     var form = document.getElementById("feld-form");
     if (!form) { return; }
 
+    // Texts come from data- attributes rendered by Feld.cshtml (rule e); the German text is only a fallback.
+    var TEXT = {
+        nichtVerfuegbar: form.getAttribute("data-msg-standort-nicht-verfuegbar") || "Standort nicht verfügbar – bitte Koordinaten eingeben.",
+        ermittelt: form.getAttribute("data-msg-standort-ermittelt") || "Standort wird ermittelt …",
+        genauigkeit: form.getAttribute("data-msg-genauigkeit") || "Genauigkeit ± {0} m",
+        n10Bis: form.getAttribute("data-msg-n10-bis") || "N10 bis {0} m"
+    };
+
     var bezeichnung = document.getElementById("bezeichnung");
     var endteufe = document.getElementById("endteufe");
     var sectionKrb = document.getElementById("section-krb");
@@ -176,7 +184,7 @@
                 input.maxLength = 3;
                 input.id = "n10-" + step;
                 input.name = "N10[" + step + "]";
-                input.setAttribute("aria-label", "N10 bis " + formatComma(step / 10, 2) + " m");
+                input.setAttribute("aria-label", TEXT.n10Bis.replace("{0}", formatComma(step / 10, 2)));
                 input.setAttribute("aria-invalid", "false");
                 if (n10Store[step]) { input.value = n10Store[step]; }
                 cells.appendChild(input);
@@ -200,12 +208,12 @@
         standortStatus.classList.toggle("is-error", !!isError);
     }
 
-    var NICHT_VERFUEGBAR = "Standort nicht verfügbar – bitte Koordinaten eingeben.";
+    var NICHT_VERFUEGBAR = TEXT.nichtVerfuegbar;
 
     function takeLocation() {
         if (!navigator.geolocation) { standortMessage(NICHT_VERFUEGBAR, true); return; }
         standortButton.disabled = true;
-        standortMessage("Standort wird ermittelt …", false);
+        standortMessage(TEXT.ermittelt, false);
 
         function done() { standortButton.disabled = false; }
 
@@ -222,7 +230,7 @@
                 .then(function (data) {
                     document.getElementById("rechtswert").value = formatComma(Number(data.rechtswert), 1);
                     document.getElementById("hochwert").value = formatComma(Number(data.hochwert), 1);
-                    standortMessage("Genauigkeit ± " + accuracy + " m", false);
+                    standortMessage(TEXT.genauigkeit.replace("{0}", String(accuracy)), false);
                     done();
                 })
                 .catch(function () { standortMessage(NICHT_VERFUEGBAR, true); done(); });

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Labor" xml:space="preserve">
+    <value>Lab</value>
+  </data>
+  <data name="Projekte" xml:space="preserve">
+    <value>Projects</value>
+  </data>
+  <data name="Brotkrumen" xml:space="preserve">
+    <value>Breadcrumb</value>
+  </data>
+  <data name="Labor &amp; Versickerung" xml:space="preserve">
+    <value>Lab &amp; infiltration</value>
+  </data>
+  <data name="Beispielwerte zur Demonstration – keine amtlichen Werte der Ersatzbaustoffverordnung (EBV)." xml:space="preserve">
+    <value>Example values for demonstration only – not official values of the Ersatzbaustoffverordnung (EBV).</value>
+  </data>
+  <data name="Kennzahlen Laborproben" xml:space="preserve">
+    <value>Key figures for lab samples</value>
+  </data>
+  <data name="Proben" xml:space="preserve">
+    <value>Samples</value>
+  </data>
+  <data name="Einstufung BM-0" xml:space="preserve">
+    <value>Classification BM-0</value>
+  </data>
+  <data name="Höhere Klasse" xml:space="preserve">
+    <value>Higher class</value>
+  </data>
+  <data name="Überschreitung" xml:space="preserve">
+    <value>Exceedance</value>
+  </data>
+  <data name="Laborwerte" xml:space="preserve">
+    <value>Lab values</value>
+  </data>
+  <data name="Legende der Beispielklassen" xml:space="preserve">
+    <value>Legend of the example classes</value>
+  </data>
+  <data name="Beispielklassen (streng bis weniger streng):" xml:space="preserve">
+    <value>Example classes (strict to less strict):</value>
+  </data>
+  <data name="= Überschreitung aller Klassen" xml:space="preserve">
+    <value>= exceeds all classes</value>
+  </data>
+  <data name="Nur auffällige Proben" xml:space="preserve">
+    <value>Only conspicuous samples</value>
+  </data>
+  <data name="Laborwerte der Probe {0}" xml:space="preserve">
+    <value>Lab values of sample {0}</value>
+  </data>
+  <data name="Parameter" xml:space="preserve">
+    <value>Parameter</value>
+  </data>
+  <data name="Wert" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="Einheit" xml:space="preserve">
+    <value>Unit</value>
+  </data>
+  <data name="Einstufung" xml:space="preserve">
+    <value>Classification</value>
+  </data>
+  <data name="Für dieses Projekt sind noch keine Proben erfasst." xml:space="preserve">
+    <value>No samples have been recorded for this project yet.</value>
+  </data>
+  <data name="Beispielgrenzwerte anzeigen" xml:space="preserve">
+    <value>Show example limit values</value>
+  </data>
+  <data name="Beispielwerte zur Demonstration – keine amtlichen Werte der Ersatzbaustoffverordnung (EBV). Einheit: mg/kg." xml:space="preserve">
+    <value>Example values for demonstration only – not official values of the Ersatzbaustoffverordnung (EBV). Unit: mg/kg.</value>
+  </data>
+  <data name="Versickerung (Vorprüfung)" xml:space="preserve">
+    <value>Infiltration (pre-check)</value>
+  </data>
+  <data name="Keine Schicht mit kf-Wert vorhanden." xml:space="preserve">
+    <value>No layer with a kf value.</value>
+  </data>
+  <data name="Vorprüfung der Versickerung je Schicht" xml:space="preserve">
+    <value>Pre-check of infiltration by layer</value>
+  </data>
+  <data name="Aufschluss" xml:space="preserve">
+    <value>Exploration point</value>
+  </data>
+  <data name="Schicht" xml:space="preserve">
+    <value>Layer</value>
+  </data>
+  <data name="kf [m/s]" xml:space="preserve">
+    <value>kf [m/s]</value>
+  </data>
+  <data name="Ergebnis" xml:space="preserve">
+    <value>Result</value>
+  </data>
+  <data name="Begründung" xml:space="preserve">
+    <value>Reason</value>
+  </data>
+  <data name="Vereinfachte Vorprüfung: Der kf-Wert ersetzt keine Bemessung nach DWA-A 138-1." xml:space="preserve">
+    <value>Simplified pre-check: the kf value does not replace a design to DWA-A 138-1.</value>
+  </data>
+</root>

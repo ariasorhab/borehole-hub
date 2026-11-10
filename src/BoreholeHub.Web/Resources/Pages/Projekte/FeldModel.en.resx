@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Art: Bitte Kleinrammbohrung oder Rammsondierung wählen." xml:space="preserve">
+    <value>Type: please choose small percussion borehole or dynamic probing.</value>
+  </data>
+  <data name="Bezeichnung: Bitte eine Bezeichnung eingeben." xml:space="preserve">
+    <value>Designation: please enter a designation.</value>
+  </data>
+  <data name="Bezeichnung: Höchstens {0} Zeichen." xml:space="preserve">
+    <value>Designation: at most {0} characters.</value>
+  </data>
+  <data name="Bezeichnung „{0}“ ist in diesem Projekt bereits vergeben." xml:space="preserve">
+    <value>Designation „{0}“ is already used in this project.</value>
+  </data>
+  <data name="Datum: Bitte ein Datum eingeben." xml:space="preserve">
+    <value>Date: please enter a date.</value>
+  </data>
+  <data name="Rechtswert: Bitte eine Zahl eingeben." xml:space="preserve">
+    <value>Easting: please enter a number.</value>
+  </data>
+  <data name="Hochwert: Bitte eine Zahl eingeben." xml:space="preserve">
+    <value>Northing: please enter a number.</value>
+  </data>
+  <data name="Ansatzhöhe: Bitte eine Zahl eingeben." xml:space="preserve">
+    <value>Start height: please enter a number.</value>
+  </data>
+  <data name="Endteufe: Bitte eine Zahl eingeben." xml:space="preserve">
+    <value>Final depth: please enter a number.</value>
+  </data>
+  <data name="Grundwasser: Bitte eine Zahl eingeben." xml:space="preserve">
+    <value>Groundwater: please enter a number.</value>
+  </data>
+  <data name="Schicht {0}, Von: Bitte eine Zahl eingeben." xml:space="preserve">
+    <value>Layer {0}, from: please enter a number.</value>
+  </data>
+  <data name="Schicht {0}, Bis: Bitte eine Zahl eingeben." xml:space="preserve">
+    <value>Layer {0}, to: please enter a number.</value>
+  </data>
+  <data name="Schicht {0}: Bodengruppe oder Kurzzeichen angeben." xml:space="preserve">
+    <value>Layer {0}: state the soil group or the short code.</value>
+  </data>
+  <data name="Schicht {0}, kf: Bitte eine Zahl eingeben (z. B. 2e-5 oder 0,00002)." xml:space="preserve">
+    <value>Layer {0}, kf: please enter a number (e.g. 2e-5 or 0,00002).</value>
+  </data>
+  <data name="Schicht {0}, kf: Der Wert muss größer als 0 sein." xml:space="preserve">
+    <value>Layer {0}, kf: the value must be greater than 0.</value>
+  </data>
+  <data name="Schicht {0}, Kurzzeichen: Höchstens {1} Zeichen." xml:space="preserve">
+    <value>Layer {0}, short code: at most {1} characters.</value>
+  </data>
+  <data name="Schicht {0}, Beschreibung: Höchstens {1} Zeichen." xml:space="preserve">
+    <value>Layer {0}, description: at most {1} characters.</value>
+  </data>
+  <data name="Schicht {0}, Bodengruppe: Höchstens {1} Zeichen." xml:space="preserve">
+    <value>Layer {0}, soil group: at most {1} characters.</value>
+  </data>
+  <data name="Schicht {0}, Farbe: Höchstens {1} Zeichen." xml:space="preserve">
+    <value>Layer {0}, colour: at most {1} characters.</value>
+  </data>
+  <data name="Schicht {0}, Zustand: Höchstens {1} Zeichen." xml:space="preserve">
+    <value>Layer {0}, condition: at most {1} characters.</value>
+  </data>
+  <data name="Schicht {0}, Homogenbereich: Höchstens {1} Zeichen." xml:space="preserve">
+    <value>Layer {0}, homogeneous zone: at most {1} characters.</value>
+  </data>
+  <data name="Schicht {0}, Frostklasse: Erlaubt sind F1, F2, F3 oder leer." xml:space="preserve">
+    <value>Layer {0}, frost class: allowed are F1, F2, F3 or empty.</value>
+  </data>
+  <data name="N10 bei {0} m: Bitte eine ganze Zahl ab 0 eingeben." xml:space="preserve">
+    <value>N10 at {0} m: please enter a whole number from 0.</value>
+  </data>
+  <data name="Standort nicht verfügbar – bitte Koordinaten eingeben." xml:space="preserve">
+    <value>Location not available – please enter coordinates.</value>
+  </data>
+  <data name="Standort wird ermittelt …" xml:space="preserve">
+    <value>Getting location …</value>
+  </data>
+  <data name="Genauigkeit ± {0} m" xml:space="preserve">
+    <value>Accuracy ± {0} m</value>
+  </data>
+  <data name="N10 bis {0} m" xml:space="preserve">
+    <value>N10 up to {0} m</value>
+  </data>
+  <data name="Prüfung: keine Befunde." xml:space="preserve">
+    <value>Data check: no findings.</value>
+  </data>
+  <data name="Prüfung: 1 Hinweis." xml:space="preserve">
+    <value>Data check: 1 notice.</value>
+  </data>
+  <data name="Prüfung: {0} Hinweise." xml:space="preserve">
+    <value>Data check: {0} notices.</value>
+  </data>
+</root>

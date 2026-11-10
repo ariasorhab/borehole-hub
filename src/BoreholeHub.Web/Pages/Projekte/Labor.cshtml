@@ -1,7 +1,8 @@
 @page "/Projekte/{id:int}/Labor"
 @model BoreholeHub.Web.Pages.Projekte.LaborModel
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer L
 @{
-    ViewData["Title"] = Model.Projekt.Name + " · Labor";
+    ViewData["Title"] = Model.Projekt.Name + " · " + L["Labor"].Value;
 }
 
 @section Head {
@@ -9,57 +10,57 @@
 }
 
 <div class="container">
-    <nav class="breadcrumb" aria-label="Brotkrumen">
+    <nav class="breadcrumb" aria-label="@L["Brotkrumen"]">
         <ol>
-            <li><a href="/Projekte">Projekte</a></li>
+            <li><a href="/Projekte">@L["Projekte"]</a></li>
             <li><a href="/Projekte/@Model.Projekt.Id">@Model.Projekt.Name</a></li>
-            <li aria-current="page">Labor &amp; Versickerung</li>
+            <li aria-current="page">@L["Labor & Versickerung"]</li>
         </ol>
     </nav>
 
     <header class="page-header">
-        <h1>Labor &amp; Versickerung</h1>
+        <h1>@L["Labor & Versickerung"]</h1>
         <p class="muted">@Model.Projekt.Name</p>
     </header>
 
     @await Html.PartialAsync("_ProjektTabs", new BoreholeHub.Web.Pages.Shared.ProjektTabsModel(Model.Projekt.Id, "labor"))
 
-    <p class="notice">Beispielwerte zur Demonstration – keine amtlichen Werte der Ersatzbaustoffverordnung (EBV).</p>
+    <p class="notice">@L["Beispielwerte zur Demonstration – keine amtlichen Werte der Ersatzbaustoffverordnung (EBV)."]</p>
 
-    <section class="kpi-row labor-kpis" aria-label="Kennzahlen Laborproben">
+    <section class="kpi-row labor-kpis" aria-label="@L["Kennzahlen Laborproben"]">
         <div class="kpi">
             <div class="kpi-value">@Model.AnzahlProben</div>
-            <div class="kpi-label">Proben</div>
+            <div class="kpi-label">@L["Proben"]</div>
         </div>
         <div class="kpi kpi-ok">
             <div class="kpi-value">@Model.AnzahlBm0</div>
-            <div class="kpi-label">Einstufung BM-0</div>
+            <div class="kpi-label">@L["Einstufung BM-0"]</div>
         </div>
         <div class="kpi kpi-warn">
             <div class="kpi-value">@Model.AnzahlHoehere</div>
-            <div class="kpi-label">Höhere Klasse</div>
+            <div class="kpi-label">@L["Höhere Klasse"]</div>
         </div>
         <div class="kpi kpi-bad">
             <div class="kpi-value">@Model.AnzahlUeberschreitung</div>
-            <div class="kpi-label">Überschreitung</div>
+            <div class="kpi-label">@L["Überschreitung"]</div>
         </div>
     </section>
 
     <section aria-labelledby="labor-titel">
-        <h2 class="section-title" id="labor-titel">Laborwerte</h2>
+        <h2 class="section-title" id="labor-titel">@L["Laborwerte"]</h2>
 
-        <div class="legend" aria-label="Legende der Beispielklassen">
-            <span class="legend-title">Beispielklassen (streng bis weniger streng):</span>
+        <div class="legend" aria-label="@L["Legende der Beispielklassen"]">
+            <span class="legend-title">@L["Beispielklassen (streng bis weniger streng):"]</span>
             @foreach (var k in Model.Klassen)
             {
                 <span class="badge @(k == Model.Klassen[0] ? "badge-ok" : "badge-warn")">@k</span>
             }
             <span class="badge badge-bad">&gt; @Model.Klassen[^1]</span>
-            <span class="legend-note">= Überschreitung aller Klassen</span>
+            <span class="legend-note">@L["= Überschreitung aller Klassen"]</span>
         </div>
 
         <input type="checkbox" id="nur-auffaellig" class="filter-box" />
-        <label for="nur-auffaellig" class="filter-label">Nur auffällige Proben</label>
+        <label for="nur-auffaellig" class="filter-label">@L["Nur auffällige Proben"]</label>
 
         <div class="sample-list">
             @foreach (var p in Model.Proben)
@@ -71,13 +72,13 @@
                     </header>
                     <div class="table-wrap table-flat">
                         <table class="data-table">
-                            <caption class="sr-only">Laborwerte der Probe @p.Bezeichnung</caption>
+                            <caption class="sr-only">@L["Laborwerte der Probe {0}", p.Bezeichnung]</caption>
                             <thead>
                                 <tr>
-                                    <th scope="col">Parameter</th>
-                                    <th scope="col" class="num">Wert</th>
-                                    <th scope="col">Einheit</th>
-                                    <th scope="col">Einstufung</th>
+                                    <th scope="col">@L["Parameter"]</th>
+                                    <th scope="col" class="num">@L["Wert"]</th>
+                                    <th scope="col">@L["Einheit"]</th>
+                                    <th scope="col">@L["Einstufung"]</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -97,18 +98,18 @@
             }
             @if (Model.Proben.Count == 0)
             {
-                <div class="empty-state"><p>Für dieses Projekt sind noch keine Proben erfasst.</p></div>
+                <div class="empty-state"><p>@L["Für dieses Projekt sind noch keine Proben erfasst."]</p></div>
             }
         </div>
 
         <details class="limits">
-            <summary>Beispielgrenzwerte anzeigen</summary>
-            <p class="muted">Beispielwerte zur Demonstration – keine amtlichen Werte der Ersatzbaustoffverordnung (EBV). Einheit: mg/kg.</p>
+            <summary>@L["Beispielgrenzwerte anzeigen"]</summary>
+            <p class="muted">@L["Beispielwerte zur Demonstration – keine amtlichen Werte der Ersatzbaustoffverordnung (EBV). Einheit: mg/kg."]</p>
             <div class="table-wrap">
                 <table class="data-table">
                     <thead>
                         <tr>
-                            <th scope="col">Parameter</th>
+                            <th scope="col">@L["Parameter"]</th>
                             @foreach (var k in Model.Klassen)
                             {
                                 <th scope="col" class="num">@k</th>
@@ -133,23 +134,23 @@
     </section>
 
     <section class="versickerung" aria-labelledby="versickerung-titel">
-        <h2 class="section-title" id="versickerung-titel">Versickerung (Vorprüfung)</h2>
+        <h2 class="section-title" id="versickerung-titel">@L["Versickerung (Vorprüfung)"]</h2>
         @if (Model.Versickerung.Count == 0)
         {
-            <p class="muted">Keine Schicht mit kf-Wert vorhanden.</p>
+            <p class="muted">@L["Keine Schicht mit kf-Wert vorhanden."]</p>
         }
         else
         {
             <div class="table-wrap">
                 <table class="data-table">
-                    <caption class="sr-only">Vorprüfung der Versickerung je Schicht</caption>
+                    <caption class="sr-only">@L["Vorprüfung der Versickerung je Schicht"]</caption>
                     <thead>
                         <tr>
-                            <th scope="col">Aufschluss</th>
-                            <th scope="col">Schicht</th>
-                            <th scope="col" class="num">kf [m/s]</th>
-                            <th scope="col">Ergebnis</th>
-                            <th scope="col">Begründung</th>
+                            <th scope="col">@L["Aufschluss"]</th>
+                            <th scope="col">@L["Schicht"]</th>
+                            <th scope="col" class="num">@L["kf [m/s]"]</th>
+                            <th scope="col">@L["Ergebnis"]</th>
+                            <th scope="col">@L["Begründung"]</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -166,7 +167,7 @@
                     </tbody>
                 </table>
             </div>
-            <p class="note">Vereinfachte Vorprüfung: Der kf-Wert ersetzt keine Bemessung nach DWA-A 138-1.</p>
+            <p class="note">@L["Vereinfachte Vorprüfung: Der kf-Wert ersetzt keine Bemessung nach DWA-A 138-1."]</p>
         }
     </section>
 </div>

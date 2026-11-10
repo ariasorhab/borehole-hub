@@ -1,7 +1,8 @@
 @page "/Projekte/{id:int}/Daten"
 @model BoreholeHub.Web.Pages.Projekte.DatenModel
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer L
 @{
-    ViewData["Title"] = Model.Projekt.Name + " · Daten";
+    ViewData["Title"] = Model.Projekt.Name + " · " + L["Daten"].Value;
 }
 
 @section Head {
@@ -9,41 +10,42 @@
 }
 
 <div class="container">
-    <nav class="breadcrumb" aria-label="Brotkrumen">
+    <nav class="breadcrumb" aria-label="@L["Brotkrumen"]">
         <ol>
-            <li><a href="/Projekte">Projekte</a></li>
+            <li><a href="/Projekte">@L["Projekte"]</a></li>
             <li><a href="/Projekte/@Model.Projekt.Id">@Model.Projekt.Name</a></li>
-            <li aria-current="page">Daten</li>
+            <li aria-current="page">@L["Daten"]</li>
         </ol>
     </nav>
 
     <header class="page-header">
-        <h1>Daten</h1>
+        <h1>@L["Daten"]</h1>
         <p class="muted">@Model.Projekt.Name</p>
     </header>
 
     @await Html.PartialAsync("_ProjektTabs", new BoreholeHub.Web.Pages.Shared.ProjektTabsModel(Model.Projekt.Id, "daten"))
 
+    @* Counts are written as markup expressions: the view localizer formats its arguments only when rendered, not through .Value. *@
     @if (Model.ImportVersucht)
     {
         if (Model.Erfolg)
         {
             <section class="result result-ok" role="status" aria-labelledby="ergebnis-titel">
-                <h2 id="ergebnis-titel">Import abgeschlossen</h2>
-                <p>@DatenModel.Plural(Model.ImportierteAufschluesse, "Aufschluss", "Aufschlüsse") und @DatenModel.Plural(Model.ImportierteSchichten, "Schicht", "Schichten") importiert.</p>
-                <p>Prüfung: @Model.PruefungFehler Fehler, @Model.PruefungHinweise Hinweise. <a href="/Projekte/@Model.Projekt.Id/Pruefung">Zur Prüfung</a></p>
-                <p><a class="btn btn-primary" href="/Projekte/@Model.Projekt.Id/Karte">Auf der Karte ansehen</a></p>
+                <h2 id="ergebnis-titel">@L["Import abgeschlossen"]</h2>
+                <p>@(Model.ImportierteAufschluesse == 1 ? L["1 Aufschluss"] : L["{0} Aufschlüsse", Model.ImportierteAufschluesse]) @L["und"] @(Model.ImportierteSchichten == 1 ? L["1 Schicht"] : L["{0} Schichten", Model.ImportierteSchichten]) @L["importiert."]</p>
+                <p>@L["Prüfung"]: @(Model.PruefungFehler == 1 ? L["1 Fehler"] : L["{0} Fehler", Model.PruefungFehler]), @(Model.PruefungHinweise == 1 ? L["1 Hinweis"] : L["{0} Hinweise", Model.PruefungHinweise]). <a href="/Projekte/@Model.Projekt.Id/Pruefung">@L["Zur Prüfung"]</a></p>
+                <p><a class="btn btn-primary" href="/Projekte/@Model.Projekt.Id/Karte">@L["Auf der Karte ansehen"]</a></p>
             </section>
         }
         else
         {
             <section class="result result-bad" role="alert" aria-labelledby="ergebnis-titel">
-                <h2 id="ergebnis-titel">Import nicht möglich (@Model.Fehler.Count @(Model.Fehler.Count == 1 ? "Fehler" : "Fehler"))</h2>
-                <p>Es wurde nichts gespeichert. Bitte die Dateien korrigieren und erneut hochladen.</p>
+                <h2 id="ergebnis-titel">@L["Import nicht möglich"] (@(Model.Fehler.Count == 1 ? L["1 Fehler"] : L["{0} Fehler", Model.Fehler.Count]))</h2>
+                <p>@L["Es wurde nichts gespeichert. Bitte die Dateien korrigieren und erneut hochladen."]</p>
                 <ol class="error-list">
-                    @foreach (var f in Model.Fehler)
+                    @foreach (var f in Model.FehlerTexte)
                     {
-                        <li>@f</li>
+                        <li>@Model.Fehlertext(f)</li>
                     }
                 </ol>
             </section>
@@ -52,42 +54,42 @@
 
     <div class="daten-grid">
         <section class="card" aria-labelledby="export-titel">
-            <h2 id="export-titel">Export</h2>
-            <p class="muted">GeoJSON mit allen Aufschlüssen dieses Projekts (WGS84).</p>
-            <p class="card-action"><a class="btn btn-primary" href="/Projekte/@Model.Projekt.Id/Daten?handler=GeoJson">GeoJSON herunterladen</a></p>
-            <p class="hint">Öffnet direkt in QGIS (Ebene hinzufügen › Vektor)</p>
+            <h2 id="export-titel">@L["Export"]</h2>
+            <p class="muted">@L["GeoJSON mit allen Aufschlüssen dieses Projekts (WGS84)."]</p>
+            <p class="card-action"><a class="btn btn-primary" href="/Projekte/@Model.Projekt.Id/Daten?handler=GeoJson">@L["GeoJSON herunterladen"]</a></p>
+            <p class="hint">@L["Öffnet direkt in QGIS (Ebene hinzufügen › Vektor)"]</p>
         </section>
 
         <section class="card card-import" aria-labelledby="import-titel">
-            <h2 id="import-titel">Import</h2>
-            <p class="muted">Aufschlüsse und Schichten aus CSV-Dateien zum Projekt hinzufügen. Es wird entweder alles oder nichts importiert.</p>
+            <h2 id="import-titel">@L["Import"]</h2>
+            <p class="muted">@L["Aufschlüsse und Schichten aus CSV-Dateien zum Projekt hinzufügen. Es wird entweder alles oder nichts importiert."]</p>
 
             <form method="post" action="/Projekte/@Model.Projekt.Id/Daten?handler=Import" enctype="multipart/form-data" class="import-form">
                 @Html.AntiForgeryToken()
                 <div class="field">
-                    <label for="aufschluesseCsv">Aufschlüsse (CSV)</label>
+                    <label for="aufschluesseCsv">@L["Aufschlüsse (CSV)"]</label>
                     <input type="file" id="aufschluesseCsv" name="aufschluesseCsv" accept=".csv,text/csv" />
                 </div>
                 <div class="field">
-                    <label for="schichtenCsv">Schichten (CSV)</label>
+                    <label for="schichtenCsv">@L["Schichten (CSV)"]</label>
                     <input type="file" id="schichtenCsv" name="schichtenCsv" accept=".csv,text/csv" />
                 </div>
                 <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">Importieren</button>
-                    <span class="hint">Vorlagen:
+                    <button type="submit" class="btn btn-primary">@L["Importieren"]</button>
+                    <span class="hint">@L["Vorlagen:"]
                         <a href="/Projekte/@Model.Projekt.Id/Daten?handler=VorlageAufschluesse">vorlage-aufschluesse.csv</a>,
                         <a href="/Projekte/@Model.Projekt.Id/Daten?handler=VorlageSchichten">vorlage-schichten.csv</a></span>
                 </div>
             </form>
 
-            <h3>Regeln</h3>
+            <h3>@L["Regeln"]</h3>
             <ul class="rules">
-                <li>Semikolon als Trennzeichen, Dezimalkomma, UTF-8 (mit oder ohne BOM), höchstens 1 MB je Datei.</li>
-                <li>Koordinaten in ETRS89 / UTM 32N (EPSG:25832); Datum als TT.MM.JJJJ; Art ist KRB oder DPH.</li>
-                <li>Eine Bezeichnung, die im Projekt schon vorhanden ist, wird nicht importiert (Fehler).</li>
-                <li>Schichten einer Kleinrammbohrung müssen lückenlos von 0 bis zur Endteufe reichen.</li>
-                <li>Frostklasse leer oder F1, F2, F3; kf z. B. 5E-08, 5,0E-08 oder 0,00000005.</li>
-                <li>Beide Dateien sind optional; Schichten können sich auf Aufschlüsse derselben Sitzung oder des Projekts beziehen.</li>
+                <li>@L["Semikolon als Trennzeichen, Dezimalkomma, UTF-8 (mit oder ohne BOM), höchstens 1 MB je Datei."]</li>
+                <li>@L["Koordinaten in ETRS89 / UTM 32N (EPSG:25832); Datum als TT.MM.JJJJ; Art ist KRB oder DPH."]</li>
+                <li>@L["Eine Bezeichnung, die im Projekt schon vorhanden ist, wird nicht importiert (Fehler)."]</li>
+                <li>@L["Schichten einer Kleinrammbohrung müssen lückenlos von 0 bis zur Endteufe reichen."]</li>
+                <li>@L["Frostklasse leer oder F1, F2, F3; kf z. B. 5E-08, 5,0E-08 oder 0,00000005."]</li>
+                <li>@L["Beide Dateien sind optional; Schichten können sich auf Aufschlüsse derselben Sitzung oder des Projekts beziehen."]</li>
             </ul>
         </section>
     </div>

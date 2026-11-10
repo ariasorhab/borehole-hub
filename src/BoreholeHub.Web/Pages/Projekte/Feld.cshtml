@@ -1,8 +1,9 @@
 @page "/Projekte/{id:int}/Feld"
 @model BoreholeHub.Web.Pages.Projekte.FeldModel
 @using BoreholeHub.Core.Services
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer L
 @{
-    ViewData["Title"] = "Feldaufnahme";
+    ViewData["Title"] = L["Feldaufnahme"].Value;
     var id = Model.Projekt.Id;
     var zeilen = Model.AnzuzeigendeZeilen();
     int schritte = Model.AnzahlSchritte();
@@ -12,7 +13,7 @@
     {
         foreach (var f in Model.FehlerFuer(key))
         {
-            <p class="field-error" role="alert">@f.Text</p>
+            <p class="field-error" role="alert">@Model.Fehlertext(f)</p>
         }
     }
 
@@ -24,25 +25,25 @@
     {
         string rowKey = "schicht-" + idx;
         <div class="schicht-row@(Model.HatFehler(rowKey) ? " is-invalid" : "")" data-row id="@rowKey">
-            <div class="row-nr">Schicht <span data-nr>@nr</span></div>
+            <div class="row-nr">@L["Schicht"] <span data-nr>@nr</span></div>
             <div class="f f-von">
-                <label for="@rowKey-von">Von [m]</label>
+                <label for="@rowKey-von">@L["Von [m]"]</label>
                 <input type="text" inputmode="decimal" autocomplete="off" id="@rowKey-von" name="Schichten[@idx].Von" value="@z.Von" />
             </div>
             <div class="f f-bis">
-                <label for="@rowKey-bis">Bis [m]</label>
+                <label for="@rowKey-bis">@L["Bis [m]"]</label>
                 <input type="text" inputmode="decimal" autocomplete="off" id="@rowKey-bis" name="Schichten[@idx].Bis" value="@z.Bis" />
             </div>
             <div class="f f-kurz">
-                <label for="@rowKey-kurzzeichen">Kurzzeichen</label>
+                <label for="@rowKey-kurzzeichen">@L["Kurzzeichen"]</label>
                 <input type="text" autocomplete="off" maxlength="40" id="@rowKey-kurzzeichen" name="Schichten[@idx].Kurzzeichen" value="@z.Kurzzeichen" />
             </div>
             <div class="f f-beschr">
-                <label for="@rowKey-beschreibung">Beschreibung</label>
+                <label for="@rowKey-beschreibung">@L["Beschreibung"]</label>
                 <input type="text" autocomplete="off" maxlength="400" id="@rowKey-beschreibung" name="Schichten[@idx].Beschreibung" value="@z.Beschreibung" />
             </div>
             <div class="f f-gruppe">
-                <label for="@rowKey-bodengruppe">Bodengruppe</label>
+                <label for="@rowKey-bodengruppe">@L["Bodengruppe"]</label>
                 <select id="@rowKey-bodengruppe" name="Schichten[@idx].Bodengruppe">
                     <option value="" selected="@(z.Bodengruppe.Length == 0)"></option>
                     @foreach (var g in BoreholeHub.Web.Pages.Projekte.FeldModel.Bodengruppen)
@@ -56,19 +57,19 @@
                 </select>
             </div>
             <div class="f f-farbe">
-                <label for="@rowKey-farbe">Farbe</label>
+                <label for="@rowKey-farbe">@L["Farbe"]</label>
                 <input type="text" autocomplete="off" maxlength="60" id="@rowKey-farbe" name="Schichten[@idx].Farbe" value="@z.Farbe" />
             </div>
             <div class="f f-zustand">
-                <label for="@rowKey-zustand">Zustand</label>
+                <label for="@rowKey-zustand">@L["Zustand"]</label>
                 <input type="text" autocomplete="off" maxlength="60" id="@rowKey-zustand" name="Schichten[@idx].Zustand" value="@z.Zustand" />
             </div>
             <div class="f f-homogen">
-                <label for="@rowKey-homogenbereich">Homogenbereich</label>
+                <label for="@rowKey-homogenbereich">@L["Homogenbereich"]</label>
                 <input type="text" autocomplete="off" maxlength="10" list="homogenbereiche" id="@rowKey-homogenbereich" name="Schichten[@idx].Homogenbereich" value="@z.Homogenbereich" />
             </div>
             <div class="f f-frost">
-                <label for="@rowKey-frostklasse">Frostklasse</label>
+                <label for="@rowKey-frostklasse">@L["Frostklasse"]</label>
                 <select id="@rowKey-frostklasse" name="Schichten[@idx].Frostklasse">
                     <option value="" selected="@(z.Frostklasse.Length == 0)"></option>
                     @foreach (var fk in BoreholeHub.Web.Pages.Projekte.FeldModel.Frostklassen)
@@ -79,14 +80,14 @@
             </div>
             <div class="f f-kf">
                 <label for="@rowKey-kf">kf [m/s]</label>
-                <input type="text" inputmode="decimal" autocomplete="off" id="@rowKey-kf" name="Schichten[@idx].Kf" value="@z.Kf" placeholder="z. B. 2e-5" />
+                <input type="text" inputmode="decimal" autocomplete="off" id="@rowKey-kf" name="Schichten[@idx].Kf" value="@z.Kf" placeholder="@L["z. B. 2e-5"]" />
             </div>
             <div class="row-remove">
-                <button type="button" class="btn btn-secondary" data-action="remove">Entfernen</button>
+                <button type="button" class="btn btn-secondary" data-action="remove">@L["Entfernen"]</button>
             </div>
             @foreach (var f in Model.FehlerFuer(rowKey))
             {
-                <p class="field-error row-error" role="alert">@f.Text</p>
+                <p class="field-error row-error" role="alert">@Model.Fehlertext(f)</p>
             }
         </div>
     }
@@ -97,16 +98,16 @@
 }
 
 <div class="container feld-page">
-    <nav class="breadcrumb" aria-label="Brotkrumen">
+    <nav class="breadcrumb" aria-label="@L["Brotkrumen"]">
         <ol>
-            <li><a href="/Projekte">Projekte</a></li>
+            <li><a href="/Projekte">@L["Projekte"]</a></li>
             <li><a href="/Projekte/@id">@Model.Projekt.Name</a></li>
-            <li aria-current="page">Feldaufnahme</li>
+            <li aria-current="page">@L["Feldaufnahme"]</li>
         </ol>
     </nav>
 
     <header class="page-header">
-        <h1>Feldaufnahme</h1>
+        <h1>@L["Feldaufnahme"]</h1>
         <p class="muted">@Model.Projekt.Name</p>
     </header>
 
@@ -115,20 +116,20 @@
     @if (Model.Gespeichert)
     {
         <section class="result result-ok" role="status" aria-labelledby="ergebnis-titel">
-            <h2 id="ergebnis-titel">@Model.GespeichertName gespeichert.</h2>
+            <h2 id="ergebnis-titel">@L["{0} gespeichert.", Model.GespeichertName]</h2>
             <p>@Model.PruefungText</p>
             @if (Model.GespeichertHinweise.Count > 0)
             {
                 <ul class="befund-list">
                     @foreach (var h in Model.GespeichertHinweise)
                     {
-                        <li><span class="badge badge-warn">Hinweis</span> <span>@h</span></li>
+                        <li><span class="badge badge-warn">@L["Hinweis"]</span> <span>@Model.BefundText(h)</span></li>
                     }
                 </ul>
             }
             <p class="result-links">
-                <a class="btn btn-primary" href="/Aufschluesse/@Model.GespeichertId">Profil öffnen</a>
-                <a class="btn btn-secondary" href="/Projekte/@id/Pruefung">Zur Prüfung</a>
+                <a class="btn btn-primary" href="/Aufschluesse/@Model.GespeichertId">@L["Profil öffnen"]</a>
+                <a class="btn btn-secondary" href="/Projekte/@id/Pruefung">@L["Zur Prüfung"]</a>
             </p>
         </section>
     }
@@ -136,12 +137,12 @@
     @if (Model.NichtGespeichert)
     {
         <section class="result result-bad" role="alert" aria-labelledby="fehler-titel" id="fehlerbox" tabindex="-1">
-            <h2 id="fehler-titel">Nichts gespeichert (@Model.Fehler.Count @(Model.Fehler.Count == 1 ? "Fehler" : "Fehler"))</h2>
-            <p>Bitte die Angaben korrigieren. Alle eingegebenen Werte sind erhalten geblieben.</p>
+            <h2 id="fehler-titel">@L["Nichts gespeichert"] (@(Model.Fehler.Count == 1 ? L["1 Fehler"] : L["{0} Fehler", Model.Fehler.Count]))</h2>
+            <p>@L["Bitte die Angaben korrigieren. Alle eingegebenen Werte sind erhalten geblieben."]</p>
             <ol class="error-list">
                 @foreach (var f in Model.Fehler)
                 {
-                    <li><a href="#@Anker(f.Key)">@f.Text</a></li>
+                    <li><a href="#@Anker(f.Key)">@Model.Fehlertext(f)</a></li>
                 }
             </ol>
         </section>
@@ -150,11 +151,11 @@
         if (hinweise.Count > 0)
         {
             <section class="result result-warn" role="status" aria-labelledby="hinweis-titel">
-                <h2 id="hinweis-titel">Hinweise der Prüfung (@hinweise.Count)</h2>
+                <h2 id="hinweis-titel">@L["Hinweise der Prüfung"] (@hinweise.Count)</h2>
                 <ul class="befund-list">
                     @foreach (var h in hinweise)
                     {
-                        <li><span class="badge badge-warn">Hinweis</span> <span>@h.Regel: @h.Meldung</span></li>
+                        <li><span class="badge badge-warn">@L["Hinweis"]</span> <span>@Model.BefundText(h)</span></li>
                     }
                 </ul>
             </section>
@@ -162,22 +163,26 @@
     }
 
     <form method="post" action="/Projekte/@id/Feld" id="feld-form" class="feld-form" novalidate
-          data-utm-url="/Projekte/@id/Feld?handler=Utm">
+          data-utm-url="/Projekte/@id/Feld?handler=Utm"
+          data-msg-standort-nicht-verfuegbar="@Model.MsgStandortNichtVerfuegbar"
+          data-msg-standort-ermittelt="@Model.MsgStandortErmittelt"
+          data-msg-genauigkeit="@Model.MsgGenauigkeit"
+          data-msg-n10-bis="@Model.MsgN10Bis">
         @Html.AntiForgeryToken()
 
         <section class="card feld-card" aria-labelledby="allgemein-titel">
-            <h2 id="allgemein-titel">Aufschluss</h2>
+            <h2 id="allgemein-titel">@L["Aufschluss"]</h2>
 
             <fieldset class="art-field">
-                <legend>Art</legend>
+                <legend>@L["Art"]</legend>
                 <div class="art-toggle" id="art">
                     <label class="art-option">
                         <input type="radio" name="Art" value="KRB" checked="@(!dph)" />
-                        <span class="art-text">Kleinrammbohrung (KRB)</span>
+                        <span class="art-text">@L["Kleinrammbohrung (KRB)"]</span>
                     </label>
                     <label class="art-option">
                         <input type="radio" name="Art" value="DPH" checked="@dph" />
-                        <span class="art-text">Rammsondierung (DPH)</span>
+                        <span class="art-text">@L["Rammsondierung (DPH)"]</span>
                     </label>
                 </div>
                 @{ Fehlerliste("art"); }
@@ -185,52 +190,52 @@
 
             <div class="feld-grid">
                 <div class="f">
-                    <label for="bezeichnung">Bezeichnung</label>
+                    <label for="bezeichnung">@L["Bezeichnung"]</label>
                     <input type="text" id="bezeichnung" name="Bezeichnung" maxlength="@BoreholeHub.Web.Pages.Projekte.FeldModel.MaxBezeichnung" autocomplete="off"
                            value="@Model.Bezeichnung" data-prefill-krb="@Model.PrefillKrb" data-prefill-dph="@Model.PrefillDph"
                            aria-invalid="@Invalid("bezeichnung")" />
                     @{ Fehlerliste("bezeichnung"); }
                 </div>
                 <div class="f">
-                    <label for="datum">Datum</label>
+                    <label for="datum">@L["Datum"]</label>
                     <input type="date" id="datum" name="Datum" value="@Model.Datum" aria-invalid="@Invalid("datum")" />
                     @{ Fehlerliste("datum"); }
                 </div>
 
                 <div class="f">
-                    <label for="rechtswert">Rechtswert [m, EPSG:25832]</label>
+                    <label for="rechtswert">@L["Rechtswert [m, EPSG:25832]"]</label>
                     <input type="text" inputmode="decimal" autocomplete="off" id="rechtswert" name="Rechtswert" value="@Model.Rechtswert" aria-invalid="@Invalid("rechtswert")" />
                     @{ Fehlerliste("rechtswert"); }
                 </div>
                 <div class="f">
-                    <label for="hochwert">Hochwert [m, EPSG:25832]</label>
+                    <label for="hochwert">@L["Hochwert [m, EPSG:25832]"]</label>
                     <input type="text" inputmode="decimal" autocomplete="off" id="hochwert" name="Hochwert" value="@Model.Hochwert" aria-invalid="@Invalid("hochwert")" />
                     @{ Fehlerliste("hochwert"); }
                 </div>
 
                 <div class="f f-wide standort">
-                    <button type="button" class="btn btn-secondary" id="standort-btn">Standort übernehmen</button>
+                    <button type="button" class="btn btn-secondary" id="standort-btn">@L["Standort übernehmen"]</button>
                     <p class="standort-status" id="standort-status" role="status" aria-live="polite"></p>
                 </div>
 
                 <div class="f">
-                    <label for="ansatzhoehe">Ansatzhöhe [m NHN]</label>
+                    <label for="ansatzhoehe">@L["Ansatzhöhe [m NHN]"]</label>
                     <input type="text" inputmode="decimal" autocomplete="off" id="ansatzhoehe" name="Ansatzhoehe" value="@Model.Ansatzhoehe" aria-invalid="@Invalid("ansatzhoehe")" />
                     @{ Fehlerliste("ansatzhoehe"); }
                 </div>
                 <div class="f">
-                    <label for="endteufe">Endteufe [m]</label>
+                    <label for="endteufe">@L["Endteufe [m]"]</label>
                     <input type="text" inputmode="decimal" autocomplete="off" id="endteufe" name="Endteufe" value="@Model.Endteufe" aria-invalid="@Invalid("endteufe")" />
                     @{ Fehlerliste("endteufe"); }
                 </div>
 
                 <div class="f">
-                    <label for="grundwasser">Grundwasser [m u. GOK] <span class="opt">(optional)</span></label>
+                    <label for="grundwasser">@L["Grundwasser [m u. GOK]"] <span class="opt">@L["(optional)"]</span></label>
                     <input type="text" inputmode="decimal" autocomplete="off" id="grundwasser" name="Grundwasser" value="@Model.Grundwasser" aria-invalid="@Invalid("grundwasser")" />
                     @{ Fehlerliste("grundwasser"); }
                 </div>
                 <div class="f f-wide">
-                    <label for="bemerkung">Bemerkung <span class="opt">(optional)</span></label>
+                    <label for="bemerkung">@L["Bemerkung"] <span class="opt">@L["(optional)"]</span></label>
                     <textarea id="bemerkung" name="Bemerkung" rows="3">@Model.Bemerkung</textarea>
                 </div>
             </div>
@@ -238,8 +243,8 @@
 
         <section class="card feld-card art-section" id="section-krb" data-art="KRB" aria-labelledby="schichten-titel">
             <div class="section-head">
-                <h2 id="schichten-titel">Schichten</h2>
-                <p class="muted">Von oben nach unten, lückenlos von 0 bis zur Endteufe. Leere Zeilen werden ignoriert.</p>
+                <h2 id="schichten-titel">@L["Schichten"]</h2>
+                <p class="muted">@L["Von oben nach unten, lückenlos von 0 bis zur Endteufe. Leere Zeilen werden ignoriert."]</p>
             </div>
             @{ Fehlerliste("schichten"); }
             <div class="schichten" id="schichten">
@@ -249,7 +254,7 @@
                 }
             </div>
             <p class="section-actions">
-                <button type="button" class="btn btn-secondary" id="schicht-add">Schicht hinzufügen</button>
+                <button type="button" class="btn btn-secondary" id="schicht-add">@L["Schicht hinzufügen"]</button>
             </p>
             <datalist id="homogenbereiche">
                 @foreach (var h in Model.Homogenbereiche)
@@ -264,8 +269,8 @@
 
         <section class="card feld-card art-section" id="section-dph" data-art="DPH" aria-labelledby="n10-titel">
             <div class="section-head">
-                <h2 id="n10-titel">Schlagzahlen N10</h2>
-                <p class="muted">Schläge je 0,10 m, von 0,10 m bis zur Endteufe. Leere Felder werden nicht gespeichert.</p>
+                <h2 id="n10-titel">@L["Schlagzahlen N10"]</h2>
+                <p class="muted">@L["Schläge je 0,10 m, von 0,10 m bis zur Endteufe. Leere Felder werden nicht gespeichert."]</p>
             </div>
             @{ Fehlerliste("n10"); }
             <div class="n10" id="n10" data-max="@BoreholeHub.Web.Pages.Projekte.FeldModel.MaxSchritte" data-standard="@BoreholeHub.Web.Pages.Projekte.FeldModel.StandardSchritte">
@@ -289,7 +294,7 @@
                                 Model.N10.TryGetValue(s, out var wert);
                                 <input type="text" inputmode="numeric" autocomplete="off" maxlength="3"
                                        id="n10-@s" name="N10[@s]" value="@wert"
-                                       aria-label="N10 bis @((s / 10.0).ToString("0.00", System.Globalization.CultureInfo.GetCultureInfo("de-DE"))) m"
+                                       aria-label="@Model.N10Beschriftung(s)"
                                        aria-invalid="@(Model.N10Ungueltig.Contains(s) ? "true" : "false")" />
                             }
                         </span>
@@ -299,8 +304,8 @@
         </section>
 
         <div class="action-bar">
-            <button type="submit" class="btn btn-primary">Speichern</button>
-            <button type="reset" class="btn btn-secondary">Zurücksetzen</button>
+            <button type="submit" class="btn btn-primary">@L["Speichern"]</button>
+            <button type="reset" class="btn btn-secondary">@L["Zurücksetzen"]</button>
         </div>
     </form>
 </div>
