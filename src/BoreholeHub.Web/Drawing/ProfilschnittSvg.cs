@@ -207,7 +207,7 @@ public static class ProfilschnittSvg
             double top = Y(c.A.AnsatzhoeheMNhn), end = Y(c.A.AnsatzhoeheMNhn - c.A.EndteufeM);
             sb.Append($"<rect class=\"ps-frame\" x=\"{N(c.X - colW / 2)}\" y=\"{N(top)}\" width=\"{N(colW)}\" height=\"{N(end - top)}\"/>");
             sb.Append($"<line class=\"ps-et\" x1=\"{N(c.X - colW / 2 - 6)}\" y1=\"{N(end)}\" x2=\"{N(c.X + colW / 2 + 6)}\" y2=\"{N(end)}\"/>");
-            sb.Append($"<text class=\"ps-et-text\" x=\"{N(c.X)}\" y=\"{N(end + 16)}\" text-anchor=\"middle\">ET {Fmt(c.A.EndteufeM, 2)} m</text>");
+            sb.Append($"<text class=\"ps-et-text\" x=\"{N(c.X)}\" y=\"{N(end + 16)}\" text-anchor=\"middle\">{Esc(T(loc, "ET {0} m", Fmt(c.A.EndteufeM, 2)))}</text>");
             sb.Append("</g>");
         }
 
@@ -249,7 +249,7 @@ public static class ProfilschnittSvg
             items.Add((b, x, y) =>
             {
                 b.Append($"<rect class=\"ps-swatch\" x=\"{N(x)}\" y=\"{N(y)}\" width=\"30\" height=\"16\" rx=\"2\" fill=\"url(#{PatternPrefix}{kind.Key})\"/>");
-                b.Append($"<text class=\"ps-legend-text\" x=\"{N(x + 38)}\" y=\"{N(y + 12)}\">{Esc(Name(kind))}</text>");
+                b.Append($"<text class=\"ps-legend-text\" x=\"{N(x + 38)}\" y=\"{N(y + 12)}\">{Esc(Name(kind, loc))}</text>");
             });
         }
 

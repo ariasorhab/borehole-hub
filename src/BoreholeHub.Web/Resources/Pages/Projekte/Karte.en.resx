@@ -12,15 +12,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Brotkrumen" xml:space="preserve">
-    <value>Breadcrumb</value>
-  </data>
-  <data name="Projekte" xml:space="preserve">
-    <value>Projects</value>
-  </data>
-  <data name="Karte" xml:space="preserve">
-    <value>Map</value>
-  </data>
   <data name="Koordinaten: ETRS89 / UTM 32N (EPSG:25832)" xml:space="preserve">
     <value>Coordinates: ETRS89 / UTM 32N (EPSG:25832)</value>
   </data>
@@ -47,9 +38,6 @@
   </data>
   <data name="GK 25: Klick in die Karte zeigt die Kartiereinheit. GÜK 300 ist nur bei Maßstäben kleiner als etwa 1:22.000 sichtbar. Bodenkarte: nur private Nutzung erlaubt. Quelle: © HLNUG." xml:space="preserve">
     <value>GK 25: a click on the map shows the map unit. GÜK 300 is only visible at scales smaller than about 1:22.000. Soil map: private use only. Source: © HLNUG.</value>
-  </data>
-  <data name="Profilschnitt" xml:space="preserve">
-    <value>Cross-section</value>
   </data>
   <data name="Kleinrammbohrungen" xml:space="preserve">
     <value>Small percussion boreholes</value>
@@ -93,15 +81,6 @@
   <data name="Rammsondierung" xml:space="preserve">
     <value>Dynamic probing</value>
   </data>
-  <data name="Art" xml:space="preserve">
-    <value>Type</value>
-  </data>
-  <data name="Endteufe" xml:space="preserve">
-    <value>Final depth</value>
-  </data>
-  <data name="Ansatzhöhe" xml:space="preserve">
-    <value>Start level</value>
-  </data>
   <data name="Grundwasser" xml:space="preserve">
     <value>Groundwater</value>
   </data>
@@ -110,12 +89,6 @@
   </data>
   <data name="m u. GOK" xml:space="preserve">
     <value>m below ground level</value>
-  </data>
-  <data name="Rechtswert" xml:space="preserve">
-    <value>Easting</value>
-  </data>
-  <data name="Hochwert" xml:space="preserve">
-    <value>Northing</value>
   </data>
   <data name="Profil öffnen" xml:space="preserve">
     <value>Open profile</value>

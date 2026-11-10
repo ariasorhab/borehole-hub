@@ -1,7 +1,9 @@
 @model BoreholeHub.Web.Pages.Shared.ProjektTabsModel
 @inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer L
+@inject Microsoft.Extensions.Localization.IStringLocalizer<BoreholeHub.Web.SharedResource> T
 @{
     // The texts are German keys, localized where they are displayed (docs/i18n.md, rule (b)).
+    var shared = new HashSet<string> { "Karte", "Profilschnitt", "Prüfung", "Daten" };
     var tabs = new (string Key, string Text, string Url)[]
     {
         ("uebersicht", "Übersicht", $"/Projekte/{Model.ProjektId}"),
@@ -18,11 +20,11 @@
     {
         if (t.Key == Model.Aktiv)
         {
-            <a class="tab" href="@t.Url" aria-current="page">@L[t.Text].Value</a>
+            <a class="tab" href="@t.Url" aria-current="page">@(shared.Contains(t.Text) ? T[t.Text].Value : L[t.Text].Value)</a>
         }
         else
         {
-            <a class="tab" href="@t.Url">@L[t.Text].Value</a>
+            <a class="tab" href="@t.Url">@(shared.Contains(t.Text) ? T[t.Text].Value : L[t.Text].Value)</a>
         }
     }
 </nav>

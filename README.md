@@ -62,6 +62,14 @@ Aktuell laufen 180 Tests, alle bestehen. Die Tests verwenden xUnit. Die Web-App 
 - Zur Versickerung gilt: „Vereinfachte Vorprüfung: Der kf-Wert ersetzt keine Bemessung nach DWA-A 138-1.“
 - Alle Projektdaten sind synthetisch und erfunden.
 
+## Sprache / Language
+
+- Die Oberfläche ist standardmäßig auf Deutsch. Mit dem Schalter **DE | EN** im Seitenkopf wechselt die Sprache.
+- Die Wahl wird im Cookie `bh-lang` für ein Jahr gespeichert. Der Schalter funktioniert auch ohne JavaScript.
+- Auf Deutsch bleiben: Normcodes (z. B. DIN 4023, DIN 18196, BM-0 bis BM-F3, KRB, DPH), Demo-Daten (Projekt-, Schicht- und Laborwertbezeichnungen) und der PDF-Bericht „Anlagen“.
+- Zahlen und Datumsangaben bleiben im deutschen Format (Dezimalkomma, TT.MM.JJJJ), auch auf Englisch.
+- Die Übersetzungsregeln stehen in [docs/i18n.md](docs/i18n.md).
+
 ## Screenshots
 
 | | |
@@ -69,6 +77,7 @@ Aktuell laufen 180 Tests, alle bestehen. Die Tests verwenden xUnit. Die Web-App 
 | ![Karte mit GÜK 300](docs/screenshots/02-karte.png) 02 Karte mit GÜK 300 | ![Bohrprofil KRB 1](docs/screenshots/03-bohrprofil.png) 03 Bohrprofil KRB 1 |
 | ![Profilschnitt](docs/screenshots/04-profilschnitt.png) 04 Profilschnitt | ![Prüfung im dunklen Modus](docs/screenshots/05-pruefung-dark.png) 05 Prüfung im dunklen Modus |
 | ![Feldaufnahme auf dem Tablet](docs/screenshots/06-feld-tablet.png) 06 Feldaufnahme auf dem Tablet | |
+| ![Übersicht auf Englisch](docs/screenshots/07-uebersicht-en.png) 07 Übersicht auf Englisch | ![Labor auf Englisch](docs/screenshots/08-labor-en.png) 08 Labor auf Englisch |
 
 ## Datenquellen & Lizenzen
 

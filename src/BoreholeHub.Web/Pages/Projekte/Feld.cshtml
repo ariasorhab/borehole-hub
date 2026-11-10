@@ -2,6 +2,7 @@
 @model BoreholeHub.Web.Pages.Projekte.FeldModel
 @using BoreholeHub.Core.Services
 @inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer L
+@inject Microsoft.Extensions.Localization.IStringLocalizer<BoreholeHub.Web.SharedResource> T
 @{
     ViewData["Title"] = L["Feldaufnahme"].Value;
     var id = Model.Projekt.Id;
@@ -65,7 +66,7 @@
                 <input type="text" autocomplete="off" maxlength="60" id="@rowKey-zustand" name="Schichten[@idx].Zustand" value="@z.Zustand" />
             </div>
             <div class="f f-homogen">
-                <label for="@rowKey-homogenbereich">@L["Homogenbereich"]</label>
+                <label for="@rowKey-homogenbereich">@T["Homogenbereich"]</label>
                 <input type="text" autocomplete="off" maxlength="10" list="homogenbereiche" id="@rowKey-homogenbereich" name="Schichten[@idx].Homogenbereich" value="@z.Homogenbereich" />
             </div>
             <div class="f f-frost">
@@ -98,9 +99,9 @@
 }
 
 <div class="container feld-page">
-    <nav class="breadcrumb" aria-label="@L["Brotkrumen"]">
+    <nav class="breadcrumb" aria-label="@T["Brotkrumen"]">
         <ol>
-            <li><a href="/Projekte">@L["Projekte"]</a></li>
+            <li><a href="/Projekte">@T["Projekte"]</a></li>
             <li><a href="/Projekte/@id">@Model.Projekt.Name</a></li>
             <li aria-current="page">@L["Feldaufnahme"]</li>
         </ol>
@@ -174,7 +175,7 @@
             <h2 id="allgemein-titel">@L["Aufschluss"]</h2>
 
             <fieldset class="art-field">
-                <legend>@L["Art"]</legend>
+                <legend>@T["Art"]</legend>
                 <div class="art-toggle" id="art">
                     <label class="art-option">
                         <input type="radio" name="Art" value="KRB" checked="@(!dph)" />
@@ -219,12 +220,12 @@
                 </div>
 
                 <div class="f">
-                    <label for="ansatzhoehe">@L["Ansatzhöhe [m NHN]"]</label>
+                    <label for="ansatzhoehe">@T["Ansatzhöhe [m NHN]"]</label>
                     <input type="text" inputmode="decimal" autocomplete="off" id="ansatzhoehe" name="Ansatzhoehe" value="@Model.Ansatzhoehe" aria-invalid="@Invalid("ansatzhoehe")" />
                     @{ Fehlerliste("ansatzhoehe"); }
                 </div>
                 <div class="f">
-                    <label for="endteufe">@L["Endteufe [m]"]</label>
+                    <label for="endteufe">@T["Endteufe [m]"]</label>
                     <input type="text" inputmode="decimal" autocomplete="off" id="endteufe" name="Endteufe" value="@Model.Endteufe" aria-invalid="@Invalid("endteufe")" />
                     @{ Fehlerliste("endteufe"); }
                 </div>

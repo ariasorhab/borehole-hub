@@ -12,12 +12,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Brotkrumen" xml:space="preserve">
-    <value>Breadcrumb</value>
-  </data>
-  <data name="Projekte" xml:space="preserve">
-    <value>Projects</value>
-  </data>
   <data name="Karte öffnen" xml:space="preserve">
     <value>Open map</value>
   </data>
@@ -48,26 +42,11 @@
   <data name="Bezeichnung" xml:space="preserve">
     <value>Designation</value>
   </data>
-  <data name="Art" xml:space="preserve">
-    <value>Type</value>
-  </data>
   <data name="Datum" xml:space="preserve">
     <value>Date</value>
   </data>
-  <data name="Ansatzhöhe [m NHN]" xml:space="preserve">
-    <value>Start level [m NHN]</value>
-  </data>
-  <data name="Endteufe [m]" xml:space="preserve">
-    <value>Final depth [m]</value>
-  </data>
   <data name="Grundwasser [m u. GOK]" xml:space="preserve">
     <value>Groundwater [m below ground level]</value>
-  </data>
-  <data name="Rechtswert" xml:space="preserve">
-    <value>Easting</value>
-  </data>
-  <data name="Hochwert" xml:space="preserve">
-    <value>Northing</value>
   </data>
   <data name="Kleinrammbohrung" xml:space="preserve">
     <value>Small percussion borehole</value>

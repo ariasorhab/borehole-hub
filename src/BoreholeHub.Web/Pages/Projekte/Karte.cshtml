@@ -1,8 +1,9 @@
 @page "/Projekte/{id:int}/Karte"
 @model BoreholeHub.Web.Pages.Projekte.KarteModel
 @inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer L
+@inject Microsoft.Extensions.Localization.IStringLocalizer<BoreholeHub.Web.SharedResource> T
 @{
-    ViewData["Title"] = Model.Projekt.Name + " · " + L["Karte"].Value;
+    ViewData["Title"] = Model.Projekt.Name + " · " + T["Karte"].Value;
 }
 
 @section Head {
@@ -10,11 +11,11 @@
 }
 
 <div class="container">
-    <nav class="breadcrumb" aria-label="@L["Brotkrumen"]">
+    <nav class="breadcrumb" aria-label="@T["Brotkrumen"]">
         <ol>
-            <li><a href="/Projekte">@L["Projekte"]</a></li>
+            <li><a href="/Projekte">@T["Projekte"]</a></li>
             <li><a href="/Projekte/@Model.Projekt.Id">@Model.Projekt.Name</a></li>
-            <li aria-current="page">@L["Karte"]</li>
+            <li aria-current="page">@T["Karte"]</li>
         </ol>
     </nav>
 
@@ -32,14 +33,14 @@
          data-t-code="@L["Kürzel"]"
          data-t-krb="@L["Kleinrammbohrung"]"
          data-t-dph="@L["Rammsondierung"]"
-         data-t-type="@L["Art"]"
-         data-t-depth="@L["Endteufe"]"
-         data-t-start="@L["Ansatzhöhe"]"
+         data-t-type="@T["Art"]"
+         data-t-depth="@T["Endteufe"]"
+         data-t-start="@T["Ansatzhöhe"]"
          data-t-groundwater="@L["Grundwasser"]"
          data-t-none="@L["nicht angetroffen"]"
          data-t-below="@L["m u. GOK"]"
-         data-t-easting="@L["Rechtswert"]"
-         data-t-northing="@L["Hochwert"]"
+         data-t-easting="@T["Rechtswert"]"
+         data-t-northing="@T["Hochwert"]"
          data-t-profile="@L["Profil öffnen"]"
          data-t-load-error="@L["Die Punkte konnten nicht geladen werden."]"
          data-t-osm="@L["© OpenStreetMap-Mitwirkende"]">
@@ -74,7 +75,7 @@
             </section>
 
             <section class="karte-section">
-                <a class="btn btn-secondary btn-sm" href="/Projekte/@Model.Projekt.Id/Profilschnitt">@L["Profilschnitt"]</a>
+                <a class="btn btn-secondary btn-sm" href="/Projekte/@Model.Projekt.Id/Profilschnitt">@T["Profilschnitt"]</a>
             </section>
 
             <section class="karte-section">

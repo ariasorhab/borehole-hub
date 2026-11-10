@@ -43,7 +43,7 @@
     <value>{0} · Small percussion borehole</value>
   </data>
   <data name="Ansatzhöhe {0} m NHN · {1} · {2}" xml:space="preserve">
-    <value>Start level {0} m NHN · {1} · {2}</value>
+    <value>Ground level {0} m NHN · {1} · {2}</value>
   </data>
   <data name="R {0} / H {1} (EPSG:25832)" xml:space="preserve">
     <value>E {0} / N {1} (EPSG:25832)</value>
@@ -73,7 +73,7 @@
     <value>{0} · heavy dynamic probe (DIN EN ISO 22476-2)</value>
   </data>
   <data name="Endteufe {0} m · {1} · Ansatzhöhe {2} m NHN" xml:space="preserve">
-    <value>Final depth {0} m · {1} · Start level {2} m NHN</value>
+    <value>Final depth {0} m · {1} · Ground level {2} m NHN</value>
   </data>
   <data name="N10 (Schläge je 10 cm)" xml:space="preserve">
     <value>N10 (blows per 10 cm)</value>

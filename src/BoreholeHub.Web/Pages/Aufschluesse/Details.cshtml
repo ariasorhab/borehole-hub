@@ -3,6 +3,7 @@
 @using System.Globalization
 @using BoreholeHub.Web.Pages.Aufschluesse
 @inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer L
+@inject Microsoft.Extensions.Localization.IStringLocalizer<BoreholeHub.Web.SharedResource> T
 @{
     var a = Model.Aufschluss;
     ViewData["Title"] = a.Bezeichnung + " · " + Model.Projekt.Name;
@@ -14,9 +15,9 @@
 }
 
 <div class="container">
-    <nav class="breadcrumb" aria-label="@L["Brotkrumen"]">
+    <nav class="breadcrumb" aria-label="@T["Brotkrumen"]">
         <ol>
-            <li><a href="/Projekte">@L["Projekte"]</a></li>
+            <li><a href="/Projekte">@T["Projekte"]</a></li>
             <li><a href="/Projekte/@Model.Projekt.Id">@Model.Projekt.Name</a></li>
             <li aria-current="page">@a.Bezeichnung</li>
         </ol>
@@ -25,8 +26,8 @@
     <header class="page-header">
         <h1>@a.Bezeichnung</h1>
         <p class="muted">
-            @(Model.IstKleinrammbohrung ? L["Kleinrammbohrung"] : L["Rammsondierung"]) · @L["Endteufe"] @DetailsModel.Meter(a.EndteufeM) m ·
-            @L["Ansatzhöhe"] @DetailsModel.Meter(a.AnsatzhoeheMNhn) m NHN ·
+            @(Model.IstKleinrammbohrung ? L["Kleinrammbohrung"] : L["Rammsondierung"]) · @T["Endteufe"] @DetailsModel.Meter(a.EndteufeM) m ·
+            @T["Ansatzhöhe"] @DetailsModel.Meter(a.AnsatzhoeheMNhn) m NHN ·
             @(a.GrundwasserM is double gw ? L["Grundwasser"].Value + " " + DetailsModel.Meter(gw) + " " + L["m u. GOK"].Value : L["Grundwasser nicht angetroffen"].Value)
         </p>
         <div class="page-actions">
@@ -89,7 +90,7 @@
                             <th scope="col">@L["Bodengruppe"]</th>
                             <th scope="col">@L["Farbe"]</th>
                             <th scope="col">@L["Zustand"]</th>
-                            <th scope="col">@L["Homogenbereich"]</th>
+                            <th scope="col">@T["Homogenbereich"]</th>
                             <th scope="col">@L["Frostklasse"]</th>
                             <th scope="col" class="num">kf [m/s]</th>
                             <th scope="col">@L["Versickerung"]</th>
@@ -122,7 +123,7 @@
         </section>
 
         <section class="profil-section" aria-labelledby="proben-titel">
-            <h2 class="section-title" id="proben-titel">@L["Proben"]</h2>
+            <h2 class="section-title" id="proben-titel">@T["Proben"]</h2>
             @if (Model.Proben.Count == 0)
             {
                 <p class="muted">@L["Aus {0} wurden keine Proben entnommen.", Model.Bohrung.Bezeichnung]</p>

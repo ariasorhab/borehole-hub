@@ -12,15 +12,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Daten" xml:space="preserve">
-    <value>Data</value>
-  </data>
-  <data name="Projekte" xml:space="preserve">
-    <value>Projects</value>
-  </data>
-  <data name="Brotkrumen" xml:space="preserve">
-    <value>Breadcrumb</value>
-  </data>
   <data name="Import abgeschlossen" xml:space="preserve">
     <value>Import complete</value>
   </data>
@@ -29,9 +20,6 @@
   </data>
   <data name="importiert." xml:space="preserve">
     <value>imported.</value>
-  </data>
-  <data name="Prüfung" xml:space="preserve">
-    <value>Data check</value>
   </data>
   <data name="1 Aufschluss" xml:space="preserve">
     <value>1 exploration point</value>

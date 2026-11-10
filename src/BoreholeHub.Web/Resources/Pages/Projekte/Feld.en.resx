@@ -15,12 +15,6 @@
   <data name="Feldaufnahme" xml:space="preserve">
     <value>Field log</value>
   </data>
-  <data name="Brotkrumen" xml:space="preserve">
-    <value>Breadcrumb</value>
-  </data>
-  <data name="Projekte" xml:space="preserve">
-    <value>Projects</value>
-  </data>
   <data name="{0} gespeichert." xml:space="preserve">
     <value>{0} saved.</value>
   </data>
@@ -51,9 +45,6 @@
   <data name="Aufschluss" xml:space="preserve">
     <value>Exploration point</value>
   </data>
-  <data name="Art" xml:space="preserve">
-    <value>Type</value>
-  </data>
   <data name="Kleinrammbohrung (KRB)" xml:space="preserve">
     <value>Small percussion borehole (KRB)</value>
   </data>
@@ -75,14 +66,8 @@
   <data name="Standort übernehmen" xml:space="preserve">
     <value>Use my location</value>
   </data>
-  <data name="Ansatzhöhe [m NHN]" xml:space="preserve">
-    <value>Start height [m NHN]</value>
-  </data>
-  <data name="Endteufe [m]" xml:space="preserve">
-    <value>Final depth [m]</value>
-  </data>
   <data name="Grundwasser [m u. GOK]" xml:space="preserve">
-    <value>Groundwater [m below GOK]</value>
+    <value>Groundwater [m below ground level]</value>
   </data>
   <data name="(optional)" xml:space="preserve">
     <value>(optional)</value>
@@ -119,9 +104,6 @@
   </data>
   <data name="Zustand" xml:space="preserve">
     <value>Condition</value>
-  </data>
-  <data name="Homogenbereich" xml:space="preserve">
-    <value>Homogeneous zone</value>
   </data>
   <data name="Frostklasse" xml:space="preserve">
     <value>Frost class</value>

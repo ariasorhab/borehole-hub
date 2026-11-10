@@ -1,6 +1,7 @@
 @page "/"
 @model BoreholeHub.Web.Pages.IndexModel
 @inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer L
+@inject Microsoft.Extensions.Localization.IStringLocalizer<BoreholeHub.Web.SharedResource> T
 @{
     ViewData["Title"] = null;
 }
@@ -14,12 +15,12 @@
             <div class="hero-actions">
                 <form method="post" action="/Demo" class="inline-form">
                     @Html.AntiForgeryToken()
-                    <button type="submit" class="btn btn-primary">@L["Demo-Projekt laden"]</button>
+                    <button type="submit" class="btn btn-primary">@T["Demo-Projekt laden"]</button>
                 </form>
                 <a class="btn btn-secondary" href="/Projekte">@L["Projekte ansehen"]</a>
             </div>
             <p class="hero-stats">
-                @Model.ProjektAnzahl @(Model.ProjektAnzahl == 1 ? L["Projekt"] : L["Projekte"]) · @Model.AufschlussAnzahl @(Model.AufschlussAnzahl == 1 ? L["Aufschluss"] : L["Aufschlüsse"]) @L["in der Datenbank"]
+                @Model.ProjektAnzahl @(Model.ProjektAnzahl == 1 ? L["Projekt"] : T["Projekte"]) · @Model.AufschlussAnzahl @(Model.AufschlussAnzahl == 1 ? L["Aufschluss"] : L["Aufschlüsse"]) @L["in der Datenbank"]
             </p>
         </div>
 

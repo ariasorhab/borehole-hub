@@ -12,15 +12,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Brotkrumen" xml:space="preserve">
-    <value>Breadcrumb</value>
-  </data>
-  <data name="Projekte" xml:space="preserve">
-    <value>Projects</value>
-  </data>
-  <data name="Profilschnitt" xml:space="preserve">
-    <value>Cross-section</value>
-  </data>
   <data name="geologischer Schnitt durch 2 bis 4 Kleinrammbohrungen" xml:space="preserve">
     <value>geological section through 2 to 4 small percussion boreholes</value>
   </data>
@@ -44,12 +35,6 @@
   </data>
   <data name="Abstand [m]" xml:space="preserve">
     <value>Distance [m]</value>
-  </data>
-  <data name="Ansatzhöhe [m NHN]" xml:space="preserve">
-    <value>Start level [m NHN]</value>
-  </data>
-  <data name="Endteufe [m]" xml:space="preserve">
-    <value>Final depth [m]</value>
   </data>
   <data name="Grundwasser [m u. GOK]" xml:space="preserve">
     <value>Groundwater [m below ground level]</value>

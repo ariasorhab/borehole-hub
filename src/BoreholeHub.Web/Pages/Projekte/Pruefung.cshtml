@@ -1,8 +1,9 @@
 @page "/Projekte/{id:int}/Pruefung"
 @model BoreholeHub.Web.Pages.Projekte.PruefungModel
 @inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer L
+@inject Microsoft.Extensions.Localization.IStringLocalizer<BoreholeHub.Web.SharedResource> T
 @{
-    ViewData["Title"] = Model.Projekt.Name + " · " + L["Prüfung"].Value;
+    ViewData["Title"] = Model.Projekt.Name + " · " + T["Prüfung"].Value;
 }
 
 @section Head {
@@ -10,16 +11,16 @@
 }
 
 <div class="container">
-    <nav class="breadcrumb" aria-label="@L["Brotkrumen"]">
+    <nav class="breadcrumb" aria-label="@T["Brotkrumen"]">
         <ol>
-            <li><a href="/Projekte">@L["Projekte"]</a></li>
+            <li><a href="/Projekte">@T["Projekte"]</a></li>
             <li><a href="/Projekte/@Model.Projekt.Id">@Model.Projekt.Name</a></li>
-            <li aria-current="page">@L["Prüfung"]</li>
+            <li aria-current="page">@T["Prüfung"]</li>
         </ol>
     </nav>
 
     <header class="page-header">
-        <h1>@L["Prüfung"]</h1>
+        <h1>@T["Prüfung"]</h1>
         <p class="muted">@Model.Projekt.Name</p>
     </header>
 

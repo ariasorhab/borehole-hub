@@ -18,20 +18,8 @@
   <data name="Übersicht" xml:space="preserve">
     <value>Overview</value>
   </data>
-  <data name="Karte" xml:space="preserve">
-    <value>Map</value>
-  </data>
-  <data name="Profilschnitt" xml:space="preserve">
-    <value>Cross-section</value>
-  </data>
   <data name="Labor &amp; Versickerung" xml:space="preserve">
     <value>Lab</value>
-  </data>
-  <data name="Prüfung" xml:space="preserve">
-    <value>Data check</value>
-  </data>
-  <data name="Daten" xml:space="preserve">
-    <value>Data</value>
   </data>
   <data name="Feldaufnahme" xml:space="preserve">
     <value>Field</value>

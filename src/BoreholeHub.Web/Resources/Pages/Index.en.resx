@@ -18,17 +18,11 @@
   <data name="Aufschlüsse erfassen, auf der Karte sehen, Schichten und Laborwerte prüfen." xml:space="preserve">
     <value>Record exploration points, view them on the map, check layers and lab values.</value>
   </data>
-  <data name="Demo-Projekt laden" xml:space="preserve">
-    <value>Load demo project</value>
-  </data>
   <data name="Projekte ansehen" xml:space="preserve">
     <value>View projects</value>
   </data>
   <data name="Projekt" xml:space="preserve">
     <value>project</value>
-  </data>
-  <data name="Projekte" xml:space="preserve">
-    <value>projects</value>
   </data>
   <data name="Aufschluss" xml:space="preserve">
     <value>exploration point</value>

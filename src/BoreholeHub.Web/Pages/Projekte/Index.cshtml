@@ -1,20 +1,21 @@
 @page "/Projekte"
 @model BoreholeHub.Web.Pages.Projekte.IndexModel
 @inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer L
+@inject Microsoft.Extensions.Localization.IStringLocalizer<BoreholeHub.Web.SharedResource> T
 @{
-    ViewData["Title"] = L["Projekte"].Value;
+    ViewData["Title"] = T["Projekte"].Value;
 }
 
 <div class="container">
-    <nav class="breadcrumb" aria-label="@L["Brotkrumen"]">
+    <nav class="breadcrumb" aria-label="@T["Brotkrumen"]">
         <ol>
             <li><a href="/">@L["Start"]</a></li>
-            <li aria-current="page">@L["Projekte"]</li>
+            <li aria-current="page">@T["Projekte"]</li>
         </ol>
     </nav>
 
     <header class="page-header">
-        <h1>@L["Projekte"]</h1>
+        <h1>@T["Projekte"]</h1>
     </header>
 
     @if (Model.Projekte.Count == 0)
@@ -23,7 +24,7 @@
             <p>@L["Noch keine Projekte vorhanden."]</p>
             <form method="post" action="/Demo" class="inline-form">
                 @Html.AntiForgeryToken()
-                <button type="submit" class="btn btn-primary">@L["Demo-Projekt laden"]</button>
+                <button type="submit" class="btn btn-primary">@T["Demo-Projekt laden"]</button>
             </form>
         </div>
     }

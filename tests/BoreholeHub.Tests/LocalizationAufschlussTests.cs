@@ -40,7 +40,7 @@ public class LocalizationAufschlussTests : IClassFixture<WebAppFactory>
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.Contains("<html lang=\"en\"", html);
         Assert.Contains("Small percussion borehole · Final depth ", html);
-        Assert.Contains("Start level ", html);
+        Assert.Contains("Ground level ", html);
         Assert.Contains("Groundwater 2,90 m below ground level", html);
         Assert.Contains("aria-current=\"page\">Overview</a>", html);
         Assert.Contains("<h2 class=\"section-title\" id=\"schichten-titel\">Layer description log KRB 3</h2>", html);

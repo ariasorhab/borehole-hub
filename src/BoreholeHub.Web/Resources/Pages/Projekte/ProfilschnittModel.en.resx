@@ -40,7 +40,7 @@
     <value>Length {0} m · heights {1} to {2} m NHN · vertical exaggeration 1:{3}</value>
   </data>
   <data name="{0} bei {1} m, Ansatzhöhe {2} m NHN, Endteufe {3} m{4}" xml:space="preserve">
-    <value>{0} at {1} m, start level {2} m NHN, final depth {3} m{4}</value>
+    <value>{0} at {1} m, ground level {2} m NHN, final depth {3} m{4}</value>
   </data>
   <data name=", Grundwasser bei {0} m u. GOK ({1} m NHN)" xml:space="preserve">
     <value>, groundwater at {0} m below ground level ({1} m NHN)</value>
@@ -74,5 +74,41 @@
   </data>
   <data name="● KRB (Nr.)   ◆ DPH   — Schnitt" xml:space="preserve">
     <value>● KRB (no.)   ◆ DPH   — section line</value>
+  </data>
+  <data name="Kies" xml:space="preserve">
+    <value>Gravel</value>
+  </data>
+  <data name="Sand" xml:space="preserve">
+    <value>Sand</value>
+  </data>
+  <data name="Schluff" xml:space="preserve">
+    <value>Silt</value>
+  </data>
+  <data name="Ton" xml:space="preserve">
+    <value>Clay</value>
+  </data>
+  <data name="Mutterboden" xml:space="preserve">
+    <value>Topsoil</value>
+  </data>
+  <data name="Boden (nicht näher bestimmt)" xml:space="preserve">
+    <value>Soil (not further specified)</value>
+  </data>
+  <data name="Auffüllung" xml:space="preserve">
+    <value>Made ground</value>
+  </data>
+  <data name=", sandig" xml:space="preserve">
+    <value>, sandy</value>
+  </data>
+  <data name=", kiesig" xml:space="preserve">
+    <value>, gravelly</value>
+  </data>
+  <data name=", schluffig" xml:space="preserve">
+    <value>, silty</value>
+  </data>
+  <data name=", tonig" xml:space="preserve">
+    <value>, clayey</value>
+  </data>
+  <data name="ET {0} m" xml:space="preserve">
+    <value>ET {0} m</value>
   </data>
 </root>

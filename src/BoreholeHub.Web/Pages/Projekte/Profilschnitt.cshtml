@@ -1,8 +1,9 @@
 @page "/Projekte/{id:int}/Profilschnitt"
 @model BoreholeHub.Web.Pages.Projekte.ProfilschnittModel
 @inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer L
+@inject Microsoft.Extensions.Localization.IStringLocalizer<BoreholeHub.Web.SharedResource> T
 @{
-    ViewData["Title"] = Model.Projekt.Name + " · " + L["Profilschnitt"].Value;
+    ViewData["Title"] = Model.Projekt.Name + " · " + T["Profilschnitt"].Value;
 }
 
 @section Head {
@@ -10,16 +11,16 @@
 }
 
 <div class="container">
-    <nav class="breadcrumb" aria-label="@L["Brotkrumen"]">
+    <nav class="breadcrumb" aria-label="@T["Brotkrumen"]">
         <ol>
-            <li><a href="/Projekte">@L["Projekte"]</a></li>
+            <li><a href="/Projekte">@T["Projekte"]</a></li>
             <li><a href="/Projekte/@Model.Projekt.Id">@Model.Projekt.Name</a></li>
-            <li aria-current="page">@L["Profilschnitt"]</li>
+            <li aria-current="page">@T["Profilschnitt"]</li>
         </ol>
     </nav>
 
     <header class="page-header">
-        <h1>@L["Profilschnitt"]</h1>
+        <h1>@T["Profilschnitt"]</h1>
         <p class="muted">@Model.Projekt.Name · @L["geologischer Schnitt durch 2 bis 4 Kleinrammbohrungen"]</p>
     </header>
 
@@ -70,8 +71,8 @@
                         <tr>
                             <th scope="col">@L["Aufschluss"]</th>
                             <th scope="col" class="num">@L["Abstand [m]"]</th>
-                            <th scope="col" class="num">@L["Ansatzhöhe [m NHN]"]</th>
-                            <th scope="col" class="num">@L["Endteufe [m]"]</th>
+                            <th scope="col" class="num">@T["Ansatzhöhe [m NHN]"]</th>
+                            <th scope="col" class="num">@T["Endteufe [m]"]</th>
                             <th scope="col" class="num">@L["Grundwasser [m u. GOK]"]</th>
                             <th scope="col" class="num">@L["Grundwasser [m NHN]"]</th>
                             <th scope="col">@L["Homogenbereiche [m u. GOK]"]</th>

@@ -12,23 +12,11 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Brotkrumen" xml:space="preserve">
-    <value>Breadcrumb</value>
-  </data>
-  <data name="Projekte" xml:space="preserve">
-    <value>Projects</value>
-  </data>
   <data name="Kleinrammbohrung" xml:space="preserve">
     <value>Small percussion borehole</value>
   </data>
   <data name="Rammsondierung" xml:space="preserve">
     <value>Dynamic probing</value>
-  </data>
-  <data name="Endteufe" xml:space="preserve">
-    <value>Final depth</value>
-  </data>
-  <data name="Ansatzhöhe" xml:space="preserve">
-    <value>Start level</value>
   </data>
   <data name="Grundwasser" xml:space="preserve">
     <value>Groundwater</value>
@@ -87,9 +75,6 @@
   <data name="Zustand" xml:space="preserve">
     <value>Condition</value>
   </data>
-  <data name="Homogenbereich" xml:space="preserve">
-    <value>Homogeneous zone</value>
-  </data>
   <data name="Frostklasse" xml:space="preserve">
     <value>Frost class</value>
   </data>
@@ -98,9 +83,6 @@
   </data>
   <data name="Vereinfachte Vorprüfung: Der kf-Wert ersetzt keine Bemessung nach DWA-A 138-1." xml:space="preserve">
     <value>Simplified pre-check: the kf value does not replace a design to DWA-A 138-1.</value>
-  </data>
-  <data name="Proben" xml:space="preserve">
-    <value>Samples</value>
   </data>
   <data name="Aus {0} wurden keine Proben entnommen." xml:space="preserve">
     <value>No samples were taken from {0}.</value>

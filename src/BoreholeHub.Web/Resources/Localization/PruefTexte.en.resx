@@ -25,7 +25,7 @@
     <value>Coordinates</value>
   </data>
   <data name="Ansatzhöhe" xml:space="preserve">
-    <value>Start height</value>
+    <value>Ground level</value>
   </data>
   <data name="Rammsondierung" xml:space="preserve">
     <value>Dynamic probing</value>
@@ -76,10 +76,10 @@
     <value>Lies {0} m from the project centre.</value>
   </data>
   <data name="Ansatzhöhe {0} m NHN ist für Hessen nicht plausibel." xml:space="preserve">
-    <value>Start height {0} m NHN is not plausible for Hesse.</value>
+    <value>Ground level {0} m NHN is not plausible for Hesse.</value>
   </data>
   <data name="Ansatzhöhe weicht {0} m vom Median des Projekts ab." xml:space="preserve">
-    <value>Start height deviates {0} m from the project median.</value>
+    <value>Ground level deviates {0} m from the project median.</value>
   </data>
   <data name="Keine Messwerte erfasst." xml:space="preserve">
     <value>No readings recorded.</value>

@@ -1,8 +1,9 @@
 @page "/Projekte/{id:int}/Daten"
 @model BoreholeHub.Web.Pages.Projekte.DatenModel
 @inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer L
+@inject Microsoft.Extensions.Localization.IStringLocalizer<BoreholeHub.Web.SharedResource> T
 @{
-    ViewData["Title"] = Model.Projekt.Name + " · " + L["Daten"].Value;
+    ViewData["Title"] = Model.Projekt.Name + " · " + T["Daten"].Value;
 }
 
 @section Head {
@@ -10,16 +11,16 @@
 }
 
 <div class="container">
-    <nav class="breadcrumb" aria-label="@L["Brotkrumen"]">
+    <nav class="breadcrumb" aria-label="@T["Brotkrumen"]">
         <ol>
-            <li><a href="/Projekte">@L["Projekte"]</a></li>
+            <li><a href="/Projekte">@T["Projekte"]</a></li>
             <li><a href="/Projekte/@Model.Projekt.Id">@Model.Projekt.Name</a></li>
-            <li aria-current="page">@L["Daten"]</li>
+            <li aria-current="page">@T["Daten"]</li>
         </ol>
     </nav>
 
     <header class="page-header">
-        <h1>@L["Daten"]</h1>
+        <h1>@T["Daten"]</h1>
         <p class="muted">@Model.Projekt.Name</p>
     </header>
 
@@ -33,7 +34,7 @@
             <section class="result result-ok" role="status" aria-labelledby="ergebnis-titel">
                 <h2 id="ergebnis-titel">@L["Import abgeschlossen"]</h2>
                 <p>@(Model.ImportierteAufschluesse == 1 ? L["1 Aufschluss"] : L["{0} Aufschlüsse", Model.ImportierteAufschluesse]) @L["und"] @(Model.ImportierteSchichten == 1 ? L["1 Schicht"] : L["{0} Schichten", Model.ImportierteSchichten]) @L["importiert."]</p>
-                <p>@L["Prüfung"]: @(Model.PruefungFehler == 1 ? L["1 Fehler"] : L["{0} Fehler", Model.PruefungFehler]), @(Model.PruefungHinweise == 1 ? L["1 Hinweis"] : L["{0} Hinweise", Model.PruefungHinweise]). <a href="/Projekte/@Model.Projekt.Id/Pruefung">@L["Zur Prüfung"]</a></p>
+                <p>@T["Prüfung"]: @(Model.PruefungFehler == 1 ? L["1 Fehler"] : L["{0} Fehler", Model.PruefungFehler]), @(Model.PruefungHinweise == 1 ? L["1 Hinweis"] : L["{0} Hinweise", Model.PruefungHinweise]). <a href="/Projekte/@Model.Projekt.Id/Pruefung">@L["Zur Prüfung"]</a></p>
                 <p><a class="btn btn-primary" href="/Projekte/@Model.Projekt.Id/Karte">@L["Auf der Karte ansehen"]</a></p>
             </section>
         }

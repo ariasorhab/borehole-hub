@@ -62,6 +62,14 @@ There are currently 180 tests, and all of them pass. The tests use xUnit. For th
 - On infiltration, the app says: "Vereinfachte Vorprüfung: Der kf-Wert ersetzt keine Bemessung nach DWA-A 138-1." (Simplified pre-check: the kf value does not replace a design according to DWA-A 138-1.)
 - All project data is synthetic and invented.
 
+## Language
+
+- The interface is German by default. The **DE | EN** switch in the page header changes the language.
+- The choice is stored in the cookie `bh-lang` for one year. The switch also works without JavaScript.
+- These stay German: norm codes (for example DIN 4023, DIN 18196, BM-0 to BM-F3, KRB, DPH), demo data (project, layer and lab parameter names) and the PDF report "Anlagen".
+- Numbers and dates stay in German format (decimal comma, DD.MM.YYYY) in both languages.
+- The translation rules are in [docs/i18n.md](docs/i18n.md) (German).
+
 ## Screenshots
 
 | | |
@@ -69,6 +77,7 @@ There are currently 180 tests, and all of them pass. The tests use xUnit. For th
 | ![Map with GÜK 300](docs/screenshots/02-karte.png) 02 Map with GÜK 300 | ![Borehole log KRB 1](docs/screenshots/03-bohrprofil.png) 03 Borehole log KRB 1 |
 | ![Cross-section](docs/screenshots/04-profilschnitt.png) 04 Cross-section | ![Data check in dark mode](docs/screenshots/05-pruefung-dark.png) 05 Data check in dark mode |
 | ![Field form on a tablet](docs/screenshots/06-feld-tablet.png) 06 Field form on a tablet | |
+| ![Overview in English](docs/screenshots/07-uebersicht-en.png) 07 Overview in English | ![Lab page in English](docs/screenshots/08-labor-en.png) 08 Lab page in English |
 
 ## Data sources & licences
 

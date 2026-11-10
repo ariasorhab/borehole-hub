@@ -2,15 +2,16 @@
 @model BoreholeHub.Web.Pages.Projekte.DetailsModel
 @using System.Globalization
 @inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer L
+@inject Microsoft.Extensions.Localization.IStringLocalizer<BoreholeHub.Web.SharedResource> T
 @{
     ViewData["Title"] = Model.Projekt.Name;
     var de = CultureInfo.GetCultureInfo("de-DE");
 }
 
 <div class="container">
-    <nav class="breadcrumb" aria-label="@L["Brotkrumen"]">
+    <nav class="breadcrumb" aria-label="@T["Brotkrumen"]">
         <ol>
-            <li><a href="/Projekte">@L["Projekte"]</a></li>
+            <li><a href="/Projekte">@T["Projekte"]</a></li>
             <li aria-current="page">@Model.Projekt.Name</li>
         </ol>
     </nav>
@@ -68,13 +69,13 @@
                 <thead>
                     <tr>
                         <th scope="col">@L["Bezeichnung"]</th>
-                        <th scope="col">@L["Art"]</th>
+                        <th scope="col">@T["Art"]</th>
                         <th scope="col">@L["Datum"]</th>
-                        <th scope="col" class="num">@L["Ansatzhöhe [m NHN]"]</th>
-                        <th scope="col" class="num">@L["Endteufe [m]"]</th>
+                        <th scope="col" class="num">@T["Ansatzhöhe [m NHN]"]</th>
+                        <th scope="col" class="num">@T["Endteufe [m]"]</th>
                         <th scope="col" class="num">@L["Grundwasser [m u. GOK]"]</th>
-                        <th scope="col" class="num">@L["Rechtswert"]</th>
-                        <th scope="col" class="num">@L["Hochwert"]</th>
+                        <th scope="col" class="num">@T["Rechtswert"]</th>
+                        <th scope="col" class="num">@T["Hochwert"]</th>
                     </tr>
                 </thead>
                 <tbody>

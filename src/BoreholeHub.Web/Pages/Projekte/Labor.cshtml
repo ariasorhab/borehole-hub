@@ -1,6 +1,7 @@
 @page "/Projekte/{id:int}/Labor"
 @model BoreholeHub.Web.Pages.Projekte.LaborModel
 @inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer L
+@inject Microsoft.Extensions.Localization.IStringLocalizer<BoreholeHub.Web.SharedResource> T
 @{
     ViewData["Title"] = Model.Projekt.Name + " · " + L["Labor"].Value;
 }
@@ -10,9 +11,9 @@
 }
 
 <div class="container">
-    <nav class="breadcrumb" aria-label="@L["Brotkrumen"]">
+    <nav class="breadcrumb" aria-label="@T["Brotkrumen"]">
         <ol>
-            <li><a href="/Projekte">@L["Projekte"]</a></li>
+            <li><a href="/Projekte">@T["Projekte"]</a></li>
             <li><a href="/Projekte/@Model.Projekt.Id">@Model.Projekt.Name</a></li>
             <li aria-current="page">@L["Labor & Versickerung"]</li>
         </ol>
@@ -30,7 +31,7 @@
     <section class="kpi-row labor-kpis" aria-label="@L["Kennzahlen Laborproben"]">
         <div class="kpi">
             <div class="kpi-value">@Model.AnzahlProben</div>
-            <div class="kpi-label">@L["Proben"]</div>
+            <div class="kpi-label">@T["Proben"]</div>
         </div>
         <div class="kpi kpi-ok">
             <div class="kpi-value">@Model.AnzahlBm0</div>
@@ -55,8 +56,11 @@
             {
                 <span class="badge @(k == Model.Klassen[0] ? "badge-ok" : "badge-warn")">@k</span>
             }
-            <span class="badge badge-bad">&gt; @Model.Klassen[^1]</span>
-            <span class="legend-note">@L["= Überschreitung aller Klassen"]</span>
+            @if (Model.Klassen.Count > 0)
+            {
+                <span class="badge badge-bad">&gt; @Model.Klassen[^1]</span>
+                <span class="legend-note">@L["= Überschreitung aller Klassen"]</span>
+            }
         </div>
 
         <input type="checkbox" id="nur-auffaellig" class="filter-box" />
