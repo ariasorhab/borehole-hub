@@ -10,9 +10,13 @@ public class WebAppFactory : WebApplicationFactory<Program>
 {
     private readonly string _dbFile = Path.Combine(Path.GetTempPath(), $"boreholehub-test-{Guid.NewGuid():N}.db");
 
+    /// <summary>The tests run with the DE | EN switch on (D140); LanguageSwitchOffFactory turns it off.</summary>
+    protected virtual bool LanguageSwitch => true;
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseSetting("Database:Provider", "Sqlite");
+        builder.UseSetting("Features:LanguageSwitch", LanguageSwitch ? "true" : "false");
         builder.UseSetting("ConnectionStrings:Sqlite", $"Data Source={_dbFile};Pooling=False");
     }
 

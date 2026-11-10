@@ -5,14 +5,21 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace BoreholeHub.Web.Pages;
 
 /// <summary>Sets the UI language cookie ("bh-lang") from the DE | EN switch in the header.</summary>
-public class SpracheModel : PageModel
+public class SpracheModel(IConfiguration configuration) : PageModel
 {
+    private bool Enabled => configuration.GetValue("Features:LanguageSwitch", false);
+
     public const string CookieName = "bh-lang";
 
-    public IActionResult OnGet() => LocalRedirect("/");
+    public IActionResult OnGet() => Enabled ? LocalRedirect("/") : NotFound();
 
     public IActionResult OnPost(string lang, string? returnUrl)
     {
+        if (!Enabled)
+        {
+            return NotFound();
+        }
+
         if (lang is not ("de" or "en"))
         {
             return BadRequest();

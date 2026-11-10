@@ -45,7 +45,10 @@ app.UseRequestLocalization(new RequestLocalizationOptions
     DefaultRequestCulture = new RequestCulture(culture: "de-DE", uiCulture: "de-DE"),
     SupportedCultures = [deDe],
     SupportedUICultures = [deDe, en],
-    RequestCultureProviders = [new CookieRequestCultureProvider { CookieName = "bh-lang" }],
+    // D140: the DE | EN switch is off unless Features:LanguageSwitch = true; then the app is always German.
+    RequestCultureProviders = app.Configuration.GetValue("Features:LanguageSwitch", false)
+        ? [new CookieRequestCultureProvider { CookieName = "bh-lang" }]
+        : [],
 });
 
 // Unknown URLs (and NotFound() results) render Pages/NotFound.cshtml with status 404.
