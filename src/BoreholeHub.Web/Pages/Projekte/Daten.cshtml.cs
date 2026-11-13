@@ -17,6 +17,9 @@ public class DatenModel(BoreholeDbContext db, IStringLocalizer<CsvImportService>
 {
     public const long MaxDateiBytes = 1024 * 1024;
 
+    /// <summary>Hosting limit (D166): a project holds at most this many Aufschlüsse; an import that would exceed it is refused as a whole.</summary>
+    public const int MaxAufschluesseProProjekt = 200;
+
     public Project Projekt { get; private set; } = null!;
 
     /// <summary>Set after an import attempt.</summary>
@@ -188,6 +191,16 @@ public class DatenModel(BoreholeDbContext db, IStringLocalizer<CsvImportService>
         {
             FehlerTexte = result.FehlerTexte;
             Fehler = result.Fehler;
+            return Page();
+        }
+
+        if (existing.Count + result.NeueAufschluesse.Count > MaxAufschluesseProProjekt)
+        {
+            var grenze = new ImportFehler(
+                "Das Projekt darf höchstens " + MaxAufschluesseProProjekt + " Aufschlüsse enthalten (vorhanden: {0}, neu: {1}).",
+                [existing.Count.ToString(), result.NeueAufschluesse.Count.ToString()]);
+            FehlerTexte = [grenze];
+            Fehler = [CsvImportService.Deutsch(grenze)];
             return Page();
         }
 

@@ -111,4 +111,7 @@
   <data name="Prüfung: {0} Hinweise." xml:space="preserve">
     <value>Data check: {0} notices.</value>
   </data>
+  <data name="Das Projekt enthält bereits 200 Aufschlüsse; weitere können nicht gespeichert werden." xml:space="preserve">
+    <value>The project already contains 200 boreholes; no more can be saved.</value>
+  </data>
 </root>

@@ -208,6 +208,12 @@ public class FeldModel(BoreholeDbContext db, IStringLocalizer<FeldModel> loc, IS
         LeseFormular();
 
         var fehler = new List<FeldFehler>();
+        if (existing.Count >= DatenModel.MaxAufschluesseProProjekt)
+        {
+            // Hosting limit (D166): no more Aufschlüsse once the project holds the maximum.
+            fehler.Add(Fehl("bezeichnung", "Das Projekt enthält bereits 200 Aufschlüsse; weitere können nicht gespeichert werden."));
+        }
+
         var kandidat = Validiere(existing, fehler);
         NichtGespeichert = true;
 

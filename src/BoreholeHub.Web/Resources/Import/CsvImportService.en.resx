@@ -150,4 +150,7 @@
   <data name="Schichten-Datei: Die Datei ist größer als 1 MB." xml:space="preserve">
     <value>Layers file: the file is larger than 1 MB.</value>
   </data>
+  <data name="Das Projekt darf höchstens 200 Aufschlüsse enthalten (vorhanden: {0}, neu: {1})." xml:space="preserve">
+    <value>The project may contain at most 200 exploration points (existing: {0}, new: {1}).</value>
+  </data>
 </root>
