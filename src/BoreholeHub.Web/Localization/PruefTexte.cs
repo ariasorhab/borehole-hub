@@ -23,6 +23,8 @@ public sealed class PruefTexte
         "Letzte Schicht endet bei {0} m, Endteufe {1} m.",
         "Endteufe fehlt oder ist 0.",
         "Endteufe {0} m liegt über {1} m (Rahmen GK1).",
+        "Grundwasser darf nicht negativ sein.",
+        "Grundwasser ({0} m) liegt tiefer als die Endteufe ({1} m).",
         "Probe {0}: Oberkante liegt nicht über Unterkante.",
         "Probe {0} ({1}–{2} m) liegt außerhalb der Bohrung.",
         "Probe {0} ({1}–{2} m) reicht über eine Schichtgrenze.",

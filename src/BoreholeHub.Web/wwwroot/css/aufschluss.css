@@ -74,8 +74,10 @@
 /* ---------- Tables and lists ---------- */
 .profil-section { margin-bottom: var(--s6); }
 .data-table th.wrap,
-.data-table td.wrap { white-space: normal; min-width: 260px; }
-.data-table td.wrap-s { white-space: normal; min-width: 150px; }
+.data-table td.wrap { white-space: normal; min-width: 160px; }
+.data-table td.wrap-s { white-space: normal; min-width: 110px; }
+.data-table thead th, .data-table td { white-space: normal; } /* layer table may wrap so it fits at 1440 px (D153) */
+.data-table td.num, .data-table .badge { white-space: nowrap; }
 .note { margin-top: var(--s3); font-size: var(--fs-1); color: var(--muted); }
 
 .badge-ok { border-color: var(--ok); color: var(--ok); background: var(--tint-ok); }

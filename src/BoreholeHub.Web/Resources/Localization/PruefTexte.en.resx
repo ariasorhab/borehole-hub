@@ -60,6 +60,12 @@
   <data name="Endteufe {0} m liegt über {1} m (Rahmen GK1)." xml:space="preserve">
     <value>Final depth {0} m is above {1} m (GK1 range).</value>
   </data>
+  <data name="Grundwasser darf nicht negativ sein." xml:space="preserve">
+    <value>Groundwater must not be negative.</value>
+  </data>
+  <data name="Grundwasser ({0} m) liegt tiefer als die Endteufe ({1} m)." xml:space="preserve">
+    <value>Groundwater ({0} m) is deeper than the final depth ({1} m).</value>
+  </data>
   <data name="Probe {0}: Oberkante liegt nicht über Unterkante." xml:space="preserve">
     <value>Sample {0}: top is not above bottom.</value>
   </data>

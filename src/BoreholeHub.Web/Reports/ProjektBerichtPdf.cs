@@ -503,7 +503,7 @@ public static class ProjektBerichtPdf
                 col.Item().Element(x => Titel(x, "Anlage 5", "Versickerung (Vorprüfung)", "Durchlässigkeitsbeiwerte kf der Schichten und einfache Beurteilung der Versickerungseignung"));
                 col.Item().Table(t =>
                 {
-                    t.ColumnsDefinition(cd => { cd.ConstantColumn(60); cd.RelativeColumn(2.0f); cd.ConstantColumn(64); cd.RelativeColumn(1.5f); cd.RelativeColumn(2.9f); });
+                    t.ColumnsDefinition(cd => { cd.ConstantColumn(72); cd.RelativeColumn(2.0f); cd.ConstantColumn(64); cd.RelativeColumn(1.5f); cd.RelativeColumn(2.9f); });
                     t.Header(h =>
                     {
                         h.Cell().Element(HeadCell).Text("Aufschluss").SemiBold();

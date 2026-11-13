@@ -143,6 +143,33 @@ public class CsvImportServiceTests
     }
 
     [Fact]
+    public void DateBeforeMinDatum_IsReported()
+    {
+        var r = Parse(A(Row(datum: "31.12.1999")), null);
+        AssertError(r, "Aufschlüsse, Zeile 2: Datum \"31.12.1999\" liegt außerhalb von 01.01.2000 bis " + CsvImportService.MaxDatum().ToString("dd.MM.yyyy", System.Globalization.CultureInfo.InvariantCulture) + ".");
+    }
+
+    [Fact]
+    public void DateOnMinDatum_IsAccepted()
+    {
+        var r = Parse(A(Row(datum: "01.01.2000")), null);
+        Assert.Empty(r.Fehler);
+        Assert.Equal(new DateOnly(2000, 1, 1), r.NeueAufschluesse.Single().Datum);
+    }
+
+    [Fact]
+    public void DateOnMaxDatum_IsAccepted_AndOneDayLaterIsReported()
+    {
+        var max = CsvImportService.MaxDatum();
+        var ok = Parse(A(Row(datum: max.ToString("dd.MM.yyyy", System.Globalization.CultureInfo.InvariantCulture))), null);
+        Assert.Empty(ok.Fehler);
+
+        var later = max.AddDays(1).ToString("dd.MM.yyyy", System.Globalization.CultureInfo.InvariantCulture);
+        var bad = Parse(A(Row(datum: later)), null);
+        AssertError(bad, "Aufschlüsse, Zeile 2: Datum \"" + later + "\" liegt außerhalb von 01.01.2000 bis " + max.ToString("dd.MM.yyyy", System.Globalization.CultureInfo.InvariantCulture) + ".");
+    }
+
+    [Fact]
     public void InvalidNumber_AndMissingValue_AreReported()
     {
         var r = Parse(A(Row(rw: "abc", et: "")), null);

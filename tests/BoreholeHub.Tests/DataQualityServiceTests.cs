@@ -134,6 +134,14 @@ public class DataQualityServiceTests
     }
 
     [Fact]
+    public void R1_LetzteSchichtTiefer_AlsEndteufe_IstFehler()
+    {
+        var befunde = Pruefen(Krb(1, "KRB 1", 3.0, S(0.0, 9.0)));
+
+        Single(befunde, PruefStufe.Fehler, "Letzte Schicht endet bei 9,00 m, Endteufe 3,00 m.");
+    }
+
+    [Fact]
     public void R1_SchichtenWerdenNachVonMSortiert_BevorGeprueftWird()
     {
         // Listed out of order, but correct once sorted by VonM.
@@ -158,6 +166,33 @@ public class DataQualityServiceTests
         var befund = Assert.Single(Pruefen(Krb(1, "KRB 1", 4.5, S(0.0, 4.5))));
 
         Assert.Equal(new PruefBefund("Endteufe", PruefStufe.Hinweis, 1, "KRB 1", "Endteufe 4,50 m liegt über 4,00 m (Rahmen GK1)."), befund);
+    }
+
+    [Fact]
+    public void R2_GrundwasserNegativ_IstFehler()
+    {
+        var krb = Krb(1, "KRB 1", 3.0, S(0.0, 3.0));
+        krb.GrundwasserM = -1;
+
+        Single(Pruefen(krb), PruefStufe.Fehler, "Grundwasser darf nicht negativ sein.");
+    }
+
+    [Fact]
+    public void R2_GrundwasserTiefer_AlsEndteufe_IstFehler()
+    {
+        var krb = Krb(1, "KRB 1", 3.0, S(0.0, 3.0));
+        krb.GrundwasserM = 9;
+
+        Single(Pruefen(krb), PruefStufe.Fehler, "Grundwasser (9,00 m) liegt tiefer als die Endteufe (3,00 m).");
+    }
+
+    [Fact]
+    public void R2_GrundwasserInnerhalbEndteufe_IstKeinBefund()
+    {
+        var krb = Krb(1, "KRB 1", 3.0, S(0.0, 3.0));
+        krb.GrundwasserM = 2.5;
+
+        Assert.Empty(Pruefen(krb));
     }
 
     // ---------- R3 Proben ----------
@@ -347,7 +382,7 @@ public class DataQualityServiceTests
     [Fact]
     public void Reihenfolge_FehlerZuerst_DannBezeichnung_DannRegel()
     {
-        // Zeta: endteufe 0 (Fehler R2) and last layer ends at 3,00 m (Hinweis R1).
+        // Zeta: endteufe 0 (Fehler R2) and last layer ends at 3,00 m, deeper than the endteufe (Fehler R1).
         var zeta = Krb(1, "Zeta", 0.0, S(0.0, 3.0));
         // Alpha: endteufe 4,50 m (Hinweis R2) and last layer ends at 3,00 m (Hinweis R1).
         var alpha = Krb(2, "Alpha", 4.5, S(0.0, 3.0));
@@ -357,10 +392,10 @@ public class DataQualityServiceTests
         var reihenfolge = befunde.Select(b => (b.Stufe, b.Aufschluss, b.Regel)).ToList();
         var erwartet = new List<(PruefStufe Stufe, string Aufschluss, string Regel)>
         {
+            (PruefStufe.Fehler, "Zeta", "Schichtfolge"),
             (PruefStufe.Fehler, "Zeta", "Endteufe"),
             (PruefStufe.Hinweis, "Alpha", "Schichtfolge"),
             (PruefStufe.Hinweis, "Alpha", "Endteufe"),
-            (PruefStufe.Hinweis, "Zeta", "Schichtfolge"),
         };
         Assert.Equal(erwartet, reihenfolge);
     }

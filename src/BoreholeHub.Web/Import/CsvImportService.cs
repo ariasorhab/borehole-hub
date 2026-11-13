@@ -34,6 +34,12 @@ public class CsvImportService
     private const double Tol = 0.0005;
     private static readonly CultureInfo De = CultureInfo.GetCultureInfo("de-DE");
 
+    /// <summary>Earliest accepted Aufschluss date (01.01.2000).</summary>
+    public static readonly DateOnly MinDatum = new(2000, 1, 1);
+
+    /// <summary>Latest accepted Aufschluss date: today plus one year (checked on each call).</summary>
+    public static DateOnly MaxDatum() => DateOnly.FromDateTime(DateTime.Today).AddYears(1);
+
     /// <summary>Reports an error of a CSV row. The template uses {0} for the row number and {1} onwards for the arguments.</summary>
     private delegate void ZeilenFehler(string vorlage, int zeile, params string[] argumente);
 
@@ -349,6 +355,10 @@ public class CsvImportService
         else if (!DateOnly.TryParseExact(d, "dd.MM.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out datum))
         {
             E("Aufschlüsse, Zeile {0}: Ungültiges Datum {1} (Format TT.MM.JJJJ).", Q(d));
+        }
+        else if (datum < MinDatum || datum > MaxDatum())
+        {
+            E("Aufschlüsse, Zeile {0}: Datum {1} liegt außerhalb von 01.01.2000 bis {2}.", Q(d), MaxDatum().ToString("dd.MM.yyyy", CultureInfo.InvariantCulture));
         }
 
         double? gw = null;

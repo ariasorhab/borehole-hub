@@ -181,7 +181,11 @@ public static class DataQualityService
         }
 
         var last = s[^1];
-        if (Math.Abs(last.BisM - a.EndteufeM) > Toleranz)
+        if (last.BisM > a.EndteufeM + Toleranz)
+        {
+            melde(1, PruefStufe.Fehler, "Letzte Schicht endet bei {0} m, Endteufe {1} m.", M(last.BisM), M(a.EndteufeM));
+        }
+        else if (last.BisM < a.EndteufeM - Toleranz)
         {
             melde(1, PruefStufe.Hinweis, "Letzte Schicht endet bei {0} m, Endteufe {1} m.", M(last.BisM), M(a.EndteufeM));
         }
@@ -198,6 +202,18 @@ public static class DataQualityService
         else if (a.EndteufeM > MaxEndteufeM)
         {
             melde(2, PruefStufe.Hinweis, "Endteufe {0} m liegt über {1} m (Rahmen GK1).", M(a.EndteufeM), M(MaxEndteufeM));
+        }
+
+        if (a.GrundwasserM is double gw)
+        {
+            if (gw < 0)
+            {
+                melde(2, PruefStufe.Fehler, "Grundwasser darf nicht negativ sein.");
+            }
+            else if (a.EndteufeM > 0 && gw > a.EndteufeM + Toleranz)
+            {
+                melde(2, PruefStufe.Fehler, "Grundwasser ({0} m) liegt tiefer als die Endteufe ({1} m).", M(gw), M(a.EndteufeM));
+            }
         }
     }
 
