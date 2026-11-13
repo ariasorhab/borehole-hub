@@ -197,7 +197,7 @@ public class DatenModel(BoreholeDbContext db, IStringLocalizer<CsvImportService>
         if (existing.Count + result.NeueAufschluesse.Count > MaxAufschluesseProProjekt)
         {
             var grenze = new ImportFehler(
-                "Das Projekt darf höchstens " + MaxAufschluesseProProjekt + " Aufschlüsse enthalten (vorhanden: {0}, neu: {1}).",
+                "Das Projekt darf höchstens 200 Aufschlüsse enthalten (vorhanden: {0}, neu: {1}).", // literal = resx key; keep in sync with MaxAufschluesseProProjekt
                 [existing.Count.ToString(), result.NeueAufschluesse.Count.ToString()]);
             FehlerTexte = [grenze];
             Fehler = [CsvImportService.Deutsch(grenze)];
