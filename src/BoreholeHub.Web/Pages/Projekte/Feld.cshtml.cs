@@ -338,6 +338,11 @@ public class FeldModel(BoreholeDbContext db, IStringLocalizer<FeldModel> loc, IS
         {
             fehler.Add(Fehl("datum", "Datum: Bitte ein Datum eingeben."));
         }
+        else if (datum < CsvImportService.MinDatum || datum > CsvImportService.MaxDatum())
+        {
+            fehler.Add(Fehl("datum", "Datum: Bitte ein Datum zwischen 01.01.2000 und {0} eingeben.",
+                CsvImportService.MaxDatum().ToString("dd.MM.yyyy", CultureInfo.InvariantCulture)));
+        }
 
         double rechts = Pflichtzahl(Rechtswert, "rechtswert", "Rechtswert: Bitte eine Zahl eingeben.", fehler);
         double hoch = Pflichtzahl(Hochwert, "hochwert", "Hochwert: Bitte eine Zahl eingeben.", fehler);
@@ -347,8 +352,20 @@ public class FeldModel(BoreholeDbContext db, IStringLocalizer<FeldModel> loc, IS
         double? grundwasser = null;
         if (!string.IsNullOrEmpty(Grundwasser))
         {
-            if (CsvImportService.TryNumber(Grundwasser, out double gw)) { grundwasser = gw; }
-            else { fehler.Add(Fehl("grundwasser", "Grundwasser: Bitte eine Zahl eingeben.")); }
+            // TryNumber also refuses infinity and NaN, which get the number message.
+            if (!CsvImportService.TryNumber(Grundwasser, out double gw))
+            {
+                fehler.Add(Fehl("grundwasser", "Grundwasser: Bitte eine Zahl eingeben."));
+            }
+            else if (gw < 0)
+            {
+                fehler.Add(Fehl("grundwasser", "Grundwasser: Der Wert darf nicht negativ sein."));
+            }
+            else if (endteufe > 0 && gw > endteufe + 0.005)
+            {
+                fehler.Add(Fehl("grundwasser", "Grundwasser: Der Wert liegt tiefer als die Endteufe."));
+            }
+            else { grundwasser = gw; }
         }
 
         var schichten = new List<Schicht>();
@@ -384,13 +401,15 @@ public class FeldModel(BoreholeDbContext db, IStringLocalizer<FeldModel> loc, IS
 
     private void PruefeSchichten(List<Schicht> schichten, List<FeldFehler> fehler)
     {
+        int n = -1; // position among the non-empty rows, the same order AnzuzeigendeZeilen() shows
         for (int i = 0; i < Zeilen.Count; i++)
         {
             var z = Zeilen[i];
             if (z.IstLeer) { continue; }
 
-            string key = $"schicht-{i}";
-            string nr = (i + 1).ToString(De);
+            n++;
+            string key = $"schicht-{n}";
+            string nr = (n + 1).ToString(De);
             int vorher = fehler.Count;
 
             bool vonOk = CsvImportService.TryNumber(z.Von, out double von);

@@ -11,8 +11,8 @@ using Microsoft.Extensions.Localization;
 
 namespace BoreholeHub.Web.Pages.Projekte;
 
-// Hard cap for the whole request; each file is limited to 1 MB in the handler with a friendly message.
-[RequestSizeLimit(3 * 1024 * 1024)]
+// Hard cap for the whole request (10 MB); each file is limited to 1 MB in the handler with a friendly message.
+[RequestSizeLimit(10 * 1024 * 1024)]
 public class DatenModel(BoreholeDbContext db, IStringLocalizer<CsvImportService> loc) : PageModel
 {
     public const long MaxDateiBytes = 1024 * 1024;
@@ -83,13 +83,13 @@ public class DatenModel(BoreholeDbContext db, IStringLocalizer<CsvImportService>
 
     public IActionResult OnGetVorlageAufschluesse(int id) => Csv("vorlage-aufschluesse.csv",
         CsvImportService.AufschluesseHeader,
-        "KRB 6;KRB;516296,5;5640626;212,8;3,0;27.10.2026;",
-        "DPH 4;DPH;516300;5640628;212,7;4,0;28.10.2026;2,9");
+        "KRB 101;KRB;516296,5;5640626;212,8;3,0;27.10.2026;",
+        "DPH 101;DPH;516300;5640628;212,7;4,0;28.10.2026;2,9");
 
     public IActionResult OnGetVorlageSchichten(int id) => Csv("vorlage-schichten.csv",
         CsvImportService.SchichtenHeader,
-        "KRB 6;0,00;0,30;U, h, s';Mutterboden: Schluff, humos, schwach sandig;OH;dunkelbraun;weich;B1;F2;1E-06",
-        "KRB 6;0,30;3,00;U, t, s';Auenlehm: Schluff, tonig, schwach sandig;TL;braun;steif;B2;F3;5,0E-08");
+        "KRB 101;0,00;0,30;U, h, s';Mutterboden: Schluff, humos, schwach sandig;OH;dunkelbraun;weich;B1;F2;1E-06",
+        "KRB 101;0,30;3,00;U, t, s';Auenlehm: Schluff, tonig, schwach sandig;TL;braun;steif;B2;F3;5,0E-08");
 
     private static FileContentResult Csv(string fileName, params string[] lines)
     {

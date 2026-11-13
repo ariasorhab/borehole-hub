@@ -372,6 +372,99 @@ public class FeldPageTests : IClassFixture<WebAppFactory>
     }
 
     [Fact]
+    public async Task Post_NegativeGrundwasser_Returns200_WithMessage_AndSavesNothing()
+    {
+        int id = await NewProjectAsync();
+        var client = NewClient();
+        string token = await TokenAsync(client, id);
+
+        var response = await PostAsync(client, id, Krb7(("Grundwasser", "-5")), token);
+        var html = Decode(await response.Content.ReadAsStringAsync());
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Contains("Grundwasser: Der Wert darf nicht negativ sein.", html);
+        Assert.Equal(0, await CountAsync(id));
+    }
+
+    [Fact]
+    public async Task Post_GrundwasserBelowEndteufe_Returns200_WithMessage_AndSavesNothing()
+    {
+        int id = await NewProjectAsync();
+        var client = NewClient();
+        string token = await TokenAsync(client, id);
+
+        var response = await PostAsync(client, id, Krb7(("Endteufe", "3,0"), ("Grundwasser", "99")), token);
+        var html = Decode(await response.Content.ReadAsStringAsync());
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Contains("Grundwasser: Der Wert liegt tiefer als die Endteufe.", html);
+        Assert.Equal(0, await CountAsync(id));
+    }
+
+    [Fact]
+    public async Task Post_ValidGrundwasser_StillSaves()
+    {
+        int id = await NewProjectAsync();
+        var client = NewClient();
+        string token = await TokenAsync(client, id);
+
+        var response = await PostAsync(client, id, Krb7(("Grundwasser", "1,50")), token);
+
+        Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
+        Assert.Equal(1, await CountAsync(id));
+    }
+
+    [Fact]
+    public async Task Post_DatumBefore2000_Returns200_WithMessage_AndSavesNothing()
+    {
+        int id = await NewProjectAsync();
+        var client = NewClient();
+        string token = await TokenAsync(client, id);
+
+        var response = await PostAsync(client, id, Krb7(("Datum", "1999-12-31")), token);
+        var html = Decode(await response.Content.ReadAsStringAsync());
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Contains($"Datum: Bitte ein Datum zwischen 01.01.2000 und {BoreholeHub.Web.Import.CsvImportService.MaxDatum():dd.MM.yyyy} eingeben.", html);
+        Assert.Equal(0, await CountAsync(id));
+    }
+
+    [Fact]
+    public async Task Post_DatumOneDayAfterMax_Returns200_WithMessage_AndSavesNothing()
+    {
+        int id = await NewProjectAsync();
+        var client = NewClient();
+        string token = await TokenAsync(client, id);
+        var tooLate = BoreholeHub.Web.Import.CsvImportService.MaxDatum().AddDays(1);
+
+        var response = await PostAsync(client, id, Krb7(("Datum", tooLate.ToString("yyyy-MM-dd"))), token);
+        var html = Decode(await response.Content.ReadAsStringAsync());
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Contains("Datum: Bitte ein Datum zwischen 01.01.2000 und", html);
+        Assert.Equal(0, await CountAsync(id));
+    }
+
+    [Fact]
+    public async Task Post_LayerErrorAfterEmptyFirstRow_IsNumberedAndLinkedByPosition()
+    {
+        int id = await NewProjectAsync();
+        var client = NewClient();
+        string token = await TokenAsync(client, id);
+        var fields = Krb7(
+            ("Schichten[0].Von", ""), ("Schichten[0].Bis", ""), ("Schichten[0].Kurzzeichen", ""),
+            ("Schichten[0].Beschreibung", ""), ("Schichten[0].Bodengruppe", ""), ("Schichten[0].Kf", ""),
+            ("Schichten[1].Von", "x"));
+
+        var response = await PostAsync(client, id, fields, token);
+        var html = Decode(await response.Content.ReadAsStringAsync());
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Contains("Schicht 1, Von: Bitte eine Zahl eingeben.", html);
+        Assert.Contains("href=\"#schicht-0\"", html);
+    }
+
+    [Fact]
     public async Task Post_NonNumericEndteufe_Returns200_WithNumberMessage()
     {
         int id = await NewProjectAsync();

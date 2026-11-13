@@ -209,5 +209,31 @@ public class DatenPageTests : IClassFixture<WebAppFactory>
         Assert.Contains($"href=\"/Projekte/{id}/Pruefung\"", html);
     }
 
+    [Fact]
+    public async Task Templates_ImportUnchanged_IntoDemoProject()
+    {
+        int id = await SeedAsync();
+        var client = _factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
+        string a = Encoding.UTF8.GetString(await client.GetByteArrayAsync($"/Projekte/{id}/Daten?handler=VorlageAufschluesse"));
+        string s = Encoding.UTF8.GetString(await client.GetByteArrayAsync($"/Projekte/{id}/Daten?handler=VorlageSchichten"));
+
+        var response = await PostImportAsync(client, id, a, s);
+
+        Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
+        await _factory.WithDbAsync(async db => Assert.True(await db.Aufschluesse.AnyAsync(x => x.ProjectId == id && x.Bezeichnung == "KRB 101")));
+    }
+
+    [Fact]
+    public async Task Import_FourMbFile_ShowsOneMbMessage()
+    {
+        int id = await NewProjectAsync("Import-Test 4 MB");
+        string big = A2 + new string('x', 4 * 1024 * 1024);
+        var response = await PostImportAsync(_factory.CreateClient(), id, big, null);
+        var html = WebWebUtility(await response.Content.ReadAsStringAsync());
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Contains("Die Datei ist größer als 1 MB", html);
+    }
+
     private static string WebWebUtility(string html) => WebUtility.HtmlDecode(html);
 }

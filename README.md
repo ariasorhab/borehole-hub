@@ -34,7 +34,7 @@ Die Konsole zeigt `Now listening on: http://localhost:5000`. Öffnen Sie diese A
 
 ### B: Windows-Paket mit SQL Server
 
-`scripts\publish-win.cmd` (aus dem Repository-Ordner, .NET 8 SDK nötig) erzeugt das eigenständige Paket `publish\BoreholeHub-1.0.1-win-x64`. Darin startet `Start-BoreholeHub.cmd` die App mit `Database:Provider` = `SqlServer` und öffnet `http://localhost:5080`. Die Verbindungszeichenfolge aus `appsettings.json` lautet `Server=.;Database=BoreholeHub;Trusted_Connection=True;TrustServerCertificate=True`; die Datenbank wird beim ersten Start angelegt.
+`scripts\publish-win.cmd` (aus dem Repository-Ordner, .NET 8 SDK nötig) erzeugt das eigenständige Paket `publish\BoreholeHub-1.0.2-win-x64`. Darin startet `Start-BoreholeHub.cmd` die App mit `Database:Provider` = `SqlServer` und öffnet `http://localhost:5080`. Die Verbindungszeichenfolge aus `appsettings.json` lautet `Server=.;Database=BoreholeHub;Trusted_Connection=True;TrustServerCertificate=True`; die Datenbank wird beim ersten Start angelegt.
 
 ## Tests
 
@@ -42,15 +42,15 @@ Die Konsole zeigt `Now listening on: http://localhost:5000`. Öffnen Sie diese A
 dotnet test
 ```
 
-Aktuell laufen 180 Tests, alle bestehen. Die Tests verwenden xUnit. Die Web-App startet dafür über `WebAppFactory`.
+Alle Tests bestehen. Die Tests verwenden xUnit. Die Web-App startet dafür über `WebAppFactory`.
 
 ## Technik
 
-- .NET 8 (`net8.0`), ASP.NET Core Razor Pages, C# mit aktivierten Nullable-Referenztypen. Die Version 1.0.1 steht in `Directory.Build.props`.
+- .NET 8 (`net8.0`), ASP.NET Core Razor Pages, C# mit aktivierten Nullable-Referenztypen. Die Version 1.0.2 steht in `Directory.Build.props`.
 - Entity Framework Core 8.0.33 mit SQLite (Standard) und SQL Server. Das Schema legt die Anwendung beim Start mit `EnsureCreated` an.
 - QuestPDF 2026.9.1 erzeugt den PDF-Bericht.
 - Die Zeichnungen (Bohrprofil, Profilschnitt, Rammdiagramm, Lageplan) entstehen als SVG auf dem Server.
-- Leaflet liegt lokal unter `wwwroot/lib/leaflet`. Die Oberfläche lädt die Schriften Inter und Space Grotesk über Google Fonts.
+- Leaflet liegt lokal unter `wwwroot/lib/leaflet`. Die Schriften Inter und Space Grotesk liegen lokal unter `wwwroot/fonts` (SIL Open Font License); es gibt keine Anfrage an Google.
 - Projektstruktur: `src/BoreholeHub.Core` (Entitäten, Dienste), `src/BoreholeHub.Web` (Razor Pages, Zeichnungen, Import, PDF), `tests/BoreholeHub.Tests`.
 - Tests mit xUnit 2.5.3 und Microsoft.AspNetCore.Mvc.Testing 8.0.33.
 
@@ -64,7 +64,8 @@ Aktuell laufen 180 Tests, alle bestehen. Die Tests verwenden xUnit. Die Web-App 
 
 ## Sprache / Language
 
-- Die Oberfläche ist standardmäßig auf Deutsch. Mit dem Schalter **DE | EN** im Seitenkopf wechselt die Sprache.
+- Die App ist deutsch. Der Schalter **DE | EN** ist standardmäßig aus (`Features:LanguageSwitch` = false in `appsettings.json`); mit true erscheint er im Seitenkopf.
+- Die folgenden Punkte gelten nur, wenn der Schalter an ist.
 - Die Wahl wird im Cookie `bh-lang` für ein Jahr gespeichert. Der Schalter funktioniert auch ohne JavaScript.
 - Auf Deutsch bleiben: Normcodes (z. B. DIN 4023, DIN 18196, BM-0 bis BM-F3, KRB, DPH), Demo-Daten (Projekt-, Schicht- und Laborwertbezeichnungen) und der PDF-Bericht „Anlagen“.
 - Zahlen und Datumsangaben bleiben im deutschen Format (Dezimalkomma, TT.MM.JJJJ), auch auf Englisch.
@@ -91,7 +92,7 @@ Aktuell laufen 180 Tests, alle bestehen. Die Tests verwenden xUnit. Die Web-App 
 
 ## KI-Hinweis
 
-Der Footer der App lautet: „Mit KI-Unterstützung erstellt, entworfen und geprüft von Sohrab Talebian Far · Version 1.0.1“.
+Der Footer der App lautet: „Mit KI-Unterstützung erstellt, entworfen und geprüft von Sohrab Talebian Far · Version 1.0.2“.
 
 ## Kontakt
 

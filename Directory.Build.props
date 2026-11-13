@@ -2,7 +2,7 @@
 
   <!-- Shared settings for all projects in the BoreholeHub solution. -->
   <PropertyGroup>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>

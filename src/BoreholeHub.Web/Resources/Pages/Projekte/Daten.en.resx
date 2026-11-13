@@ -90,6 +90,9 @@
   <data name="Regeln" xml:space="preserve">
     <value>Rules</value>
   </data>
+  <data name="max. 1 MB pro Datei" xml:space="preserve">
+    <value>max. 1 MB per file</value>
+  </data>
   <data name="Semikolon als Trennzeichen, Dezimalkomma, UTF-8 (mit oder ohne BOM), höchstens 1 MB je Datei." xml:space="preserve">
     <value>Semicolon as separator, decimal comma, UTF-8 (with or without BOM), at most 1 MB per file.</value>
   </data>
